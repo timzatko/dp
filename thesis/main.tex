@@ -1,0 +1,138 @@
+% SETTINGS
+
+\newcommand{\myTitle}[0] {Uplatnenie interpretovateľnosti a vysvetliteľnosti neurónových sietí pri vyhodnocovaní medicínskych obrazových dát}
+\newcommand{\myTitleEng}[0] {Application of interpretability and explainability of neural networks in the evaluation of medical images}
+\newcommand{\myName}[0] {Bc. Timotej Zaťko}
+\newcommand{\mySupervisor}[0] {Ing. Martin Tamajka}
+\newcommand{\mySupervisorEng}[0] {Ing. Martin Tamajka}
+\newcommand{\myEvidenceNumber}[0] {FIIT-XXXX-86077}
+\newcommand{\myDate}[0] {máj 2020}
+\newcommand{\myStudyProgram}[0] {Inteligentné softvérové systémy}
+\newcommand{\myStudyProgramEng}[0] {Intelligent Software Systems}
+\newcommand{\myDegreeCourse}[0] {18. Informatika}
+\newcommand{\myDegreeCourseEng}[0] {18. Informatics}
+\newcommand{\myInstitute}[0] {Ústav informatiky, informačných systémov a softvérového inžinierstva (FIIT)}
+\newcommand{\myFontSize}[0] {12pt}
+\newcommand{\mySpacing}[0] {1.3}
+\newcommand{\myBibliography}[0] {bibliography/references}
+
+\include{preamble/preamble}
+
+\begin{document}
+    \captionsetup{justification=centering,margin=1cm}
+    
+    % Minted
+    % pygmentize -L styles
+    % \usemintedstyle{autumn}
+    
+    % Cover page
+    % \include{preamble/cover}
+    
+    % Title page
+    \include{preamble/title}
+    
+    % Zadanie diplomovej prace
+    \input{preamble/assignment}
+    
+    % Cestne prehlasenie
+    \input{preamble/affidavit}
+    
+    % Annotation
+    \include{preamble/annotation}
+    
+    % Acknowledgment
+    \include{preamble/acknowledgment}
+    
+    % Table of contents
+    \pagenumbering{arabic}
+    
+    \renewcommand*\contentsname{Obsah}
+    \tableofcontents
+    
+    % List of listings
+    % \listoffigures\newpage{}
+    % \renewcommand\listoflistingscaption{List of Listings}
+    % \listoflistings\newpage{}
+    
+    % References segment
+    \begin{refsegment}
+    
+    % Introduction
+    % \clearpage\null
+    % \input{content/intro}
+    
+    % Introduction
+    \clearpage\null
+    \input{content/introduction}
+    
+    % Analysis
+    \clearpage\null
+    \input{content/analysis}
+    
+    % Goals
+    % \clearpage\null
+    % \input{content/goals}
+    
+    % Design
+    \clearpage\null
+    \input{content/design}
+    
+    % Verification
+    % \clearpage\null
+    % \input{content/verification}
+    
+    % Záver
+    % \clearpage\null
+    % \input{content/evaluation}
+    
+    % Related Work
+    % \clearpage\null
+    % \input{content/related}
+    
+    % Resume
+    % \clearpage\null
+    % \input{content/resume}
+    
+    % Bibliography
+    \clearpage\null
+    \printbibliography[
+        heading=bibintoc,
+        title={Literatúra},
+        segment=\therefsegment,
+        resetnumbers=true
+    ]
+    
+    \end{refsegment}
+    
+    % Appendix
+    % \appendix
+    
+    % \pagenumbering{gobble}
+    
+    \begin{appendices}
+        % https://tex.stackexchange.com/questions/238781/remove-appendix-page-numbers-in-toc-while-using-appendix-package
+    
+        \addtocontents{toc}{
+            \cftpagenumbersoff{chapter}
+            \cftpagenumbersoff{section}
+            \cftpagenumbersoff{subsection}
+            \cftpagenumbersoff{subsubsection}
+        }
+    
+        \clearpage\null
+        \newpage
+    
+        \renewcommand{\thepage}{\arabic{page}}
+    
+        \include{appendices/plan}
+    
+        \clearpage\null
+        % \include{appendices/technical_documentation}
+    
+        \clearpage\null
+        % \include{appendices/cdrom}
+    
+        \clearpage\null
+        % \include{appendices/research_article}
+    \end{appendices}
+\end{document}

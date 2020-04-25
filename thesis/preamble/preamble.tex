@@ -1,0 +1,122 @@
+% \documentclass[\MyFontSize,a4paper,twoside,openright,english]{book}
+\documentclass[12pt,a4paper,twoside,openright,english]{book}
+\usepackage[utf8]{inputenc}
+\usepackage[T1]{fontenc}
+\usepackage[english,slovak]{babel}
+\usepackage[a4paper]{geometry}
+
+\usepackage[parfill]{parskip}
+\usepackage{enumitem}
+
+\usepackage{graphicx}
+\usepackage{float}
+\usepackage{longtable}
+\usepackage{setspace}
+\usepackage{listings}
+\usepackage{xparse}
+\usepackage{caption}
+\usepackage{hyperref}
+% \usepackage[hyphenbreaks]{breakurl}
+\usepackage{pifont}
+\usepackage[titletoc]{appendix}
+\usepackage{tocloft}
+\usepackage{csquotes}
+
+
+% Spacing
+% \setstretch{\mySpacing}
+\setstretch{1.3}
+
+\setcounter{secnumdepth}{3}
+\setcounter{tocdepth}{3}
+
+\usepackage{tabularx}
+\newsavebox\mybox
+\usepackage{fancyhdr}
+\pagestyle{fancy}
+\lhead{\nouppercase{\leftmark}}
+\chead{}
+\rhead{}
+\lfoot{}
+\cfoot{\thepage}
+\rfoot{}
+
+%style=iso-numeric
+%style=authortitle-dw
+% \usepackage[backend=bibtex,defernums=true]{biblatex}
+
+\usepackage[
+   backend=biber        % if we want unicode
+  ,style=iso-numeric % or iso-numeric for numeric citation method
+  ,autolang=other       % to support multiple languages in bibliography
+  ,sortlocale=sk     % locale of main language, for sorting
+  ,bibencoding=UTF8     % this is necessary only if bibliography file is in different encoding than main document
+]{biblatex}
+
+\defbibheading{references}[References]{ 
+  \chapter*{#1}
+  \markboth{#1}{#1}
+}
+\defbibheading{referencessec}[References]{ 
+  \section*{#1}
+  \markboth{#1}{#1}
+}
+% \bibliography{\myBibliography}
+\bibliography{bibliography/references}
+% \addbibresource{bibliography/references.bib}
+
+% Listing as figure
+% \usepackage{libs/minted}
+% \usepackage[section]{minted}
+
+\usepackage{listing}
+
+% openright does not work :(
+\let\tmp\oddsidemargin
+\let\oddsidemargin\evensidemargin
+\let\evensidemargin\tmp
+\reversemarginpar
+
+\usepackage{lscape}
+\usepackage{afterpage}
+
+\usepackage{lipsum}
+
+% Get rid of "Chapter N."
+\makeatletter
+\def\@makechapterhead#1{%
+  \vspace*{50\p@}%
+  {\parindent \z@ \raggedright \normalfont
+    \interlinepenalty\@M
+    \Huge\bfseries  \thechapter.\quad #1\par\nobreak
+    \vskip 40\p@
+  }}
+\makeatother
+%%%%%
+
+% Table
+\usepackage[table,xcdraw]{xcolor}
+\usepackage{tabularx}
+
+% Incldue pdf in document
+\usepackage[final]{pdfpages}  
+
+\addto\captionsenglish{\renewcommand{\figurename}{Obr.}}
+\addto\captionsenglish{\renewcommand{\tablename}{Tabuľka}}
+
+\lstdefinestyle{BashInputStyle}{
+  language=bash,
+  basicstyle=\small\sffamily,
+  numbers=left,
+  numberstyle=\tiny,
+  numbersep=3pt,
+  frame=tb,
+  columns=fullflexible,
+  backgroundcolor=\color{lightgray!20},
+  linewidth=0.9\linewidth,
+  xleftmargin=0.1\linewidth
+}
+
+\raggedbottom
+
+% \renewcommand{\appendixname}{Príloha}

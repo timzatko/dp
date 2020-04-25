@@ -1,2 +1,12 @@
 .DS_Store
 .ipynb_checkpoints
+
+# LaTex
+*.log
+*.aux
+*.out
+*.gz
+*.fdb_latexmk
+*.bbl
+*.blg
+*.fls

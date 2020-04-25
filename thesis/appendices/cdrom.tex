@@ -1,0 +1,53 @@
+% TODO CD/USB
+
+\chapter{Opis digitálnej časti práce \label{cha:cdrom} }
+
+\setcounter{page}{1}
+
+Evidenčné čislo práce v informačnom systéme FIIT-5212-86077.
+
+Obsah digitálnej časti práce (archív ZIP):
+
+\begin{itemize}
+    \item \texttt{/app}
+        \begin{itemize}
+            \item \texttt{/be} --- Adresár obsahujúci súbory serverovej (angl. backend) časti vytvorenej aplikácie
+            \item \texttt{/fe} --- Adresár obsahujúci súbory klientskej (angl. frontend) časti vytvorenej aplikácie
+        \end{itemize}
+    \item \texttt{/data-analysis} --- Adresár obsahujúci všetky zozbierané dáta z experiemntov
+        \begin{itemize}
+            \item \texttt{/pilot} --- Adresár obsahujúci csv súbory s dátami z pilotného experimentu
+                \begin{itemize}
+                    \item \texttt{/pilot\_experiemnt.ipyb} --- Jupyter Notebook s jednoduchou analýzou a vyhodnotením pilotného experimentu
+                    \item \texttt{/data} --- Adresár obsahujúci csv súbory s nespracovanými dátami z pilotného experimentu
+                    \item \texttt{/results/pilot\_result.csv} --- Súbor vo formáte .csv obsahujúci vyhodnotenie experimentu
+                \end{itemize}
+            \item \texttt{/main} -- Adresár obsahujúci vyhodnotenie hlavného experimentu
+                \begin{itemize}
+                    \item \texttt{/data} --- Adresár obsahujúci csv súbory s nespracovanými dátami z experimentu
+                    \item \texttt{/data-processed} --- Adresár obsahujúci csv súbory so spracovanými dátami z experimentu
+                    \item \texttt{/preprocessing} --- Adresár obsahujúci súbory formátu "Jupyter Notebook" slúžiace na spracovanie dát z experimentu
+                    \item \texttt{/results/main\_result.csv} --- Súbor vo formáte .csv obsahujúci vyhodnotenie experimentu
+                    \item \texttt{/basic\_analysis.ipyb} --- Súbor vo formáte Jupyter Notebook s jednoduchou analýzou a vyhodnotením experimentu
+                    \item \texttt{/run-analysis.bash} -- Skript na pregenerovanie analýz v súboroch formátu Jupyter Notebook
+                \end{itemize}
+            \item \texttt{/main-2} -- Adresár obsahujúci vyhodnotenie druhého hlavného experimentu
+                \begin{itemize}
+                    \item \texttt{/data} --- Adresár obsahujúci csv súbory s nespracovanými dátami z experimentu
+                    \item \texttt{/data-processed} --- Adresár obsahujúci csv súbory so spracovanými dátami z experimentu
+                    \item \texttt{/preprocessing} --- Adresár obsahujúci súbory formátu "Jupyter Notebook" slúžiace na spracovanie dát z experimentu
+                    \item \texttt{/results/main\_result.csv} --- Súbor vo formáte .csv obsahujúci vyhodnotenie experimentu
+                    \item \texttt{/basic\_analysis.ipyb} --- Súbor vo formáte Jupyter Notebook s jednoduchou analýzou a vyhodnotením experimentu
+                    \item \texttt{/run-analysis.bash} --- Skript na pregenerovanie analýz v súboroch formátu Jupyter Notebook
+                \end{itemize}
+            \item \texttt{/main\_experiments\_analysis.ipyb} --- Porovnanie výsledkov medzi prvým a druhým experimentom
+            \item \texttt{/utils.py} --- Súbor obsahujúci pomocné funkcie v jazyku python
+            \item \texttt{/run-preprocessing.js} ---- Skript na spustenie spracovania dát z experiementu
+            \item \texttt{/run-notebook.bash} --- Skript na spustenie súboru vo formáte Jupyter Notebook
+        \end{itemize}
+    \item \texttt{/thesis}
+        \begin{itemize}
+            \item \texttt{/BP\_TimotejZatko.pdf} --- Práca vo formáte PDF
+            \item \texttt{/BP\_prilohy\_TimotejZatko.pdf} --- Prílohy vo formáte PDF
+        \end{itemize}
+\end{itemize}
