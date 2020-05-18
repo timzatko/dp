@@ -13,25 +13,25 @@
 \defcounter {refsection}{0}\relax 
 \contentsline {subsection}{\numberline {2.1.3}Obrazov\IeC {\'e} a r\IeC {\'a}diologick\IeC {\'e} ukazovatele}{7}{subsection.2.1.3}
 \defcounter {refsection}{0}\relax 
-\contentsline {section}{\numberline {2.2}Neur\IeC {\'o}nov\IeC {\'e} siete}{7}{section.2.2}
+\contentsline {section}{\numberline {2.2}Neur\IeC {\'o}nov\IeC {\'e} siete}{8}{section.2.2}
 \defcounter {refsection}{0}\relax 
-\contentsline {subsection}{\numberline {2.2.1}Interpretovanie neur\IeC {\'o}novej siete}{8}{subsection.2.2.1}
+\contentsline {subsection}{\numberline {2.2.1}Interpretovanie neur\IeC {\'o}novej siete}{9}{subsection.2.2.1}
 \defcounter {refsection}{0}\relax 
-\contentsline {paragraph}{Maximaliz\IeC {\'a}cia aktiv\IeC {\'a}cie (angl. Activation maximization)}{9}{section*.7}
+\contentsline {paragraph}{Maximaliz\IeC {\'a}cia aktiv\IeC {\'a}cie (angl. Activation maximization)}{10}{section*.7}
 \defcounter {refsection}{0}\relax 
 \contentsline {paragraph}{Maximaliz\IeC {\'a}cia aktiv\IeC {\'a}cie s expertom}{10}{section*.9}
 \defcounter {refsection}{0}\relax 
-\contentsline {subsection}{\numberline {2.2.2}Vysvet\IeC {\v l}ovanie predikcie neur\IeC {\'o}novej siete}{10}{subsection.2.2.2}
+\contentsline {subsection}{\numberline {2.2.2}Vysvet\IeC {\v l}ovanie predikcie neur\IeC {\'o}novej siete}{12}{subsection.2.2.2}
 \defcounter {refsection}{0}\relax 
 \contentsline {subsubsection}{\numberline {2.2.2.1}Anal\IeC {\'y}za senzitivity}{12}{subsubsection.2.2.2.1}
 \defcounter {refsection}{0}\relax 
-\contentsline {subsubsection}{\numberline {2.2.2.2}LRP (angl. layer-wiser relevance propagation)}{12}{subsubsection.2.2.2.2}
+\contentsline {subsubsection}{\numberline {2.2.2.2}LRP (angl. layer-wiser relevance propagation)}{13}{subsubsection.2.2.2.2}
 \defcounter {refsection}{0}\relax 
 \contentsline {subsubsection}{\numberline {2.2.2.3}RISE - Randomized Input Sampling for Explanation}{14}{subsubsection.2.2.2.3}
 \defcounter {refsection}{0}\relax 
-\contentsline {section}{\numberline {2.3}Vyu\IeC {\v z}itie neur\IeC {\'o}nov\IeC {\'y}ch siet\IeC {\'\i } pri odha\IeC {\v l}ovan\IeC {\'\i } Alzheimerovej choroby}{15}{section.2.3}
+\contentsline {section}{\numberline {2.3}Vyu\IeC {\v z}itie neur\IeC {\'o}nov\IeC {\'y}ch siet\IeC {\'\i } pri odha\IeC {\v l}ovan\IeC {\'\i } Alzheimerovej choroby}{16}{section.2.3}
 \defcounter {refsection}{0}\relax 
-\contentsline {subsection}{\numberline {2.3.1}Vysvet\IeC {\v l}ovanie rozhodnut\IeC {\'\i } neur\IeC {\'o}nov\IeC {\'y}ch siet\IeC {\'\i } deteguj\IeC {\'u}cich Alzheimerovu chorobu}{16}{subsection.2.3.1}
+\contentsline {subsection}{\numberline {2.3.1}Vysvet\IeC {\v l}ovanie rozhodnut\IeC {\'\i } neur\IeC {\'o}nov\IeC {\'y}ch siet\IeC {\'\i } deteguj\IeC {\'u}cich Alzheimerovu chorobu}{17}{subsection.2.3.1}
 \defcounter {refsection}{0}\relax 
 \contentsline {section}{\numberline {2.4}Zhrnutie}{17}{section.2.4}
 \defcounter {refsection}{0}\relax 
