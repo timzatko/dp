@@ -77,9 +77,9 @@ Na obrázkoch je viditeľná úroveň metabolizmu glukózy, u pacientov s Alzhei
 
 \section{Neurónové siete}
 
-Neurónové siete patria medzi obľúbené techniky strojového učenia. Špeciálnou kategóriou sú hlboké neurónové siete (často označované skratkou DNN od angl. deep neural network), ktoré sa oproti obyčajným neurónovým sieťam odlišujú počtom vrstiev. Hlbokým neurónovým sieťam sa doteraz podarilo dosiahnuť v mnohých úlohách výnimočné výsledky v ktorých častokrát už dokázali poraziť človeka. % zazdrojovat nejako?
+Neurónové siete patria medzi obľúbené techniky strojového učenia. Špeciálnou kategóriou sú hlboké neurónové siete (často označované skratkou DNN od angl. deep neural network), ktoré sa oproti obyčajným neurónovým sieťam odlišujú počtom vrstiev. Hlbokým neurónovým sieťam sa doteraz podarilo dosiahnuť v mnohých úlohách výnimočné výsledky, v ktorých častokrát už dokázali poraziť človeka. % zazdrojovat nejako?
 
-V doméne obrazových dát sa predovšetkým využívajú konvolučné neurónové siete. Tie majú schopnosť naučiť sa rozpoznávať špecifické štruktúry/tvary z obráz-ka. Toto dokážu pomocou takzvaných konvolučných filtrov, ktoré sa v nižších vrstvách naučia rozoznávať jednoduchšie tvary, akými sú napríklad obrysy alebo hrany. V tých vyšších vrstvách sú to zložitejšie štruktúry akými môžu byť celé objekty ako napríklad pes alebo morča.
+V doméne obrazových dát sa využívajú predovšetkým konvolučné neurónové siete. Tie majú schopnosť naučiť sa rozpoznávať špecifické štruktúry/tvary z obrázka. Toto dokážu pomocou takzvaných konvolučných filtrov, ktoré sa v nižších vrstvách naučia rozoznávať jednoduchšie tvary, akými sú napríklad obrysy alebo hrany. V tých vyšších vrstvách sú to zložitejšie štruktúry akými môžu byť celé objekty v závislosti od typu úlohy na ktorú boli trénované. Ak bola neurónová sieť trénovaná napríklad na klasifikáciu zvierat, môže tým objektom byť pes alebo morča, v prípade ak je úlohou neurónovej siete detekcia Alzheimerovej choroby možu týmito objektami byť niektoré väčšie časti mozgu (napr. hippocampus).
 
 \begin{figure}[h!]
 \centering
@@ -111,7 +111,7 @@ V doméne obrazových dát sa predovšetkým využívajú konvolučné neurónov
 
 \subsection{Interpretovanie neurónovej siete}
 
-\citeauthor{montavon2018methods} definujú interpretovanie ako mapovanie abstraktného konceptu (napríklad predikovanej triedy) do domény, ktorej človek dokáže porozumieť. Ako príklad domény, ktorá je interpretovateľná uvádzajú obrázky (pole pixelov) alebo text (sekvencia slov) \cite{montavon2018methods}. Medzi domény, ktoré nie sú interpretovateľné zaraďujú napríklad latentné vektorové reprezentácie slov (angl. word embeddings) alebo iné abstraktné vektorové reprezentácie \cite{montavon2018methods}.
+\citeauthor{montavon2018methods} (\citeyear{montavon2018methods}) definujú interpretovanie ako mapovanie abstraktného konceptu (napríklad predikovanej triedy) do domény, ktorej človek dokáže porozumieť. Ako príklad domény, ktorá je interpretovateľná uvádzajú obrázky (pole pixelov) alebo text (sekvencia slov) \cite{montavon2018methods}. Medzi domény, ktoré nie sú interpretovateľné zaraďujú napríklad latentné vektorové reprezentácie slov (angl. word embeddings) alebo iné abstraktné vektorové reprezentácie \cite{montavon2018methods}.
 Na rozdiel od vstupných dát do neurónovej siete, ktoré sú zvyčajne interpretovatelné, neuróny na výstupnej vrstve a v skrytých vrstvách sú abstraktné a vyžadujú dodatočné úsilie na ich interpretovanie. Jedným zo spôsobov interpretovania týchto neurónov je maximalizácia aktivácie (angl. activation maximization).
 
 \paragraph{Maximalizácia aktivácie (angl. Activation maximization)}
@@ -122,7 +122,7 @@ Takýto vstupný prototyp je nájdený tak, že neurónovej sieti je daný na vs
 \begin{figure}[h!]
 \centering
 \includegraphics[scale=0.6]{assets/images/activation_maximization.png}
-\caption{\textbf{Maximalizácia aktivácie aplikovaná na obrazové dáta. \cite{simonyan2013deep}} Výsledné vzorové prototypy pre jednotlivé triedy nevyzerajú prirodzene, sú prevažne šedé s farebnými črtami objektov.
+\caption{\textbf{Maximalizácia aktivácie aplikovaná na obrazové dáta. \cite{simonyan2013deep}} Výsledné vzorové prototypy pre jednotlivé triedy nevyzerajú prirodzene, sú prevažne šedé s farebnými črtami objektov. Tieto vzorové prototypy nereprezentujú príklady vstupov ''z reálneho sveta'' ale ideálne vstupy pre jednotlivé triedy. Takéto vstupy nerónová sieť bežne nedostane.
 }
 \label{fig:activation_maximization}
 \end{figure}
@@ -137,41 +137,61 @@ Na získanie realistickejších prototypov (prototypov, ktoré sa viac podobajú
 
 \subsection{Vysvetľovanie predikcie neurónovej siete}
 
-\citeauthor{montavon2018methods} definujú vysvetľovanie ako kolekciu vlastností dát, ktoré sú z interpretovateľnej domény, ktoré prispeli k výslednému rozhodnutiu (napr. zaradenie do určitej triedy - klasifikácia) pre určité pozorovanie \cite{montavon2018methods}. Rozdiel oproti interpretovaniu teda je, že pri interpretovaní hľadáme vzorový prototyp (vzorové pozorovanie) pre zvolenú triedu, kde pri vysvetľovaní sa snažíme zistiť prečo, a teda na základe ktorých vlastností, vyprodukovala neurónová sieť predikciu (napr. zaradenie pozorovania do určitej triedy). 
+\citeauthor{montavon2018methods} (\citeyear{montavon2018methods}) definujú vysvetľovanie ako kolekciu vlastností dát, ktoré sú z interpretovateľnej domény, ktoré prispeli k výslednému rozhodnutiu (napr. zaradenie do určitej triedy - klasifikácia) pre určité pozorovanie \cite{montavon2018methods}. Rozdiel oproti interpretovaniu teda je, že pri interpretovaní hľadáme vzorový prototyp (vzorové pozorovanie) pre zvolenú triedu, zatiaľ čo pri vysvetľovaní sa snažíme zistiť prečo, a teda ktoré z vlastností vstupu najviac prispeli (tj. sú najviac relevantné) k výslednej predikcii neurónovej siete (napr. zaradenie pozorovania do určitej triedy). 
 
-Niektoré metódy vysvetľovania sú fungujú na základe zakrývania častí obrázka a sledovaním zmeny predikcie predikovanej triedy -- perturbačné metódy, iné zasa na základe spätného šírenia (angl. backpropagation) -- napr. LRP, analýza senzitivity.
+Niektoré metódy vysvetľovania fungujú na základe zakrývania častí obrázka a sledovaním zmeny predikcie predikovanej triedy -- perturbačné metódy, iné zasa na základe spätného šírenia (angl. backpropagation) -- napr. LRP, analýza senzitivity.
 
-Každá z metód má svoje výhody a nevýhody, napríklad výhodou perturbačných metód je, že môžu byť použité na akýkoľvek model, keďže jediné čo potrebujú je výstup (predikciu) z modelu. Ich nevýhodou avšak je, že sú pomalé. Niektoré z metód vysvetľovania sme bližšie popísali v tejto kapitole.
+Každá z metód má svoje výhody a nevýhody, napríklad výhodou perturbačných metód je, že môžu byť použité na akýkoľvek model, keďže jediné čo potrebujú je výstup (predikciu) z modelu. Ich nevýhodou však je, že sú pomalé. Niektoré z metód vysvetľovania bližšie opíšeme v tejto kapitole.
 
 \subsubsection{Analýza senzitivity}
 
-Analýza senzitivity slúži na vysvetľovanie predikcie neuró-novej siete. Táto metóda identifikuje, ktoré z vlastností vstupného pozorovania najviac prispievajú výslednej predikcii. Najviac dôležité sú také vlastnosti, ktorých zmenou sa najvýraznejšie zmení výsledná predikcia. Na takéto vlastností je výsledná predikcia najviac senzitívna (resp. citlivá) \cite{montavon2018methods}.
+Analýza senzitivity slúži na vysvetľovanie predikcie neurónovej siete. Táto metóda identifikuje, ktoré z vlastností vstupného pozorovania najviac prispievajú, či už pre alebo proti, výslednej predikcii. Najviac dôležité sú také vlastnosti, ktorých zmenou sa najvýraznejšie zmení výsledná predikcia. Na takéto vlastností je výsledná predikcia najviac senzitívna (resp. citlivá) \cite{montavon2018methods}.
 
-Výsledok analýzy senzitivity znázornený v tepelnej mape (angl. heatmap) je zobrazený na obrázku \ref{fig:sensitivity_analysis}. Analýza senzitivity zachytáva teda vlastnosti vstupného pozorovania, ktoré k výslednej predikcii prispievajú pozitívne aj negatívne (napr. zmenením určitej vlastnosti vstupu sa výrazne zníži zaradenie do danej triedy). Na výslednej tepelnej mape vlastnosti, ktoré k výslednej predikcii prispievajú pozitívne, a vlastnosti, ktoré k výslednej predikcii prispievajú negatívne, nevieme rozlíšiť. Vieme len, že zmenením danej vlastnosti výrazne ovplyvníme predikciu.
+Výsledok analýzy senzitivity znázornený v tepelnej mape (angl. heatmap) je zobrazený na obrázku \ref{fig:sensitivity_analysis}. Analýza senzitivity zachytáva teda vlastnosti vstupného pozorovania, ktoré k výslednej predikcii prispievajú pozitívne aj negatívne (napr. zmenením určitej vlastnosti vstupu sa výrazne zníži zaradenie do danej triedy). Na výslednej tepelnej mape vlastnosti, ktoré k výslednej predikcii prispievajú pozitívne, a vlastnosti, ktoré k výslednej predikcii prispievajú negatívne (proti), nevieme rozlíšiť. Vieme len, že zmenením danej vlastnosti výrazne ovplyvníme predikciu.
 
 \begin{figure}[h!]
 \centering
 \includegraphics[scale=0.5]{assets/images/sensitivity_analysis.png}
-\caption{\textbf{Analýza senzitivity aplikovaná na konvolučnú neurónovú sieť trénovanú na dátovej sade MNIST. \cite{montavon2018methods}} Červenou farbou sú zobrazené miesta ktoré najviac prispievajú výslednej predikcii. Čím je červená farba výraznejšia, tým viac je výsledok senzitívny na zmenu daného pixela.}
+\caption{\textbf{Analýza senzitivity aplikovaná na konvolučnú neurónovú sieť trénovanú na dátovej sade MNIST. \cite{montavon2018methods}} Červenou farbou sú zobrazené miesta ktoré najviac prispievajú, či už pre alebo proti, výslednej predikcii. Čím je červená farba výraznejšia, tým viac je výsledok senzitívny na zmenu daného pixela.}
 \label{fig:sensitivity_analysis}
 \end{figure}
 
 \subsubsection{LRP (angl. layer-wiser relevance propagation)}
 
-Metóda vrstvami propagovanej relevancie, ďalej len LRP (angl. layer-wise relevance propagation) sa od analýzy senzitivity odlišuje tým, že vo výslednej tepelnej mape dokáže odlíšiť vlastnosti, ktoré prispeli pozitívne alebo negatívne k výslednej predikcii.
+Metóda vrstvami propagovanej relevancie, ďalej len LRP (angl. layer-wise relevance propagation), sa od analýzy senzitivity odlišuje tým, že vo výslednej tepelnej mape dokáže odlíšiť vlastnosti, ktoré prispeli pozitívne alebo negatívne k výslednej predikcii (v zázislosti od použitých parametrov $\alpha$ a $\beta$).
 
-Táto technika funguje tak, že vstupný obrázok dopredným šírením "prejde" ne-urónovou sieťou, pričom sú zozbierané aktivácie neurónov v jednotlivých vrstvách. Následne je neurónovou sieťou spätným šírením propagované skóre z výstupu neurónovej siete v podobe relevancie až k vstupnému obrázku. \cite{montavon2018methods}
+Táto technika funguje tak, že vstupný obrázok dopredným šírením ''prejde'' neurónovou sieťou, pričom sú zozbierané aktivácie neurónov v jednotlivých vrstvách. Následne je neurónovou sieťou spätným šírením propagované skóre z výstupu neurónovej siete v podobe relevancie až k vstupnému obrázku. 
 
-Spôsob propagovanie relevancie je možné upraviť parametrami $\alpha$ a $\beta$, ktoré ovplyvňujú, koľko pozitívnej alebo negatívnej relevancie je vytvorenej počas fázy spätného šírenia relevancie. Súčet pozitívnej a negatívnej relevancie je však medzi vrstvami vždy rovnaký a musí platiť, že $\alpha - \beta = 1$. Výsledok použitia rôznych hodnôt $\alpha$ a $\beta$ je znázornený na obrázku \ref{fig:lrp}.
+Nasledovné vzorce \ref{eq:lrp_1}, \ref{eq:lrp_2}, \ref{eq:lrp_3} \cite{montavon2018methods} vyjadrujú spôsob výpočtu propagovanej relevancie medzi vrstvami. $j$ a $k$ sú jednotlivé vrstvy, pričom $k$ je vrstva, z ktorej je relevancia $R$ propagovaná. Parametre $\alpha$ a $\beta$ upravujú, koľko pozitívnej ($\alpha$) alebo negatívnej ($\beta$) relevancie je vytvorenej počas fázy spätného šírenia relevancie. Pri ich nastavovaní musí platiť, že $\alpha - \beta = 1$ a zároveň $\beta \geq 0$. Súčet pozitívnej a negatívnej relevancie je však medzi vrstvami vždy rovnaký \cite{montavon2018methods}, výsledok použitia rôznych hodnôt $\alpha$ a $\beta$ je znázornený na obrázku \ref{fig:lrp}. $R_{j\leftarrow k}^{+}$ (Obr. \ref{eq:lrp_1}) a $R_{j\leftarrow k}^{-}$ (Obr. \ref{eq:lrp_3}) vyjadrujú množstvo pozitívnej ($+$), resp. negatívnej ($-$) relevancie propagovanej z vrstvy $k$ do vrstvy $j$. $a_j$ je aktivácia neurónu, na ktorý je propagovaná relevancia.
+
+% Option 1
+% \begin{equation}
+%     R_{j}=\sum_{k}^{}\frac{a_j w_{j k}^+}{\sum_{j}^{} a_j w_{j k}^+}\alpha R_k + \sum_{k}^{}\frac{a_j w_{j k}^-}{\sum_{j}^{} a_j w_{j k}^-}\beta R_k
+%     \label{eq:lrp}
+% \end{equation}
+
+% Option 2
+\begin{equation} 
+    R_{j\leftarrow k}^{+} = \frac{a_j w_{j k}^+}{\sum_{j}^{} a_j w_{j k}^+}
+    \label{eq:lrp_1}
+\end{equation}
+\begin{equation} 
+    R_{j\leftarrow k}^{-} = \frac{a_j w_{j k}^-}{\sum_{j}^{} a_j w_{j k}^-}
+    \label{eq:lrp_2}
+\end{equation}
+\begin{equation} 
+    R_{j}=\sum_{k}^{} \left ( \alpha R_{j\leftarrow k}^{+} - \beta R_{j\leftarrow k}^{-} \right ) R_k
+    \label{eq:lrp_3}
+\end{equation}
 
 \begin{figure}[h!]
 \centering
 \includegraphics[scale=0.5]{assets/images/lrp.png}
-\caption{\textbf{Výsledné vysvetlenie (v podobe tepelnej mapy) vytvorené použitím LRP s rôznymi hodnotami $\alpha$ a $\beta$ na dátovej sade MNIST. \cite{montavon2018methods}} Pozitívna relevancia je zobrazená červenou farbou . \cite{montavon2018methods} Negatívna relevancia je zobrazená modrou farbou. \cite{montavon2018methods}}
+\caption{\textbf{Výsledné vysvetlenie (v podobe tepelnej mapy) vytvorené použitím LRP s rôznymi hodnotami $\alpha$ a $\beta$ na dátovej sade MNIST. \cite{montavon2018methods}} Pozitívna relevancia je zobrazená červenou farbou . \cite{montavon2018methods} Negatívna relevancia je zobrazená modrou farbou. \cite{montavon2018methods} V prípade, že použijeme $\alpha = 1$ a $\beta = 0$ strácame informáciu o tom, ktoré pixely negatívne (tj. sú proti výslednej predikcii) prispeli k výslednej predikcii (a opačne).}
 \label{fig:lrp}
-\end{figure}d
+\end{figure}
 
-Výhodou LRP oproti analýze senzitivity a dekonvolúcii je že vysvetlenie (výsledná tepelná mapa) vytvorené technikou LRP je pre rôzne obrázky vždy rôzne \cite{Muller_Samek_Montavon_Lapuschkin_Arras}. Naopak pri analýze senzitivity a dekonvolúcii je vysvetlenie vždy rovnaké pokiaľ v architektúre neurónovej siete neboli použité združovacie vrstvy (angl. pooling layers) \cite{Muller_Samek_Montavon_Lapuschkin_Arras}. Ďaľším rozdielom je, že vo výslednom vysvetlení LRP rozlišuje ktoré vlastnosti pozitívne alebo negatívne prispeli k negatívnej predikcii.
+Výhodou LRP oproti analýze senzitivity je, že vysvetlenie (výsledná tepelná mapa) vytvorené technikou LRP je pre rôzne obrázky vždy rôzne \cite{Muller_Samek_Montavon_Lapuschkin_Arras}. Naopak, pri analýze senzitivity je vysvetlenie vždy rovnaké pokiaľ v architektúre neurónovej siete neboli použité združovacie vrstvy (angl. pooling layers) \cite{Muller_Samek_Montavon_Lapuschkin_Arras}. Ďaľším rozdielom je, že vo výslednom vysvetlení LRP rozlišuje, ktoré vlastnosti pozitívne alebo negatívne prispeli k negatívnej predikcii.
 
 % TODO: vysvetlit dekonvoluciu???
 
@@ -181,8 +201,8 @@ Túto metódu môžeme zaradiť medzi perturbačné metódy, keďže je tiež za
 
 \begin{itemize}
     \item Je vytvorená náhodná binárna (tj. iba z bielej a čiernej farby) maska o malej veľkosti (napríklad 8px x 8px).
-    \item Táto maska je zväčšená (angl. upsampled) pomocou bilineárnej interpolácie \cite{petsiuk2018rise} (angl. bilinear interpolation) na veľkosť obrázka s ktorým bude prekrytá. Tým sa zníži jej kvalita a ostré hrany medzi bielymi a čiernymi časťami sa zjemnia. Masky už teda nie sú binárne. % TODO prepisat, v skutocnisti je o trochu vacsia
-    \item Z masky je náhodne vyrezaná určitá čast a je opäť zväčšená na pôvodnú veľkosť obrázka.
+    \item Táto maska je zväčšená (angl. upsampled) pomocou bilineárnej interpolácie \cite{petsiuk2018rise} (angl. bilinear interpolation) na veľkosť ktorá je mierne väčšia ako veľkosť obrázka s ktorým bude prekrytá (kvôli oreznávaniu). Tým sa zníži jej kvalita a ostré hrany medzi bielymi a čiernymi časťami sa zjemnia. Masky už teda nie sú binárne.
+    \item Z masky je náhodne vyrezaná náhodná čast o veľkosť prekrývaného obrázka.
 \end{itemize}
 
 % To address these issues we first sample smaller binary masks and then upsample them to
@@ -197,18 +217,18 @@ Toto sa opakuje $N$ krát. Výsledná tepelná mapa je je vypočítaná ako vá�
 \label{fig:rise_architecture}
 \end{figure}
 
-Autori porovnali túto metódu s metódami \textit{GradCAM} alebo \textit{LIME}, metóda \textit{RISE} si oproti týmto dvom metódam počínala lepšie (Obr. \ref{fig:rise_results}).
+Autori porovnali túto metódu s metódami \textit{GradCAM} (\citeauthor*{selvaraju2017grad} \citeyear{selvaraju2017grad}) a \textit{LIME} (\citeauthor*{ribeiro2016should} \citeyear{ribeiro2016should}). Metóda \textit{RISE} si oproti týmto dvom metódam počínala lepšie (Obr. \ref{fig:rise_results}). Vykonali niekoľko experimentov, v ktorých porovnali architektúry neurónových sietí \textit{ResNet50} (\citeauthor*{he2016deep} \citeyear{he2016deep}) a \textit{VGG16} (\citeauthor{simonyan2014very} \citeyear{simonyan2014very}) natrénované na dátových sadách PASCAL VOC07 (\citeauthor*{everingham2010pascal} \citeyear{he2016deep}) a MSCOCO2014 (\citeauthor*{lin2014microsoft} \citeyear{lin2014microsoft}). Sledovali metriky \textit{insertion} a \textit{deletion} (Obr. \ref{fig:rise_results}). Metrika \textit{insertion} je vyjadrená ako plocha pod krivkou (angl. Area Under Curve - AUC) funkcie $y = f(x)$, kde $y$ je istota predikcie a $x$ je počet pridaných najdôležijetších pixelov, dôležitosť pixelov je určená metódou vysvetľovania predikcie neurónovej siete a môže byť zobrazené pomocou tepelnej mapy. Metrika \textit{deletion} naopak odoberá najdôležitejšie pixely z obrázka.
 
 \begin{figure}[h!]
 \centering
 \includegraphics[scale=0.5]{assets/images/rise_results.png}
-\caption{Porovnanie metódy \textit{RISE} s \textit{GradCAM} alebo \textit{LIME}. \cite{petsiuk2018rise} V prvom riadku sú tepelné mapy jednotlivých metód pre vstup. V druhom riadku je znázornená porovnávaná metrika. Táto metrika sleduje vzťah medzi odobratím najvýznamnejších pixelov (podľa tepelnej mapy) a výslednú predikciu modelu. Na grafoch si môžeme všimnúť, že metóda \textit{RISE} potrebuje odobrať menej pixelov na to aby klesla pravdepodobnosť predikovanej triedy. To znamená, že tepelná mapa (metódy \textit{RISE} oproti ostatným metódam) lepšie zaznamenáva dôležité pixely pre predikovanú triedu.}
+\caption{Porovnanie metódy \textit{RISE} s \textit{GradCAM} alebo \textit{LIME}. \cite{petsiuk2018rise} V prvom riadku sú tepelné mapy jednotlivých metód pre vstup. V druhom riadku je znázornená porovnávaná metrika \textit{deletion}. Táto metrika sleduje vzťah medzi odobratím najdôležijetších pixelov a výslednou predikciou modelu. Je vyčíslená pomocou výpočtu plochy pod krivkou (angl. AUC - Area Under Curve). Na grafoch si môžeme všimnúť, že metóda \textit{RISE} potrebuje odobrať menej pixelov na to aby klesla pravdepodobnosť predikovanej triedy. To znamená, že tepelná mapa (metódy \textit{RISE} oproti ostatným metódam) lepšie zaznamenáva dôležité pixely pre predikovanú triedu.}
 \label{fig:rise_results}
 \end{figure}
 
 \section{Využitie neurónových sietí pri odhaľovaní Alzheimerovej choroby}
 
-Neurónovým sieťam sa doposiaľ podarilo dosiahnuť veľmi dobré výsledky pri odhaľovaní Alzhemiemerovej choroby. Medzi state-of-the-art riešenia patrí konvolučná neurónová sieť od \citeauthor{esmaeilzadeh2018end} s presnosťou \textbf{94.1\%} (a s $F_2$ skóre 0.93\%) na populárnej dátovej množine s názvom \textit{ADNI-1}. Vstupom do tejto neurónovej siete boli snímky z magnetickej rezonancie (MRI) ale aj demografické informácie akými sú napríklad vek alebo pohlavie. Autor avšak nereportuje úspešnosť modelu, ktorý bol natrénovaný iba z obrazových dát, táto úspešnosť by bola pravdepodobne o niečo nižšia.
+Neurónovým sieťam sa doposiaľ podarilo dosiahnuť veľmi dobré výsledky pri odhaľovaní Alzhemiemerovej choroby. Medzi state-of-the-art riešenia patrí konvolučná neurónová sieť od \citeauthor*{esmaeilzadeh2018end} s presnosťou \textbf{94.1\%} (a s $F_2$ skóre 0.93\%) na populárnej dátovej množine s názvom \textit{ADNI-1}. Tento výsledok dosiahli v úlohe klasifikácie iba do CN a AD, pridaním MCI sa presnosť výrazne znižuje. Vstupom do tejto neurónovej siete boli snímky z magnetickej rezonancie (MRI) ale aj demografické informácie akými sú napríklad vek alebo pohlavie. Autor avšak nereportuje úspešnosť modelu, ktorý bol natrénovaný iba z obrazových dát, táto úspešnosť by bola pravdepodobne o niečo nižšia.
 
 S takto vysokou úspešnosťou môžu byť neurónové siete veľmi dobrým pomocníkom doktorov. Problémom však je, že sa správajú ako čierne skrinky, preto je potrebné ich rozhodnutia interpretovať, aby bolo pre doktora zrejmé na základe čoho sa neurónová sieť urobila svoju predikciu.
 
