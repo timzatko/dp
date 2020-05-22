@@ -1,6 +1,6 @@
 \chapter{Analýza}
 
-\section{Alzheimerova choroba}
+\section{Alzheimerova choroba \label{sec:ad}}
 
 Alzheimerova choroba je najčastejšou príčinou demencie. Prvotné príznaky tejto choroby sú zhoršenie pamäti, zabúdanie nedávnych udalostí, mien, neschopnosť rozoznávať známe miesta či orientovať sa v čase \cite{Alzheimer.sk_2019}. Jej priebeh sa vyznačuje postupným poklesom kognitívnych funkcií, postupným zhoršením pamäte, myslenia, rozprávania a schopnosti učenia sa \cite{duthey2013background}. Najčastejšie sa vyskytuje u ľudí starších ako 65 rokov, s pravdepodobnosťou výskytu až 50\% po dovŕšení 85 rokov života \cite{duthey2013background}.
 % khan2016biomarkers uvadza 24–33%, dafuuuuq???
@@ -226,11 +226,9 @@ Autori porovnali túto metódu s metódami \textit{GradCAM} (\citeauthor*{selvar
 \label{fig:rise_results}
 \end{figure}
 
-\section{Využitie neurónových sietí pri odhaľovaní Alzheimerovej choroby}
+\section{Využitie neurónových sietí pri odhaľovaní Alzheimerovej choroby \label{sec:nn_ad_prediction}}
 
-Neurónovým sieťam sa doposiaľ podarilo dosiahnuť veľmi dobré výsledky pri odhaľovaní Alzhemiemerovej choroby. Medzi state-of-the-art riešenia patrí konvolučná neurónová sieť od \citeauthor*{esmaeilzadeh2018end} s presnosťou \textbf{94.1\%} (a s $F_2$ skóre 0.93\%) na populárnej dátovej množine s názvom \textit{ADNI-1}. Tento výsledok dosiahli v úlohe klasifikácie iba do CN a AD, pridaním MCI sa presnosť výrazne znižuje. Vstupom do tejto neurónovej siete boli snímky z magnetickej rezonancie (MRI) ale aj demografické informácie akými sú napríklad vek alebo pohlavie. Autor avšak nereportuje úspešnosť modelu, ktorý bol natrénovaný iba z obrazových dát, táto úspešnosť by bola pravdepodobne o niečo nižšia.
-
-S takto vysokou úspešnosťou môžu byť neurónové siete veľmi dobrým pomocníkom doktorov. Problémom však je, že sa správajú ako čierne skrinky, preto je potrebné ich rozhodnutia interpretovať, aby bolo pre doktora zrejmé na základe čoho sa neurónová sieť urobila svoju predikciu.
+Neurónovým sieťam sa doposiaľ podarilo dosiahnuť veľmi dobré výsledky pri odhaľovaní Alzhemiemerovej choroby. Medzi state-of-the-art riešenia patrí konvolučná neurónová sieť od \citeauthor*{esmaeilzadeh2018end} s presnosťou \textbf{94.1\%} (a s $F_2$ skóre 93\%) na populárnej dátovej množine s názvom \textit{ADNI-1}. Tento výsledok dosiahli v úlohe klasifikácie iba do CN a AD (bez MCI). Vstupom do tejto neurónovej siete boli snímky z magnetickej rezonancie (MRI) ale aj demografické informácie akými sú napríklad vek alebo pohlavie. Autor avšak nereportuje úspešnosť modelu, ktorý bol natrénovaný iba z obrazových dát, táto úspešnosť by bola pravdepodobne o niečo nižšia. 
 
 \subsection{Vysvetľovanie rozhodnutí neurónových sietí detegujúcich Alzheimerovu chorobu}
 
@@ -266,7 +264,15 @@ Najviac relevancie je na miestach s červenou farbou.
 
 \section{Zhrnutie}
 
-\lipsum[5]
+TODO: 2.1
+TODO: 2.2
+TODO: 2.3
+
+Neurónové siete už dosiahli pri detekcii Alzheimerovej choroby veľmi dobré výsledky (presnosť až \textbf{94.1\%} \ref{sec:nn_ad_prediction}). S takto vysokou úspešnosťou môžu byť veľmi dobrým pomocníkom doktorov. Do úvahy však musíme zobrať, že tieto výsledky boli dosiahnuté bez klasifikácie MCI pacientov. V reálnom svete doktora navštívia všetky typy pacientov - CN, MCI a AD, preto musí byť takáto neurónová sieť byť natrénovaná na klasifikáciu každého z nich. Takýto model, by mal výrazne nižšiu úspešnosť. Táto úspešnosť bola tiež dosiahnutá použitím informácií o veku a pohlaví pacienta. Keďže pravdepodobnosťou výskytu Alzheimerovej choroby po dovŕšení 85 rokov života je až 50\% \ref{sec:ad}, je možné, že sa pri vyššom veku model začne rozhodovať najmä na základe neho a nie na základe obrazových dát. Preto si myslím, že v produkčnom modely by sa tento atribút mal vynechať. 
+
+Ďaľším problémom neurónových sietí je, že sa správajú ako čierne skrinky. Preto je potrebné ich rozhodnutia interpretovať, aby bolo pre doktora zrejmé na základe čoho sa neurónová sieť urobila svoju predikciu. V tomto práve môžu pomôcť metódy na vysvetľovanie rozhodnutí neurónovej siete (white-box metódy), alebo iné black-box metódy.
+
+Používaním neurónovích sietí ako pomocníka pre doktórov, nebráni len ich vysvetliteľnosť, ale aj ich schopnosť detekcie ochorenia, keďže aj tu je priestor na zlepšenie - napr. úspešnosti klasifikácie do CN, MCI a AD.
 
 % TODO
 % 1-3 strany

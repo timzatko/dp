@@ -5,7 +5,7 @@
 \defcounter {refsection}{0}\relax 
 \contentsline {chapter}{\numberline {2}Anal\IeC {\'y}za}{5}{chapter.2}
 \defcounter {refsection}{0}\relax 
-\contentsline {section}{\numberline {2.1}Alzheimerova choroba}{5}{section.2.1}
+\contentsline {section}{\numberline {2.1}Alzheimerova choroba }{5}{section.2.1}
 \defcounter {refsection}{0}\relax 
 \contentsline {subsection}{\numberline {2.1.1}Diagnostika Alzheimerovej choroby}{6}{subsection.2.1.1}
 \defcounter {refsection}{0}\relax 
@@ -29,7 +29,7 @@
 \defcounter {refsection}{0}\relax 
 \contentsline {subsubsection}{\numberline {2.2.2.3}RISE - Randomized Input Sampling for Explanation}{15}{subsubsection.2.2.2.3}
 \defcounter {refsection}{0}\relax 
-\contentsline {section}{\numberline {2.3}Vyu\IeC {\v z}itie neur\IeC {\'o}nov\IeC {\'y}ch siet\IeC {\'\i } pri odha\IeC {\v l}ovan\IeC {\'\i } Alzheimerovej choroby}{17}{section.2.3}
+\contentsline {section}{\numberline {2.3}Vyu\IeC {\v z}itie neur\IeC {\'o}nov\IeC {\'y}ch siet\IeC {\'\i } pri odha\IeC {\v l}ovan\IeC {\'\i } Alzheimerovej choroby }{17}{section.2.3}
 \defcounter {refsection}{0}\relax 
 \contentsline {subsection}{\numberline {2.3.1}Vysvet\IeC {\v l}ovanie rozhodnut\IeC {\'\i } neur\IeC {\'o}nov\IeC {\'y}ch siet\IeC {\'\i } deteguj\IeC {\'u}cich Alzheimerovu chorobu}{18}{subsection.2.3.1}
 \defcounter {refsection}{0}\relax 
