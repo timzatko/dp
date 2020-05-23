@@ -1,5 +1,65 @@
 \chapter{Návrh riešenia}
 
+Tak ako sme už spomenuli, pre použitie neurónových sietí v bežnej praxi doktorov pri diagnostike Alzheimerovej choroby je nevyhnutné, aby sa rozhodnutia neurónových sietí dali vysvetliť. Preto navrhujeme metódu na vyvsvetľovanie rozhodnutí neurónových sietí, ktorú overíme na snímkoch z MRI u pacientov s Alzheimerovou chorobou.
 
-\section{Zhrnutie}
+Navrhujeme metódu, ktorá vychádza z už existujúcej metódy \textit{RISE} (Sek. \ref{cap:rise}). Táto metóda dosiahla veľmi dobré výsledky oproti metódam GradCAM a LIME a je teda vhodným základom na možné vylepšenia. Táto metóda slúži na pricípe zakrývania častí obrázka (tak ako iné perturbačné metódy) jednou farbou, zvyčajne čiernou. Po takomto prekrytí u iných perturbačných metódach vznikajú ostré hrany, čo môže neurónovú sieť mýliť. RISE tento problém rieši, a miesta ktoré prekrýva nemajú ostré hrany, avšak prekryté miesta sú stále čierne. Keďže v MRI snímky sú v odtieňoch čiernej (a u AD jedincov je na snímkovch oveľa viac ''čiernej'' z dôvody úbytku mozgového tkaniva) môže byť toto ďaľším zdrojom zmätenia pre neurónovú sieť. Preto navrhujeme zakrývané miesta dokresliť určitou metódou spracovania obrazu (Sek. \ref{cap:image_processing}) alebo na zakrytie použiť inú farbu.
 
+\section{RISEI - Randomized Input Sampling for Explanation with Inpainting}
+
+Metódu sme pomenovali \textit{Randomized Input Sampling for Explanation with Inpainting} (tj. náhodné vzorkovanie vstupu pre vysvetlovanie s dokreslovaním) so skratkou \text{RISEI}.
+
+Keďže metóda vychádza už z existujúcej metódy, časť tejto metódy je samozrejme rovnaká. Proces vytvorenia vysvetlenia klasifikácie do triedy $T$ pre obrázok $O$ modelom je teda nasledovný:
+
+\begin{enumerate}
+    \item Vytvorenie \textit{N} náhodne zamaskovaných obrázkov z obrázka $O$
+    \item Vloženie zamaskovaných obrázkov do modelu a následné získanie pravdepodobností pre triedu $T$
+    \item Vytvorenie a vizualizácia vysvetlenia pomocou tepelnej mapy
+\end{enumerate}
+
+Toto sú 3 hlavné kroky z ktorých pozostáva táto metóda, ďalej bližšie popíšeme jednotlivé z nich.
+
+\paragraph{Vytvorenie náhodne zamaskovaných obrázkov}
+
+Vytvorenie náhodne zamaskovaných obrázkov tiež pozostáva z niekoľkých krokov, pričom niektoré z nich môžu bežať paralelne. Tento sme vizualizovali do diagramu (Obr. \ref{fig:risei_diagram}). Masky sa vytvárajú paralelne, pretože ''čierna'' maska ma jemné hrany a na dokreslenie potrebujeme masku s ostrými hranami.
+
+\begin{figure}[h!]
+    \centering
+    \includegraphics[scale=0.45]{assets/images/risei_diagram.png}
+    \caption{BPMN diagram generovania jedného obrázka prekrytého maskou}
+    \label{fig:risei_diagram}
+\end{figure}
+
+Oproti metóde \textit{RISE} vytvárame o jednu masku naviac a teda je originálny obrázok prekrytý z viacerými maskami. Jednotlivé masky cez seba prekryjeme, pričom každej z nich nastavíme určité množstvo priehľadnosti. S týmto pomerom môžeme ďalej experimentovať a výsledky porovnávať. Môžeme porovnať použitie iba dokreslenej masky s iba čiernou maskou a tiež s použitím oboch v rôznych pomeroch.
+
+Vytvorenie ''čiernej'' masky je rovnaké ako pri metóde \textit{RISE}. Dokreslená maska vznikne dokreslením zakrytých (zamaskovaných) častí obrázka pomocou jedného z algoritmov na dokreslovanie (angl. inpainting). Tieto algoritmy sme popísali v sekcii \ref{cap:image_processing} Spracovanie obrazu.
+
+\paragraph{Vytvorenie a vizualizácia vysvetlenia pomocou tepelnej mapy}
+
+Tento krok je identický s originálnou metódou \textit{RISE}. Nasledovný vzorec \ref{eq:risei_heatmap_1} vyjadruje výpočet dôležitosti $I$ pre každý pixel $[x, y]$ obrázka, kde $n$ je počet všetkých zamaskovaných obrázkov. Funkcia $p(k, x, y)$ vracia $0$ ak pixel $[x, y]$ bol v danom zamaskovanom obrázku $k$ prekrytý, inak vracia predikciu (pravdepodobnosť) z modelu pre zamaskovaný obrázok $k$.
+
+\begin{equation}
+    I_{x, y} = \frac{\sum_{k}^{n} p(k, x, y)}{n}
+    \label{eq:risei_heatmap_1}
+\end{equation}
+
+Táto metóda do orignálnej pridáva niekoľko parametrov, a najmä výpočtovo náročné dokreslovanie, preto bude nutné nájsť vhodné nastavenie parametrov aby výpočet vysvetlenia nebol príliš časovo náročný. Práve výpočtová náročnosť môže byť slabinou tejto metódy.
+
+\section{Experimenty}
+
+Našu metódu budeme najsôr porovnávať s originálnou metódou RISE a následne s metódou LRP. Tieto experimenty môžeme vykonávať na CN a AD vzorkách; a aj na CN, MCI a AD vzorkách.
+
+\subsection{Dátová sada} Experimenty budeme vykonávať na dátovej sade ADNI, ktorá obsauje MRI snímky AD pacientov. Táto dátova sada bola použitá aj na trénovanie state-of-the-art modelu na diagnsotiku Alzheimerovej choroby \cite{esmaeilzadeh2018end}, ale aj pri vysvetlovaní rozhodnutí neurónovej siete pomocou LRP \cite{bohle2019layer}. Na tejto dátovej sade budeme musieť vykonáť rovnaké predspracovanie ako \citeauthor*{bohle2019layer} aby sme sa s ich výsledkami mohli porovnať. Prípadne môžeme vykonať vlastný preprocessing, ale budeme musieť vykonať aj experimenty s metódou LRP.
+
+\subsection{Metriky}
+
+Budeme vyhodnocovať kvalitu tepelných máp a správnosť tepelných máp. 
+
+\paragraph{Kvalita tepelných máp} Kvalitou tepelnej mapy myslíme, že ako veľmi odzrkadluje to, na základe čoho sa model rozhoduje. Toto budeme merať metrikami \textit{insertion (AUC)} a \textit{deletion (AUC)}, ktoré sme bližšie popísali v sekcii \ref{sec:rise}. Táto metrika nám povie ako dobrá je naša metóda na vysvetlovanie.
+
+\paragraph{Správnosť tepelných máp} Správnosťou tepelných máp myslíme, do akej miery dávajú tepelné mapy zmysel v kontexte skutočnej anatómie mozgu. Sledujeme, že či tepelná mapa nehovorí o tom, že sa model rozhodol na základe takej oblasti mozgu, z ktorej sa Alzheimerova choroba nedá zistiť. Veľkú úlohu v tejto metrike teda zohráva aj kvalita natrénovaného modelu. Táto metriky je súborom niekoľkých metrík z práce, s ktorou sa porovávame od \citeauthor*{bohle2019layer}.
+
+% TODO: tell more about those metrics, ffs
+
+\section{Záver}
+
+V tejto kapitole sme navrhli metódu na vyvsvetľovanie predikcii neurónovej siete, spôsob jej implementácie a vyhodnocovania.

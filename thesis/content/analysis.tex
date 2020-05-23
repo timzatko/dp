@@ -149,7 +149,7 @@ Na získanie realistickejších prototypov (prototypov, ktoré sa viac podobajú
 
 Niektoré metódy vysvetľovania fungujú na základe zakrývania častí obrázka a sledovaním zmeny predikcie predikovanej triedy -- perturbačné metódy, iné zasa na základe spätného šírenia (angl. backpropagation) -- napr. LRP, analýza senzitivity.
 
-Každá z metód má svoje výhody a nevýhody, napríklad výhodou perturbačných metód je, že môžu byť použité na akýkoľvek model, keďže jediné čo potrebujú je výstup (predikciu) z modelu. Ich nevýhodou však je, že sú pomalé. Niektoré z metód vysvetľovania bližšie opíšeme v tejto kapitole.
+Každá z metód má svoje výhody a nevýhody, napríklad výhodou perturbačných metód je, že môžu byť použité na akýkoľvek model, keďže jediné čo potrebujú je výstup (predikciu) z modelu. Ich nevýhodou však je, že sú pomalé. Niektoré z metód vysvetľovania bližšie opíšeme v tejto sekcii.
 
 \subsubsection{Analýza senzitivity}
 
@@ -203,7 +203,7 @@ Výhodou LRP oproti analýze senzitivity je, že vysvetlenie (výsledná tepeln�
 
 % TODO: vysvetlit dekonvoluciu???
 
-\subsubsection{RISE - Randomized Input Sampling for Explanation}
+\subsubsection{RISE - Randomized Input Sampling for Explanation \label{sec:rise}}
 
 Túto metódu môžeme zaradiť medzi perturbačné metódy, keďže je tiež založená na zakrývaní jednotlivých častí obrazu a sledovaním zmeny výslednej predikcie modelu. Už z názvu modelu \textit{(Randomized Input Sampling for Explanation)} je zrejmé, že táto metóda využíva náhodu na zakrývanie jednotlivých častí vstupného obrazu. Vstupný obraz je prekrytý náhodou maskou, ktorá je vytvorená nasledovne \cite{petsiuk2018rise}:
 
@@ -226,6 +226,8 @@ Toto sa opakuje $N$ krát. Výsledná tepelná mapa je je vypočítaná ako vá�
 \end{figure}
 
 Autori porovnali túto metódu s metódami \textit{GradCAM} (\citeauthor*{selvaraju2017grad} \citeyear{selvaraju2017grad}) \cite{selvaraju2017grad} a \textit{LIME} (\citeauthor*{ribeiro2016should} \citeyear{ribeiro2016should}) \cite{ribeiro2016should}. Metóda \textit{RISE} si oproti týmto dvom metódam počínala lepšie (Obr. \ref{fig:rise_results}). Vykonali niekoľko experimentov, v ktorých porovnali architektúry neurónových sietí \textit{ResNet50} (\citeauthor*{he2016deep} \citeyear{he2016deep}) \cite{he2016deep} a \textit{VGG16} (\citeauthor{simonyan2014very} \citeyear{simonyan2014very}) \cite{simonyan2014very} natrénované na dátových sadách PASCAL VOC07 (\citeauthor*{everingham2010pascal} \citeyear{everingham2010pascal}) \cite{everingham2010pascal} a MSCOCO2014 (\citeauthor*{lin2014microsoft} \citeyear{lin2014microsoft}) \cite{lin2014microsoft}. Sledovali metriky \textit{insertion} a \textit{deletion} (Obr. \ref{fig:rise_results}). Metrika \textit{insertion} je vyjadrená ako plocha pod krivkou (AUC) funkcie $y = f(x)$, kde $y$ je istota predikcie a $x$ je počet pridaných najdôležijetších pixelov, dôležitosť pixelov je určená metódou vysvetľovania predikcie neurónovej siete a môže byť zobrazené pomocou tepelnej mapy. Metrika \textit{deletion} naopak odoberá najdôležitejšie pixely z obrázka.
+
+Výhodou tejto metódy je, že oproti bežným perturbačným metódam je výrazne rýchlejšia.
 
 \begin{figure}[h!]
     \centering
@@ -251,22 +253,22 @@ Autori experimentovali trénovaním dvoch rôznych modelov, jedného jednoduchš
 
 % TODO: translate max-pooling, dropout?
 
-\subsection{Vysvetľovanie rozhodnutí neurónových sietí detegujúcich Alzheimerovu chorobu}
+\subsection{Vysvetľovanie rozhodnutí neurónových sietí detegujúcich Alzheimerovu chorobu \label{sec:ad_nn_explanation}}
 
-Existujúce práce sa už zaoberali metódami vysvetľovania rozhodnutí neurónových sietí detekujúcich Alzheimerovu chorobu. \citeauthor{bohle2019layer} uviedli možnosti analýzy rozhodnutí za účelom ich vysvetľovania. Konkrétne sa zaoberali metódami vrstvami propagovanej relevancie (LRP) a vedenou spätnou propagáciou (angl. guided backpropagation). Uvádzajú LRP ako metódu na vysvetľovanie invididuálnych rozhodnutí neurónovej siete kde naopak vedenú spätnú propagáciu ako metódu na zistenie oblastí, na ktoré je neurónová sieť senzitívna. Tieto metódy skúmali porovnávaním priemerov tepelných máp (angl. heatmaps) všetkých pozorovaní v predikovaných triedach (2 - AD, HC). Taktiež porovnávali priemerné tepelné mapy pozorovaní podľa spôsobu zaradenia výslednej predikcie (4 - true positive, true negative, false positive, false negative) (Obrázok \ref{fig:lrp_alzheimer}). Okrem iného porovnávali mieru relevancie pri metóde LRP v jednotlivých častiach mozgu u pozorovaní s Alzheimerovou chorobou a u pozorovaní bez nej. Možným vylepšením tejto práce je vyskúšanie metódy LRP aj na pacientoch s miernym kognitývnym poškodením (angl. mild-cognitive impairment), nie len na pacientoch s Alzheimerovoch chorobou a zdravých jedincoch.
+Existujúce práce sa už zaoberali metódami vysvetľovania rozhodnutí neurónových sietí detekujúcich Alzheimerovu chorobu. \citeauthor{bohle2019layer} \citeyear{bohle2019layer} uviedli možnosti analýzy rozhodnutí za účelom ich vysvetľovania. Konkrétne sa zaoberali metódami vrstvami propagovanej relevancie (LRP) a vedenou spätnou propagáciou (angl. guided backpropagation). Uvádzajú LRP ako metódu na vysvetľovanie invididuálnych rozhodnutí neurónovej siete kde naopak vedenú spätnú propagáciu ako metódu na zistenie oblastí, na ktoré je neurónová sieť senzitívna. Tieto metódy skúmali porovnávaním priemerov tepelných máp (angl. heatmaps) všetkých pozorovaní v predikovaných triedach (2 - AD, HC). Taktiež porovnávali priemerné tepelné mapy pozorovaní podľa spôsobu zaradenia výslednej predikcie (4 - true positive, true negative, false positive, false negative) (Obr. \ref{fig:lrp_alzheimer}). Okrem iného porovnávali mieru relevancie pri metóde LRP v jednotlivých častiach mozgu u pozorovaní s Alzheimerovou chorobou a u pozorovaní bez nej. Možným vylepšením tejto práce je vyskúšanie metódy LRP aj na pacientoch s miernym kognitývnym poškodením (angl. mild-cognitive impairment), nie len na pacientoch s Alzheimerovoch chorobou a zdravých jedincoch.
 
 % TODO: este nejake prace
 
 \begin{figure}[h!]
 \centering
 \includegraphics[scale=0.4]{assets/images/lrp_alzheimer.png}
-\caption{\textbf{Priemerná relevancia (z metódy LRP) pozorovaní podľa spôsobu zaradenia výslednej predikcie}
-Najviac relevancie je na miestach s červenou farbou.
+\caption{\textbf{Priemerná relevancia (z metódy LRP ($\beta = 0$)) pozorovaní podľa spôsobu zaradenia výslednej predikcie}
+Najviac relevancie je na miestach so žltou farbou.
 }
 \label{fig:lrp_alzheimer}
 \end{figure}
 
-\section{Spracovanie obrazu}
+\section{Spracovanie obrazu \label{cap:image_processing}}
 
 TODO:
 
@@ -293,11 +295,11 @@ TODO:
 
 \section{Zhrnutie}
 
-Alzhemierova choroba je bez pochyby veľmi nebezpečnou chorobou, keďže nie je ''iba'' o strate pamäti ale patrí k častím príčinám smrti (Kap. \ref{sec:ad}). Diagnostika tejto choroby pozostáva najmä z neuropsychometrických testov a analýzy rádiologických snímkov (napr. z PET, MRI). V súčasnosti tieto rádiologické snímky posudzujú doktori samotný. Práve tu je priestor pre umelú inteligenciu, aby im pri posudzovaní týchto snímkov pomohla.
+Alzhemierova choroba je bez pochyby veľmi nebezpečnou chorobou, keďže nie je ''iba'' o strate pamäti ale patrí k častím príčinám smrti (Sek. \ref{sec:ad}). Diagnostika tejto choroby pozostáva najmä z neuropsychometrických testov a analýzy rádiologických snímkov (napr. z PET, MRI). V súčasnosti tieto rádiologické snímky posudzujú doktori samotný. Práve tu je priestor pre umelú inteligenciu, aby im pri posudzovaní týchto snímkov pomohla.
 
 TODO: 2.2
 
-Neurónové siete už dosiahli pri detekcii Alzheimerovej choroby veľmi dobré výsledky (presnosť až \textbf{94.1\%} (Kap. \ref{sec:nn_ad_prediction})). S takto vysokou úspešnosťou môžu byť veľmi dobrým pomocníkom doktorov. Do úvahy však musíme zobrať, že tieto výsledky boli dosiahnuté bez klasifikácie MCI pacientov. V reálnom svete doktora navštívia všetky typy pacientov - CN, MCI a AD. V tomto prípade najlepšie neurónové siete dosahujú presnosť zatiaľ iba \textbf{61.1\%} (Kap. \ref{sec:nn_ad_prediction}). Tieto výsledky boli taktiež dosiahnuté použitím informácií o veku a pohlaví pacienta. Keďže pravdepodobnosťou výskytu Alzheimerovej choroby po dovŕšení 85 rokov života je až 50\% (Kap. \ref{sec:ad}), je možné, že sa pri vyššom veku pacienta model začne rozhodovať najmä na základe tejto informácie a nie na základe obrazových dát. Preto si myslím, že v produkčnom modely by sa tento atribút mal vynechať. 
+Neurónové siete už dosiahli pri detekcii Alzheimerovej choroby veľmi dobré výsledky (presnosť až \textbf{94.1\%} (Sek. \ref{sec:nn_ad_prediction})). S takto vysokou úspešnosťou môžu byť veľmi dobrým pomocníkom doktorov. Do úvahy však musíme zobrať, že tieto výsledky boli dosiahnuté bez klasifikácie MCI pacientov. V reálnom svete doktora navštívia všetky typy pacientov - CN, MCI a AD. V tomto prípade najlepšie neurónové siete dosahujú presnosť zatiaľ iba \textbf{61.1\%} (Sek. \ref{sec:nn_ad_prediction}). Tieto výsledky boli taktiež dosiahnuté použitím informácií o veku a pohlaví pacienta. Keďže pravdepodobnosťou výskytu Alzheimerovej choroby po dovŕšení 85 rokov života je až 50\% (Sek. \ref{sec:ad}), je možné, že sa pri vyššom veku pacienta model začne rozhodovať najmä na základe tejto informácie a nie na základe obrazových dát. Preto si myslím, že v produkčnom modely by sa tento atribút mal vynechať. 
 
 Ďaľším problémom neurónových sietí je, že sa správajú ako čierne skrinky. Preto je potrebné ich rozhodnutia interpretovať, aby bolo pre doktora zrejmé na základe čoho neurónová sieť urobila svoju predikciu. V tomto práve môžu pomôcť metódy na vysvetľovanie rozhodnutí neurónovej siete (tzv. white-box metódy), alebo iné black-box metódy.
 
