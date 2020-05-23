@@ -93,7 +93,7 @@ TODO:
 \centering
 \includegraphics[scale=0.5]{assets/images/cnn.png}
 \caption{
-    \textbf{Vizualizácia druhej (hore) a tretej vrstvy (dole) konvolučných neurónových sietí naučených na špecifické kategórie objektov (tváre, autá a slony). \cite{Lee_Grosse_Ranganath_Ng}}
+    Vizualizácia druhej (hore) a tretej vrstvy (dole) konvolučných neurónových sietí naučených na špecifické kategórie objektov (tváre, autá a slony). \cite{Lee_Grosse_Ranganath_Ng}
 }
 \label{fig:cnn}
 \end{figure}
@@ -219,24 +219,37 @@ Túto metódu môžeme zaradiť medzi perturbačné metódy, keďže je tiež za
 Toto sa opakuje $N$ krát. Výsledná tepelná mapa je je vypočítaná ako vážený priemer všetkých vygenerovaných masiek, kde váhy sú skóre (pravdepodobnosť predikovanej triedy) z modelu. Tento proces je zobrazený na obrázku \ref{fig:rise_architecture}.
 
 \begin{figure}[h!]
-\centering
-\includegraphics[scale=0.35]{assets/images/rise_architecture.png}
-\caption{Metóda \textit{RISE}. \cite{petsiuk2018rise} Vygenerované masky nahrádzajú vstupný obrázok na, ktorý sú aplikované. Z výstupných predikcii jednotlivých masiek je nakoniec vypočítaná tepelná mapa.}
-\label{fig:rise_architecture}
+    \centering
+    \includegraphics[scale=0.35]{assets/images/rise_architecture.png}
+    \caption{Metóda \textit{RISE}. \cite{petsiuk2018rise} Vygenerované masky nahrádzajú vstupný obrázok na, ktorý sú aplikované. Z výstupných predikcii jednotlivých masiek je nakoniec vypočítaná tepelná mapa.}
+    \label{fig:rise_architecture}
 \end{figure}
 
-Autori porovnali túto metódu s metódami \textit{GradCAM} (\citeauthor*{selvaraju2017grad} \citeyear{selvaraju2017grad}) a \textit{LIME} (\citeauthor*{ribeiro2016should} \citeyear{ribeiro2016should}). Metóda \textit{RISE} si oproti týmto dvom metódam počínala lepšie (Obr. \ref{fig:rise_results}). Vykonali niekoľko experimentov, v ktorých porovnali architektúry neurónových sietí \textit{ResNet50} (\citeauthor*{he2016deep} \citeyear{he2016deep}) a \textit{VGG16} (\citeauthor{simonyan2014very} \citeyear{simonyan2014very}) natrénované na dátových sadách PASCAL VOC07 (\citeauthor*{everingham2010pascal} \citeyear{he2016deep}) a MSCOCO2014 (\citeauthor*{lin2014microsoft} \citeyear{lin2014microsoft}). Sledovali metriky \textit{insertion} a \textit{deletion} (Obr. \ref{fig:rise_results}). Metrika \textit{insertion} je vyjadrená ako plocha pod krivkou (AUC) funkcie $y = f(x)$, kde $y$ je istota predikcie a $x$ je počet pridaných najdôležijetších pixelov, dôležitosť pixelov je určená metódou vysvetľovania predikcie neurónovej siete a môže byť zobrazené pomocou tepelnej mapy. Metrika \textit{deletion} naopak odoberá najdôležitejšie pixely z obrázka.
+Autori porovnali túto metódu s metódami \textit{GradCAM} (\citeauthor*{selvaraju2017grad} \citeyear{selvaraju2017grad}) \cite{selvaraju2017grad} a \textit{LIME} (\citeauthor*{ribeiro2016should} \citeyear{ribeiro2016should}) \cite{ribeiro2016should}. Metóda \textit{RISE} si oproti týmto dvom metódam počínala lepšie (Obr. \ref{fig:rise_results}). Vykonali niekoľko experimentov, v ktorých porovnali architektúry neurónových sietí \textit{ResNet50} (\citeauthor*{he2016deep} \citeyear{he2016deep}) \cite{he2016deep} a \textit{VGG16} (\citeauthor{simonyan2014very} \citeyear{simonyan2014very}) \cite{simonyan2014very} natrénované na dátových sadách PASCAL VOC07 (\citeauthor*{everingham2010pascal} \citeyear{everingham2010pascal}) \cite{everingham2010pascal} a MSCOCO2014 (\citeauthor*{lin2014microsoft} \citeyear{lin2014microsoft}) \cite{lin2014microsoft}. Sledovali metriky \textit{insertion} a \textit{deletion} (Obr. \ref{fig:rise_results}). Metrika \textit{insertion} je vyjadrená ako plocha pod krivkou (AUC) funkcie $y = f(x)$, kde $y$ je istota predikcie a $x$ je počet pridaných najdôležijetších pixelov, dôležitosť pixelov je určená metódou vysvetľovania predikcie neurónovej siete a môže byť zobrazené pomocou tepelnej mapy. Metrika \textit{deletion} naopak odoberá najdôležitejšie pixely z obrázka.
 
 \begin{figure}[h!]
-\centering
-\includegraphics[scale=0.5]{assets/images/rise_results.png}
-\caption{Porovnanie metódy \textit{RISE} s \textit{GradCAM} alebo \textit{LIME}. \cite{petsiuk2018rise} V prvom riadku sú tepelné mapy jednotlivých metód pre vstup. V druhom riadku je znázornená porovnávaná metrika \textit{deletion}. Táto metrika sleduje vzťah medzi odobratím najdôležijetších pixelov a výslednou predikciou modelu. Je vyčíslená pomocou výpočtu plochy pod krivkou (AUC). Na grafoch si môžeme všimnúť, že metóda \textit{RISE} potrebuje odobrať menej pixelov na to aby klesla pravdepodobnosť predikovanej triedy. To znamená, že tepelná mapa (metódy \textit{RISE} oproti ostatným metódam) lepšie zaznamenáva dôležité pixely pre predikovanú triedu.}
-\label{fig:rise_results}
+    \centering
+    \includegraphics[scale=0.5]{assets/images/rise_results.png}
+    \caption{Porovnanie metódy \textit{RISE} s \textit{GradCAM} alebo \textit{LIME}. \cite{petsiuk2018rise} V prvom riadku sú tepelné mapy jednotlivých metód pre vstup. V druhom riadku je znázornená porovnávaná metrika \textit{deletion}. Táto metrika sleduje vzťah medzi odobratím najdôležijetších pixelov a výslednou predikciou modelu. Je vyčíslená pomocou výpočtu plochy pod krivkou (AUC). Na grafoch si môžeme všimnúť, že metóda \textit{RISE} potrebuje odobrať menej pixelov na to aby klesla pravdepodobnosť predikovanej triedy. To znamená, že tepelná mapa (metódy \textit{RISE} oproti ostatným metódam) lepšie zaznamenáva dôležité pixely pre predikovanú triedu.}
+    \label{fig:rise_results}
 \end{figure}
 
 \section{Využitie neurónových sietí pri odhaľovaní Alzheimerovej choroby \label{sec:nn_ad_prediction}}
 
-Neurónovým sieťam sa doposiaľ podarilo dosiahnuť veľmi dobré výsledky pri odhaľovaní Alzhemiemerovej choroby. Medzi state-of-the-art riešenia patrí konvolučná neurónová sieť od \citeauthor*{esmaeilzadeh2018end} s presnosťou \textbf{94.1\%} (a s $F_2$ skóre 93\%) na populárnej dátovej množine s názvom \textit{ADNI-1}. Tento výsledok dosiahli v úlohe klasifikácie iba do CN a AD (bez MCI). Vstupom do tejto neurónovej siete boli snímky z magnetickej rezonancie (MRI) ale aj demografické informácie akými sú napríklad vek alebo pohlavie. Autor avšak nereportuje úspešnosť modelu, ktorý bol natrénovaný iba z obrazových dát, táto úspešnosť by bola pravdepodobne o niečo nižšia. 
+Neurónovým sieťam sa doposiaľ podarilo dosiahnuť veľmi dobré výsledky pri odhaľovaní Alzhemiemerovej choroby. Medzi state-of-the-art riešenia patrí konvolučná neurónová sieť (Obr. \ref{fig:ad_cnn_architecture}) od \citeauthor*{esmaeilzadeh2018end} s presnosťou \textbf{94.1\%} (a s $F_2$ skóre 0.93) na populárnej dátovej množine s názvom \textit{ADNI-1}. Tento výsledok dosiahli v úlohe klasifikácie iba do CN a AD (bez MCI). Vstupom do tejto neurónovej siete boli snímky z magnetickej rezonancie (MRI) ale aj demografické informácie akými sú napríklad vek alebo pohlavie. Autor avšak nereportuje úspešnosť modelu, ktorý bol natrénovaný iba z obrazových dát, táto úspešnosť by bola pravdepodobne o niečo nižšia.
+
+\begin{figure}[h!]
+    \centering
+    \includegraphics[scale=0.35]{assets/images/ad_cnn_architecture.png}
+    \caption{Architektúra konvolučnej neurónovej siete použitej pri detekcii Alzheimerovej choroby. \cite{esmaeilzadeh2018end} Modré kocky sú konvolučné vrstvy, oranžové kocky sú \textit{max-pooling} vrstvy, posledné dve (zelené) vrstvy sú plne prepojené vrstvy. Môžeme si všimnúť, že do posledných dvoch plne prepojených vrstiev okrem obrazových dát vstupujú informácie o veku a pohlaví.}
+    \label{fig:ad_cnn_architecture}
+\end{figure}
+
+V prípade klasifikácie do všetkých troch tried - CN, MCI a AD autori tejto práce dosiahli horšie výsledky oproti binárnej klasifikácii. Ich model dokázal správne zaradiť pacienta s presnosťou \textbf{61.1\%} (a s $F_2$ skóre 0.62) \cite{esmaeilzadeh2018end}. Pri dosiahnutí tohto výsledku použili tzv. učenie s prenosom (angl. transfer learning), ktoré im zlepšilo úspešnosť modelu až o 5.1\%, z pôvodných 54\%. Model, z ktorého učili prenosom je už skôršie spomínaný model na binárnu klasifikáciu pacientov s Alzheimerovou chorobou.
+
+Autori experimentovali trénovaním dvoch rôznych modelov, jedného jednoduchšieho a druhého zložitejšieho. Lepší bol jednoduchší model, pretože nebol tak náchylný na pretrénovanie. Okrem toho v najlepšom modely použili dropout, $l_2$ regularizáciu a augmentované dáta (obrázky otočili po osi x). Tieto ''vylepšenia'' pridávali postupne a sledovali rozdiel v úspešnosti modelu, každé jedno z týchto vylepšení výrazne zlepšilo úspešnosť modelu. V kroku predspracovania dát odstránili z obrázkov také časti, ktoré nepredstavovali tkanivo mozgu (napr. lebka) technikou s názvom BET (\citeauthor*{smith2002fast} \citeyear{smith2002fast}) \cite{smith2002fast}.
+
+% TODO: translate max-pooling, dropout?
 
 \subsection{Vysvetľovanie rozhodnutí neurónových sietí detegujúcich Alzheimerovu chorobu}
 
@@ -280,18 +293,18 @@ TODO:
 
 \section{Zhrnutie}
 
-Alzhemierova choroba je bez pochyby veľmi nebezpečnou chorobou, keďže nie je ''iba'' o strate pamäti ale patrí k častím príčinám smrti \ref{sec:ad}. Diagnostika tejto choroby pozostáva najmä z neuropsychometrických testov a analýzy rádiologických snímkov (napr. z PET, MRI). V súčasnosti tieto rádiologické snímky posudzujú doktori samotný. Práve tu je priestor pre umelú inteligenciu, aby im pri posudzovaní týchto snímkov pomohla.
+Alzhemierova choroba je bez pochyby veľmi nebezpečnou chorobou, keďže nie je ''iba'' o strate pamäti ale patrí k častím príčinám smrti (Kap. \ref{sec:ad}). Diagnostika tejto choroby pozostáva najmä z neuropsychometrických testov a analýzy rádiologických snímkov (napr. z PET, MRI). V súčasnosti tieto rádiologické snímky posudzujú doktori samotný. Práve tu je priestor pre umelú inteligenciu, aby im pri posudzovaní týchto snímkov pomohla.
 
 TODO: 2.2
-% Mozno najst nejake modely ktore detekuju CN, MCI a AD
 
-Neurónové siete už dosiahli pri detekcii Alzheimerovej choroby veľmi dobré výsledky (presnosť až \textbf{94.1\%} \ref{sec:nn_ad_prediction}). S takto vysokou úspešnosťou môžu byť veľmi dobrým pomocníkom doktorov. Do úvahy však musíme zobrať, že tieto výsledky boli dosiahnuté bez klasifikácie MCI pacientov. V reálnom svete doktora navštívia všetky typy pacientov - CN, MCI a AD, preto musí byť takáto neurónová sieť byť natrénovaná na klasifikáciu každého z nich. Takýto model, by mal výrazne nižšiu úspešnosť. Táto úspešnosť bola tiež dosiahnutá použitím informácií o veku a pohlaví pacienta. Keďže pravdepodobnosťou výskytu Alzheimerovej choroby po dovŕšení 85 rokov života je až 50\% \ref{sec:ad}, je možné, že sa pri vyššom veku model začne rozhodovať najmä na základe neho a nie na základe obrazových dát. Preto si myslím, že v produkčnom modely by sa tento atribút mal vynechať. 
+Neurónové siete už dosiahli pri detekcii Alzheimerovej choroby veľmi dobré výsledky (presnosť až \textbf{94.1\%} (Kap. \ref{sec:nn_ad_prediction})). S takto vysokou úspešnosťou môžu byť veľmi dobrým pomocníkom doktorov. Do úvahy však musíme zobrať, že tieto výsledky boli dosiahnuté bez klasifikácie MCI pacientov. V reálnom svete doktora navštívia všetky typy pacientov - CN, MCI a AD. V tomto prípade najlepšie neurónové siete dosahujú presnosť zatiaľ iba \textbf{61.1\%} (Kap. \ref{sec:nn_ad_prediction}). Tieto výsledky boli taktiež dosiahnuté použitím informácií o veku a pohlaví pacienta. Keďže pravdepodobnosťou výskytu Alzheimerovej choroby po dovŕšení 85 rokov života je až 50\% (Kap. \ref{sec:ad}), je možné, že sa pri vyššom veku pacienta model začne rozhodovať najmä na základe tejto informácie a nie na základe obrazových dát. Preto si myslím, že v produkčnom modely by sa tento atribút mal vynechať. 
 
-Ďaľším problémom neurónových sietí je, že sa správajú ako čierne skrinky. Preto je potrebné ich rozhodnutia interpretovať, aby bolo pre doktora zrejmé na základe čoho sa neurónová sieť urobila svoju predikciu. V tomto práve môžu pomôcť metódy na vysvetľovanie rozhodnutí neurónovej siete (white-box metódy), alebo iné black-box metódy.
+Ďaľším problémom neurónových sietí je, že sa správajú ako čierne skrinky. Preto je potrebné ich rozhodnutia interpretovať, aby bolo pre doktora zrejmé na základe čoho neurónová sieť urobila svoju predikciu. V tomto práve môžu pomôcť metódy na vysvetľovanie rozhodnutí neurónovej siete (tzv. white-box metódy), alebo iné black-box metódy.
 
-Používaním neurónovích sietí ako pomocníka pre doktorov, nebráni len ich vysvetliteľnosť, ale aj ich schopnosť detekcie ochorenia, keďže aj tu je priestor na zlepšenie - napr. úspešnosti klasifikácie do CN, MCI a AD.
+Bežným používaním neurónových sietí ako pomocníka pre doktorov, nebráni len ich vysvetliteľnosť, ale aj ich schopnosť detekcie ochorenia, keďže aj tu je priestor na zlepšenie - napr. úspešnosti klasifikácie do CN, MCI a AD.
 
 TODO: 2.3
+TODO: 2.4
 
 % TODO
 % 1-3 strany
