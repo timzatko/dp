@@ -1,14 +1,14 @@
 \chapter{Návrh riešenia}
 
-Tak ako sme už spomenuli, pre použitie neurónových sietí v bežnej praxi doktorov pri diagnostike Alzheimerovej choroby je nevyhnutné, aby sa rozhodnutia neurónových sietí dali vysvetliť. Preto navrhujeme metódu na vyvsvetľovanie rozhodnutí neurónových sietí, ktorú overíme na snímkoch z MRI u pacientov s Alzheimerovou chorobou.
+Tak ako sme už spomenuli, pre použitie neurónových sietí v bežnej praxi doktorov pri diagnostike Alzheimerovej choroby je nevyhnutné, aby sa rozhodnutia neurónových sietí dali vysvetliť. Preto navrhujeme metódu na vyvsvetľovanie rozhodnutí neurónových sietí, ktorú overíme na MRI snímkoch u pacientov (CN, MCI a AD).
 
-Navrhujeme metódu, ktorá vychádza z už existujúcej metódy \textit{RISE} (Sek. \ref{cap:rise}). Táto metóda dosiahla veľmi dobré výsledky oproti metódam GradCAM a LIME a je teda vhodným základom na možné vylepšenia. Táto metóda slúži na pricípe zakrývania častí obrázka (tak ako iné perturbačné metódy) jednou farbou, zvyčajne čiernou. Po takomto prekrytí u iných perturbačných metódach vznikajú ostré hrany, čo môže neurónovú sieť mýliť. RISE tento problém rieši, a miesta ktoré prekrýva nemajú ostré hrany, avšak prekryté miesta sú stále čierne. Keďže v MRI snímky sú v odtieňoch čiernej (a u AD jedincov je na snímkovch oveľa viac ''čiernej'' z dôvody úbytku mozgového tkaniva) môže byť toto ďaľším zdrojom zmätenia pre neurónovú sieť. Preto navrhujeme zakrývané miesta dokresliť určitou metódou spracovania obrazu (Sek. \ref{cap:image_processing}) alebo na zakrytie použiť inú farbu.
+Navrhujeme metódu, ktorá vychádza z už existujúcej metódy \textit{RISE} (Sek. \ref{sec:rise}). Táto metóda dosiahla veľmi dobré výsledky oproti metódam GradCAM a LIME a je teda vhodným základom na možné vylepšenia. Táto metóda slúži na pricípe zakrývania častí obrázka (tak ako iné perturbačné metódy). Po takomto prekrytí u iných perturbačných metódach vznikajú ostré hrany, čo môže neurónovú sieť mýliť, RISE tento problém ale nemá. Avšak tento prekryv býva zvyčajne v čiernej farbe. Keďže v MRI snímky sú v odtieňoch čiernej (a u AD jedincov je na snímkovch oveľa viac ''čiernej'' z dôvody úbytku mozgového tkaniva) môže byť práve toto ďaľším zdrojom zmätenia pre neurónovú sieť. Preto navrhujeme zakrývané miesta dokresliť určitou metódou spracovania obrazu (Sek. \ref{cap:image_processing}) alebo na zakrytie použiť inú farbu.
 
 \section{RISEI - Randomized Input Sampling for Explanation with Inpainting}
 
 Metódu sme pomenovali \textit{Randomized Input Sampling for Explanation with Inpainting} (tj. náhodné vzorkovanie vstupu pre vysvetlovanie s dokreslovaním) so skratkou \text{RISEI}.
 
-Keďže metóda vychádza už z existujúcej metódy, časť tejto metódy je samozrejme rovnaká. Proces vytvorenia vysvetlenia klasifikácie do triedy $T$ pre obrázok $O$ modelom je teda nasledovný:
+Keďže metóda vychádza už z existujúcej metódy, časť našej metódy je samozrejme rovnaká. Proces vytvorenia vysvetlenia klasifikácie do triedy $T$ pre obrázok $O$ modelom je teda nasledovný:
 
 \begin{enumerate}
     \item Vytvorenie \textit{N} náhodne zamaskovaných obrázkov z obrázka $O$
@@ -20,7 +20,7 @@ Toto sú 3 hlavné kroky z ktorých pozostáva táto metóda, ďalej bližšie p
 
 \paragraph{Vytvorenie náhodne zamaskovaných obrázkov}
 
-Vytvorenie náhodne zamaskovaných obrázkov tiež pozostáva z niekoľkých krokov, pričom niektoré z nich môžu bežať paralelne. Tento sme vizualizovali do diagramu (Obr. \ref{fig:risei_diagram}). Masky sa vytvárajú paralelne, pretože ''čierna'' maska ma jemné hrany a na dokreslenie potrebujeme masku s ostrými hranami.
+Vytvorenie náhodne zamaskovaných obrázkov tiež pozostáva z niekoľkých krokov, pričom niektoré z nich môžu bežať paralelne. Tento sme znázornili diagramom (Obr. \ref{fig:risei_diagram}). Masky sa vytvárajú paralelne, pretože ''čierna'' maska ma jemné hrany a na dokreslenie potrebujeme naopak masku s ostrými hranami.
 
 \begin{figure}[h!]
     \centering
@@ -31,7 +31,7 @@ Vytvorenie náhodne zamaskovaných obrázkov tiež pozostáva z niekoľkých kro
 
 Oproti metóde \textit{RISE} vytvárame o jednu masku naviac a teda je originálny obrázok prekrytý z viacerými maskami. Jednotlivé masky cez seba prekryjeme, pričom každej z nich nastavíme určité množstvo priehľadnosti. S týmto pomerom môžeme ďalej experimentovať a výsledky porovnávať. Môžeme porovnať použitie iba dokreslenej masky s iba čiernou maskou a tiež s použitím oboch v rôznych pomeroch.
 
-Vytvorenie ''čiernej'' masky je rovnaké ako pri metóde \textit{RISE}. Dokreslená maska vznikne dokreslením zakrytých (zamaskovaných) častí obrázka pomocou jedného z algoritmov na dokreslovanie (angl. inpainting). Tieto algoritmy sme popísali v sekcii \ref{cap:image_processing} Spracovanie obrazu.
+Vytvorenie ''čiernej'' masky je rovnaké ako pri metóde \textit{RISE}. Dokreslená maska vznikne dokreslením zakrytých (zamaskovaných) častí obrázka pomocou jedného z algoritmov na dokreslovanie (angl. inpainting). Tieto algoritmy sme popísali v sekcii \ref{cap:image_processing} Spracovanie obrazu. V našej metóde budeme experimentovať s rôznymi farbami prekrytia, nielen s čiernou.
 
 \paragraph{Vytvorenie a vizualizácia vysvetlenia pomocou tepelnej mapy}
 
