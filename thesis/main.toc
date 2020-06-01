@@ -33,27 +33,31 @@
 \defcounter {refsection}{0}\relax 
 \contentsline {subsection}{\numberline {2.2.3}Konvolu\IeC {\v c}n\IeC {\'e} neur\IeC {\'o}nov\IeC {\'e} siete}{13}{subsection.2.2.3}
 \defcounter {refsection}{0}\relax 
-\contentsline {subsection}{\numberline {2.2.4}Interpretovanie neur\IeC {\'o}novej siete}{15}{subsection.2.2.4}
+\contentsline {paragraph}{Konvolu\IeC {\v c}n\IeC {\'e} vrstvy}{15}{section*.16}
 \defcounter {refsection}{0}\relax 
-\contentsline {paragraph}{Maximaliz\IeC {\'a}cia aktiv\IeC {\'a}cie (angl. Activation maximization)}{16}{section*.17}
+\contentsline {paragraph}{Zdru\IeC {\v z}ovacie vrstvy}{15}{section*.17}
 \defcounter {refsection}{0}\relax 
-\contentsline {paragraph}{Maximaliz\IeC {\'a}cia aktiv\IeC {\'a}cie s expertom}{16}{section*.19}
+\contentsline {subsection}{\numberline {2.2.4}Interpretovanie neur\IeC {\'o}novej siete}{16}{subsection.2.2.4}
 \defcounter {refsection}{0}\relax 
-\contentsline {subsection}{\numberline {2.2.5}Vysvet\IeC {\v l}ovanie predikcie neur\IeC {\'o}novej siete}{16}{subsection.2.2.5}
+\contentsline {paragraph}{Maximaliz\IeC {\'a}cia aktiv\IeC {\'a}cie (angl. Activation maximization)}{16}{section*.19}
 \defcounter {refsection}{0}\relax 
-\contentsline {subsubsection}{\numberline {2.2.5.1}Anal\IeC {\'y}za senzitivity}{18}{subsubsection.2.2.5.1}
+\contentsline {paragraph}{Maximaliz\IeC {\'a}cia aktiv\IeC {\'a}cie s expertom}{17}{section*.21}
 \defcounter {refsection}{0}\relax 
-\contentsline {subsubsection}{\numberline {2.2.5.2}LRP (angl. layer-wiser relevance propagation)}{19}{subsubsection.2.2.5.2}
+\contentsline {subsection}{\numberline {2.2.5}Vysvet\IeC {\v l}ovanie predikcie neur\IeC {\'o}novej siete}{17}{subsection.2.2.5}
+\defcounter {refsection}{0}\relax 
+\contentsline {subsubsection}{\numberline {2.2.5.1}Anal\IeC {\'y}za senzitivity}{19}{subsubsection.2.2.5.1}
+\defcounter {refsection}{0}\relax 
+\contentsline {subsubsection}{\numberline {2.2.5.2}LRP (angl. layer-wiser relevance propagation)}{20}{subsubsection.2.2.5.2}
 \defcounter {refsection}{0}\relax 
 \contentsline {subsubsection}{\numberline {2.2.5.3}RISE - Randomized Input Sampling for Explanation }{21}{subsubsection.2.2.5.3}
 \defcounter {refsection}{0}\relax 
-\contentsline {section}{\numberline {2.3}Vyu\IeC {\v z}itie neur\IeC {\'o}nov\IeC {\'y}ch siet\IeC {\'\i } pri odha\IeC {\v l}ovan\IeC {\'\i } Alzheimerovej choroby }{22}{section.2.3}
+\contentsline {section}{\numberline {2.3}Vyu\IeC {\v z}itie neur\IeC {\'o}nov\IeC {\'y}ch siet\IeC {\'\i } pri odha\IeC {\v l}ovan\IeC {\'\i } Alzheimerovej choroby }{24}{section.2.3}
 \defcounter {refsection}{0}\relax 
-\contentsline {subsection}{\numberline {2.3.1}Vysvet\IeC {\v l}ovanie rozhodnut\IeC {\'\i } neur\IeC {\'o}nov\IeC {\'y}ch siet\IeC {\'\i } deteguj\IeC {\'u}cich Alzheimerovu chorobu }{24}{subsection.2.3.1}
+\contentsline {subsection}{\numberline {2.3.1}Vysvet\IeC {\v l}ovanie rozhodnut\IeC {\'\i } neur\IeC {\'o}nov\IeC {\'y}ch siet\IeC {\'\i } deteguj\IeC {\'u}cich Alzheimerovu chorobu }{25}{subsection.2.3.1}
 \defcounter {refsection}{0}\relax 
-\contentsline {section}{\numberline {2.4}Spracovanie obrazu }{25}{section.2.4}
+\contentsline {section}{\numberline {2.4}Spracovanie obrazu }{26}{section.2.4}
 \defcounter {refsection}{0}\relax 
-\contentsline {subsection}{\numberline {2.4.1}Inpainting}{25}{subsection.2.4.1}
+\contentsline {subsection}{\numberline {2.4.1}Inpainting}{26}{subsection.2.4.1}
 \defcounter {refsection}{0}\relax 
 \contentsline {section}{\numberline {2.5}Zhrnutie}{26}{section.2.5}
 \defcounter {refsection}{0}\relax 
@@ -67,9 +71,9 @@
 \defcounter {refsection}{0}\relax 
 \contentsline {section}{\numberline {4.1}RISEI - Randomized Input Sampling for Explanation with Inpainting}{32}{section.4.1}
 \defcounter {refsection}{0}\relax 
-\contentsline {paragraph}{Vytvorenie n\IeC {\'a}hodne zamaskovan\IeC {\'y}ch obr\IeC {\'a}zkov.}{32}{section*.26}
+\contentsline {paragraph}{Vytvorenie n\IeC {\'a}hodne zamaskovan\IeC {\'y}ch obr\IeC {\'a}zkov.}{32}{section*.28}
 \defcounter {refsection}{0}\relax 
-\contentsline {paragraph}{Vytvorenie a vizualiz\IeC {\'a}cia vysvetlenia pomocou tepelnej mapy.}{33}{section*.29}
+\contentsline {paragraph}{Vytvorenie a vizualiz\IeC {\'a}cia vysvetlenia pomocou tepelnej mapy.}{33}{section*.31}
 \defcounter {refsection}{0}\relax 
 \contentsline {section}{\numberline {4.2}Overenie rie\IeC {\v s}enia}{34}{section.4.2}
 \defcounter {refsection}{0}\relax 
@@ -83,7 +87,7 @@
 \defcounter {refsection}{0}\relax 
 \contentsline {section}{\numberline {4.3}Z\IeC {\'a}ver}{35}{section.4.3}
 \defcounter {refsection}{0}\relax 
-\contentsline {chapter}{Literat\IeC {\'u}ra}{37}{chapter*.30}
+\contentsline {chapter}{Literat\IeC {\'u}ra}{37}{chapter*.32}
 \defcounter {refsection}{0}\relax 
  \cftpagenumbersoff {chapter} \cftpagenumbersoff {section} \cftpagenumbersoff {subsection} \cftpagenumbersoff {subsubsection} 
 \defcounter {refsection}{0}\relax 

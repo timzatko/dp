@@ -125,7 +125,7 @@ Dopredné neurónové siete (Obr. \ref{fig:ff_nn}) sú jednou z mnoha architekt�
 
 \begin{figure}[h!]
     \centering
-    \includegraphics[scale=1]{assets/images/ff_nn.png}
+    \includegraphics[width=8cm]{assets/images/ff_nn.png}
     \caption{\textbf{Model doprednej neurónovej siete.} \cite{haykin2009neural} Dopredné neurónové siete sa skladajú zo vstupnej vrstvy, skrytých vrstiev a výstupnej vrstvy. Keď hovoríme o počte vrstiev vstupnú vrstvu nepočítame. Neurónová sieť na obrázku má teda dve vrstvy.}
     \label{fig:ff_nn}
 \end{figure}
@@ -143,11 +143,20 @@ Konvolučné neurónové siete sa používajú prevažne v doméne obrazových d
     \label{fig:cnn}
 \end{figure}
 
+Základnými stavebnými blokmi konvolučných neurónových sietí sú konvolučné vrstvy (angl. convolutional layers) a združovacie vrstvy (angl. pooling layers).
+
+\paragraph{Konvolučné vrstvy}
+
+Pomocou konvolučných vrstiev sa neurónová sieť učí extrahovať črty z obrázka \cite{haykin2009neural}. Konvolúcia prebieha tak, že tzv. jadro (angl. kernel) sa posúva po tzv. mape vlastností (angl. feature map) a matematickými operáciami z pôvodnej mapy vlastností a svojich parametrov vytvára novú mapu vlastností. Tieto parametre sú trénovateľné, čo umožňuje sa každému jadru naučiť urćitú črtu - napr. hranu. Konvolučná vrstva tiež dokáže znižovať kompexitu modelu (a teda aj počet jeho parametrov) jej hyper parametrami (angl: stride, padding, depth).
+
+\paragraph{Združovacie vrstvy}
+
+Cieľom združovacích vrstiev je postupne znižovať dimenzionalitu dát, tým znižovať počet počet parametrov modelu, a teda aj jeho komplexitu \cite{o2015introduction}. Najčastejšie sa používajú vrstvy združujúce maximom (angl. max-pooling), ale existujú aj vrsvy združujúce priemerom či súčtom.
 
 \begin{figure}[h!]
     \centering
     \includegraphics[width=12cm]{assets/images/conv_net_architecture.png}
-    \caption{}
+    \caption{\textbf{Príklad architektúry konvolučnej neurónovej siete. \cite{haykin2009neural}} V tejto achitektúre neurónovej siete sa používajú tri konvolučné vrstvy (označené ako \textit{convolution}) a dve združovacie vrstvy (označené ako \textit{subsampling}). Môžeme si všimnúť, že konvolučné vrstvy postupne pridávajú mapy vlastností (tiež ozačované ako: angl. ''volumes'') a tiež mierne znižujú ich veľkosť. Združovacie vrstvy zasa výrazne znižujú ich veľkosť (až o polovicu) a tým aj počet parametrov v neurónovej sieti.}
     \label{fig:conv_net_architecture}
 \end{figure}
 
