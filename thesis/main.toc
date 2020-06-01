@@ -57,27 +57,31 @@
 \defcounter {refsection}{0}\relax 
 \contentsline {chapter}{\numberline {3}Ciele pr\IeC {\'a}ce }{25}{chapter.3}
 \defcounter {refsection}{0}\relax 
-\contentsline {chapter}{\numberline {4}N\IeC {\'a}vrh rie\IeC {\v s}enia}{29}{chapter.4}
+\contentsline {section}{\numberline {3.1}Vytvorenie novej, alebo vylep\IeC {\v s}enie existuj\IeC {\'u}cej met\IeC {\'o}dy pre vysvet\IeC {\v l}ovanie rozhodnut\IeC {\'\i } neur\IeC {\'o}nov\IeC {\'y}ch siet\IeC {\'\i } }{25}{section.3.1}
 \defcounter {refsection}{0}\relax 
-\contentsline {section}{\numberline {4.1}RISEI - Randomized Input Sampling for Explanation with Inpainting}{29}{section.4.1}
+\contentsline {section}{\numberline {3.2}Vyu\IeC {\v z}itie vytvorenej met\IeC {\'o}dy na ur\IeC {\v c}enie miery spr\IeC {\'a}vnosti modelu neur\IeC {\'o}novej siete detekuj\IeC {\'u}cej Alzheimerovu chorobu }{26}{section.3.2}
 \defcounter {refsection}{0}\relax 
-\contentsline {paragraph}{Vytvorenie n\IeC {\'a}hodne zamaskovan\IeC {\'y}ch obr\IeC {\'a}zkov}{30}{section*.23}
+\contentsline {chapter}{\numberline {4}N\IeC {\'a}vrh rie\IeC {\v s}enia}{27}{chapter.4}
 \defcounter {refsection}{0}\relax 
-\contentsline {paragraph}{Vytvorenie a vizualiz\IeC {\'a}cia vysvetlenia pomocou tepelnej mapy}{31}{section*.25}
+\contentsline {section}{\numberline {4.1}RISEI - Randomized Input Sampling for Explanation with Inpainting}{28}{section.4.1}
 \defcounter {refsection}{0}\relax 
-\contentsline {section}{\numberline {4.2}Experimenty}{31}{section.4.2}
+\contentsline {paragraph}{Vytvorenie n\IeC {\'a}hodne zamaskovan\IeC {\'y}ch obr\IeC {\'a}zkov.}{28}{section*.23}
 \defcounter {refsection}{0}\relax 
-\contentsline {subsection}{\numberline {4.2.1}D\IeC {\'a}tov\IeC {\'a} sada}{32}{subsection.4.2.1}
+\contentsline {paragraph}{Vytvorenie a vizualiz\IeC {\'a}cia vysvetlenia pomocou tepelnej mapy.}{29}{section*.26}
 \defcounter {refsection}{0}\relax 
-\contentsline {subsection}{\numberline {4.2.2}Metriky}{32}{subsection.4.2.2}
+\contentsline {section}{\numberline {4.2}Overenie rie\IeC {\v s}enia}{30}{section.4.2}
 \defcounter {refsection}{0}\relax 
-\contentsline {paragraph}{Kvalita tepeln\IeC {\'y}ch m\IeC {\'a}p}{32}{section*.26}
+\contentsline {subsection}{\numberline {4.2.1}D\IeC {\'a}tov\IeC {\'a} sada}{30}{subsection.4.2.1}
 \defcounter {refsection}{0}\relax 
-\contentsline {paragraph}{Spr\IeC {\'a}vnos\IeC {\v t} tepeln\IeC {\'y}ch m\IeC {\'a}p}{32}{section*.27}
+\contentsline {subsection}{\numberline {4.2.2}Experimenty}{31}{subsection.4.2.2}
 \defcounter {refsection}{0}\relax 
-\contentsline {section}{\numberline {4.3}Z\IeC {\'a}ver}{33}{section.4.3}
+\contentsline {subsubsection}{\numberline {4.2.2.1}Ur\IeC {\v c}enie kvality met\IeC {\'o}dy vysvet\IeC {\v l}ovania rozhodnut\IeC {\'\i } modelu}{31}{subsubsection.4.2.2.1}
 \defcounter {refsection}{0}\relax 
-\contentsline {chapter}{Literat\IeC {\'u}ra}{35}{chapter*.28}
+\contentsline {subsubsection}{\numberline {4.2.2.2}Ur\IeC {\v c}enie spr\IeC {\'a}vnosti modelu}{31}{subsubsection.4.2.2.2}
+\defcounter {refsection}{0}\relax 
+\contentsline {section}{\numberline {4.3}Z\IeC {\'a}ver}{31}{section.4.3}
+\defcounter {refsection}{0}\relax 
+\contentsline {chapter}{Literat\IeC {\'u}ra}{33}{chapter*.27}
 \defcounter {refsection}{0}\relax 
  \cftpagenumbersoff {chapter} \cftpagenumbersoff {section} \cftpagenumbersoff {subsection} \cftpagenumbersoff {subsubsection} 
 \defcounter {refsection}{0}\relax 
