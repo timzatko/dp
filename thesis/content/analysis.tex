@@ -43,26 +43,26 @@ Snímky z magnetickej rezonancie (MRI) dokážu zachytiť odumieranie tkaniva (n
 % TODO: Spomenut: MRI (structural), FMRI, MRS?
 
 \begin{figure}[h!]
-\centering
-\includegraphics[scale=0.3]{assets/images/mri_brain_antrophy.png}
-\caption{\textbf{Typické odumieranie mozgového tkaniva zachytené magnetickou rezonanciou.} Obrázok zľava, označený ako CN (angl. cognitive normal), reprezentuje kognitívne normálneho jedinca. Obrázok v strede, označený ako aMCI (angl. amnestic mild cognitive impairment) reprezentuje jedinca s miernym kognitívnym poškodením - na obrázku je zreteľný úbytok mozgového tkaniva (šedá farba) najmä v strede mozgu (ale aj na jeho okrajoch) oproti kognitívne normálnemu jedincovi. Posledný obrázok označený ako AD (angl. Alzheimer’s disease) reprezentuje jedinca s Alzheimerovou chorobou - na obrázku je zreteľný značný úbudok mozgového tkaniva. \cite{khan2016biomarkers}
-} 
-\label{fig:mri_brain_antrophy}
+    \centering
+    \includegraphics[scale=0.3]{assets/images/mri_brain_antrophy.png}
+    \caption{\textbf{Typické odumieranie mozgového tkaniva zachytené magnetickou rezonanciou.} Obrázok zľava, označený ako CN (angl. cognitive normal), reprezentuje kognitívne normálneho jedinca. Obrázok v strede, označený ako aMCI (angl. amnestic mild cognitive impairment) reprezentuje jedinca s miernym kognitívnym poškodením - na obrázku je zreteľný úbytok mozgového tkaniva (šedá farba) najmä v strede mozgu (ale aj na jeho okrajoch) oproti kognitívne normálnemu jedincovi. Posledný obrázok označený ako AD (angl. Alzheimer’s disease) reprezentuje jedinca s Alzheimerovou chorobou - na obrázku je zreteľný značný úbudok mozgového tkaniva. \cite{khan2016biomarkers}
+    } 
+    \label{fig:mri_brain_antrophy}
 \end{figure}
 
 Snímky z pozitrónovej emisnej tomografie (PET) dokážu zachytiť pokles mozgovej aktivity, ktorá je u pacientov s Alzheimerovou chorobou nižšia. Mozgová aktivita odráža úroveň metabolizmu glukózy v mozgu. Na miestach v mozgu, ktoré sú touto chorobou postihnuté, je úroveň metabolizmu glukózy nižšia. Tento jav je znázornený na obrázku \ref{fig:pet}.
 
 \begin{figure}[h!]
-\centering
-\includegraphics[scale=0.5]{assets/images/pet.png}
-\caption{\textbf{Snímky normálneho mozgu a mozgu postihnutého Alzheimerovou chorobou z pozitrónovej emisnej tomografie (PET).} \cite{khan2016biomarkers}
-Na obrázkoch je viditeľná úroveň metabolizmu glukózy, u pacientov s Alzheimerovou chorobou je táto úroveň nižšia (žltá a modrá farba na obrázkoch).
-(a) Mozog kognitívne zdravého jedinca - vyznačuje sa vyššou mozgovou aktivitou.
-(b) Mozog vyznačujúci symptómy Alzheimerovej choroby - je vidieť nižšiu aktivitu v niektorých častiach mozgu oproti kognitívne zdravému jedincovi.
-(c) Mozog postihnutý frontotemporálnou demenciou (angl. frontotemporal dementia), tiež sa vyznačuje nižšou mozgovou aktivitou.
-(d) Mozog postihnutý Alzheimerovou chorobou.
-} 
-\label{fig:pet}
+    \centering
+    \includegraphics[scale=0.5]{assets/images/pet.png}
+    \caption{\textbf{Snímky normálneho mozgu a mozgu postihnutého Alzheimerovou chorobou z pozitrónovej emisnej tomografie (PET).} \cite{khan2016biomarkers}
+    Na obrázkoch je viditeľná úroveň metabolizmu glukózy, u pacientov s Alzheimerovou chorobou je táto úroveň nižšia (žltá a modrá farba na obrázkoch).
+    (a) Mozog kognitívne zdravého jedinca - vyznačuje sa vyššou mozgovou aktivitou.
+    (b) Mozog vyznačujúci symptómy Alzheimerovej choroby - je vidieť nižšiu aktivitu v niektorých častiach mozgu oproti kognitívne zdravému jedincovi.
+    (c) Mozog postihnutý frontotemporálnou demenciou (angl. frontotemporal dementia), tiež sa vyznačuje nižšou mozgovou aktivitou.
+    (d) Mozog postihnutý Alzheimerovou chorobou.
+    } 
+    \label{fig:pet}
 \end{figure}
 
 % Príklad snímku z MRI je zobrazený na obrázku \ref{fig:mri}.
@@ -77,45 +77,79 @@ Na obrázkoch je viditeľná úroveň metabolizmu glukózy, u pacientov s Alzhei
 
 \section{Neurónové siete}
 
-Neurónové siete patria medzi obľúbené techniky strojového učenia. Špeciálnou kategóriou sú hlboké neurónové siete (často označované skratkou DNN od angl. deep neural network), ktoré sa oproti obyčajným neurónovým sieťam odlišujú počtom vrstiev. Hlbokým neurónovým sieťam sa doteraz podarilo dosiahnuť v mnohých úlohách výnimočné výsledky, v ktorých častokrát už dokázali poraziť človeka. % zazdrojovat nejako?
+Neurónové siete patria medzi obľúbené techniky strojového učenia. Špeciálnou kategóriou sú hlboké neurónové siete (často označované skratkou DNN od angl. deep neural network), ktoré sa oproti obyčajným neurónovým sieťam odlišujú počtom vrstiev. Hlbokým neurónovým sieťam sa doteraz podarilo dosiahnuť v mnohých úlohách výnimočné výsledky, v ktorých častokrát už dokázali poraziť človeka. V našej oblasti obrazových rádiologických dát sa používajú najmä konvolučné neurónové siete.
 
-V doméne obrazových dát sa využívajú predovšetkým konvolučné neurónové siete. Tie majú schopnosť naučiť sa rozpoznávať špecifické štruktúry/tvary z obrázka. Toto dokážu pomocou takzvaných konvolučných filtrov, ktoré sa v nižších vrstvách naučia rozoznávať jednoduchšie tvary, akými sú napríklad obrysy alebo hrany. V tých vyšších vrstvách sú to zložitejšie štruktúry akými môžu byť celé objekty v závislosti od typu úlohy na ktorú boli trénované. Ak bola neurónová sieť trénovaná napríklad na klasifikáciu zvierat, môže tým objektom byť pes alebo morča, v prípade ak je úlohou neurónovej siete detekcia Alzheimerovej choroby možu týmito objektami byť niektoré väčšie časti mozgu (napr. hippocampus).
+\citeauthor*{haykin2009neural} \cite{haykin2009neural} definujú neurónovú sieť nasledovne: 
+\begin{quote}Neurónová sieť je veľký paralelný distribuovaný procesor tvorený jednoduchými procesorovými jednotkami, ktorý má prirodzený sklon ukladať poznatky a sprístupňovať ich na použitie. Ľudskému mozgu sa podobá v dvoch aspektoch: 
+    \begin{enumerate}
+        \item Neurónová sieť získava vedomosti zo svojho prostredia prostredníctvom procesu učenia.
+        \item Na uchovanie získaných poznatkov sa používajú prepojenia medzi jednotlivými neurónami.
+    \end{enumerate}
+\end{quote}
+Neurónové siete sú teda inšpirované fungovaním mozgu človeka, keďže napodobňujú jeho fungovanie.
+
+\subsection{Neurón} 
+
+Neurón (Obr. \ref{fig:neuron}) je základnou stavebnou jednotkou neurónových sietí. Matematicky sa dá zapísať ako \cite{haykin2009neural}:
+
+\begin{equation}
+    y_k = \varphi(b_k + \sum_{j=1}^{m} w_{kj}\cdot x_j)
+    \label{eq:neuron}
+\end{equation}
+
+Kde:
+\begin{itemize}
+    \item $x_1, x_2, ... x_m$ sú vstupné signály
+    \item $w_{k1}, x_{k2}, ... x_{km}$ sú váhy neurónu $k$
+    \item $b_k$ je sklon neurónu $k$
+    \item $\varphi(...)$ je aktivačná funkcia
+    \item $y_k$ je výsupný signál neurónu $k$
+\end{itemize}
+
+Parametrami, ktoré sa počas trénovania neurónovej siete menia sú váhy $w_{kj}$ a sklon $b_{k}$, tieto parametre sú takzvané trénovateľné parametre. Tieto parametre sa upravujú pri spätnej propagácii (angl. backpropagation), kedy sa minimalizuje chybová funkcia (angl. loss function).
+
+V neurónových sieťach s viac vrstvami sa stávajú výstupné signály $y$ neurónov jednej vrstvy vstupom $x$ do ďaľšej.
+
+Aktivačná funkcia zabezpečuje nelinearitu neurónu, medzi najpoužívanejšie aktivačné funkcie patria Sigmoid ($S(x) = \frac{1}{1 + e^x}$), Tanh alebo ReLU ($ReLU(x) = max(0, x)$). Jednotlivé neuróny si môžeme predstaviť ako nelineárne funkcie, ktorých spojením do viac vrstiev dokážu skladať ešte zložitejšie a komplexnejšie funkcie.
+
+\begin{figure}[h!]
+    \centering
+    \includegraphics[scale=1]{assets/images/neuron.png}
+    \caption{\textbf{Model neurónu.} \cite{haykin2009neural} Neurón sa skladá zo vstupných signálov a váh, ktoré sú na tieto signály aplikované, sklon ($b_k$ - angl. bias) a aktivačnej funkcie, ktorá zapezpečuje nelinearitu. Vzorec \ref{eq:neuron} matematicky popisuje správanie neurónu.} 
+    \label{fig:neuron}
+\end{figure}
 
 \subsection{Dopredné neurónové siete}
 
-TODO:
+Dopredné neurónové siete (Obr. \ref{fig:ff_nn}) sú jednou z mnoha architektúr neurónových sietí. V dopredných neurónových sieťach výstupný signál z jednej vrsvy nemôže byť vstupným signálom do jej predošlej vrstvy. Signál je prenášaný iba v jednom smere -- dopredu. Dopredné neurónové siete sa môžu skladať z viacerých vrstiev. Základom je vstupná a výstupná vrstva a ľubovolný počet skrytých vrstiev. Ich počet nie je limitovaný, avšak v hlbokých neurónových sieťach (tj. sieťach s veľkým početom skrytých vrstiev) môže nastať problém miznúceho gradientu.
+
+\begin{figure}[h!]
+    \centering
+    \includegraphics[scale=1]{assets/images/ff_nn.png}
+    \caption{\textbf{Model doprednej neurónovej siete.} \cite{haykin2009neural} Dopredné neurónové siete sa skladajú zo vstupnej vrstvy, skrytých vrstiev a výstupnej vrstvy. Keď hovoríme o počte vrstiev vstupnú vrstvu nepočítame. Neurónová sieť na obrázku má teda dve vrstvy.}
+    \label{fig:ff_nn}
+\end{figure}
 
 \subsection{Konvolučné neurónové siete}
 
-TODO:
+Konvolučné neurónové siete sa používajú prevažne v doméne obrazových dát. Tieto siete majú schopnosť naučiť sa rozpoznávať špecifické štruktúry/tvary z obrázka. Toto dokážu pomocou takzvaných konvolučných filtrov, ktoré sa v nižších vrstvách naučia rozoznávať jednoduchšie tvary, akými sú napríklad obrysy alebo hrany (Obr. \ref{fig:cnn}). V tých vyšších vrstvách sú to zložitejšie štruktúry akými môžu byť celé objekty v závislosti od typu úlohy na ktorú boli trénované. Ak bola neurónová sieť trénovaná napríklad na klasifikáciu zvierat, môže tým objektom byť pes alebo morča, v prípade ak je úlohou neurónovej siete detekcia Alzheimerovej choroby možu týmito objektami byť niektoré väčšie časti mozgu (napr. hippocampus).
 
 \begin{figure}[h!]
-\centering
-\includegraphics[scale=0.5]{assets/images/cnn.png}
-\caption{
-    Vizualizácia druhej (hore) a tretej vrstvy (dole) konvolučných neurónových sietí naučených na špecifické kategórie objektov (tváre, autá a slony). \cite{Lee_Grosse_Ranganath_Ng}
-}
-\label{fig:cnn}
+    \centering
+    \includegraphics[scale=0.5]{assets/images/cnn.png}
+    \caption{
+        Vizualizácia druhej (hore) a tretej vrstvy (dole) konvolučných neurónových sietí naučených na špecifické kategórie objektov (tváre, autá a slony). \cite{Lee_Grosse_Ranganath_Ng} Nižšie vrstvy rozoznávajú jednoduchšie štruktúry zatiaľ čo vyššie už dokážu rozonávať aj tie zložitejšie.
+    }
+    \label{fig:cnn}
 \end{figure}
 
-% TODO: o neuronovych sietach vo vseobecnosti, ze na obrazove data sa pouzivaju konvolucky a vseobecne dva riadky ze preco sa pouzivaju, ze su uspesne a to staci
 
-% budeme pouzivat
-
-% \subsubsection{Perceptrón} % na uroven vyskumneho zameru velmi low level, radsej az v analyze DP
-
-% nieco jednoduche na zaciatok
-
-% \subsubsection{Hlboké neurónové siete}
-
-% pretoze ich budeme pouzivat
-
-% \subsubsection{Konvolučné neurónové siete}
-
-% pretoze sa venujeme obrazovym datam
-
-% \subsection{Pochopenie rozhodnutí neurónových sietí}
-% % Angl: Understanding neural networks decisionns
+\begin{figure}[h!]
+    \centering
+    \includegraphics[width=12cm]{assets/images/conv_net_architecture.png}
+    \caption{}
+    \label{fig:conv_net_architecture}
+\end{figure}
 
 \subsection{Interpretovanie neurónovej siete}
 
@@ -300,16 +334,15 @@ TODO:
 
 Alzhemierova choroba je bez pochyby veľmi nebezpečnou chorobou, keďže nie je ''iba'' o strate pamäti ale patrí k častím príčinám smrti (Sek. \ref{sec:ad}). Diagnostika tejto choroby pozostáva najmä z neuropsychometrických testov a analýzy rádiologických snímkov (napr. z PET, MRI). V súčasnosti tieto rádiologické snímky posudzujú doktori samotný. Práve tu je priestor pre umelú inteligenciu, aby im pri posudzovaní týchto snímkov pomohla.
 
-TODO: 2.2
+V doméne obrazových dát sa používajú najmä konvolučné neurónové siete, pretože majú veľmi dobrú schopnosť naučiť sa rozoznávať špecifické objekty z obrázka. Konvolučné neurónové siete sa v nižších vrstvách naučia rozoznávať jednoduchšie tvary/hrany a vo vyšších zložitejšie šruktúry až celé objekty. Keďže jednou z možností diagnostiky Alzheimerovej choroby je diagnstika pomocou rádiologických snímkov, je možné použiť neurónové siete práve pri detekcii tohto ochorenia.
 
-Neurónové siete už dosiahli pri detekcii Alzheimerovej choroby veľmi dobré výsledky (niektoré state-of-the art riešenia dosahujú presnosť až \textbf{95.09\%}, \citeauthor*{suk2016deep}). S takto vysokou úspešnosťou môžu byť veľmi dobrým pomocníkom doktorov. Do úvahy však musíme zobrať, že tieto výsledky boli dosiahnuté bez klasifikácie MCI pacientov. V reálnom svete doktora navštívia všetky typy pacientov - CN, MCI a AD. V tomto prípade neurónové siete dosahujú rádovo nižšiu presnosť. (\citeauthor*{bohle2019layer} - \textbf{61.1\%}). Niektoré práce dosiahli tieto výsledky použitím informácií o veku a pohlaví pacienta. Keďže pravdepodobnosťou výskytu Alzheimerovej choroby po dovŕšení 85 rokov života je až 50\% (Sek. \ref{sec:ad}), je možné, že sa pri vyššom veku pacienta model začne rozhodovať najmä na základe tejto informácie a nie na základe obrazových dát. Zároveň to však môže neurónovej sieti pomôcť, ak nebude brať tento atribút ako hlavný indikátor Alzheimerovej choroby, ale skôr ako pomocný atribút, ktorý bude meniť jej správanie u rôznych typov pacientov. Tu je však dôležité, takúto neurónovú sieť podrobiť dôkladnou analýzou ňjej rozhodnutí. Osobne si ale myslím, že v produkčnom modeli by sa tento atribút mal vynechať. 
+Neurónovým sieťam sa doteraz podarilo dosiahnuť veľmi dobré výsledky pri detekcii Alzhemerovej choroby, niektoré state-of-the art riešenia dosahujú presnosť až \textbf{95.09\%} (\citeauthor*{suk2016deep} \citeyear{suk2016deep}). S takto vysokou úspešnosťou môžu byť veľmi dobrým pomocníkom doktorov. Do úvahy však musíme zobrať, že tieto výsledky boli dosiahnuté bez klasifikácie MCI pacientov. V reálnom svete doktora navštívia všetky typy pacientov - CN, MCI a AD. V tomto prípade neurónové siete dosahujú rádovo nižšiu presnosť (\textbf{61.1\%}, \citeauthor*{bohle2019layer} \citeyear{bohle2019layer}). Niektoré práce dosiahli tieto výsledky použitím informácií o veku a pohlaví pacienta. Keďže pravdepodobnosťou výskytu Alzheimerovej choroby po dovŕšení 85 rokov života je až 50\% (Sek. \ref{sec:ad}), je možné, že sa pri vyššom veku pacienta model začne rozhodovať najmä na základe tejto informácie a nie na základe obrazových dát. Zároveň to však môže neurónovej sieti pomôcť, ak nebude brať tento atribút ako hlavný indikátor Alzheimerovej choroby, ale skôr ako pomocný atribút, ktorý bude meniť jej správanie u rôznych typov pacientov. Tu je však dôležité, takúto neurónovú sieť podrobiť dôkladnou analýzou jej rozhodnutí. Osobne si ale myslím, že v produkčnom modeli by sa tento atribút mal vynechať. 
 
 Ďaľším problémom neurónových sietí je, že sa správajú ako čierne skrinky. Preto je potrebné ich rozhodnutia interpretovať, aby bolo pre doktora zrejmé na základe čoho neurónová sieť urobila svoju predikciu. V tomto práve môžu pomôcť metódy na vysvetľovanie rozhodnutí neurónovej siete (tzv. white-box metódy), alebo iné black-box metódy.
 
 Bežným používaním neurónových sietí ako pomocníka pre doktorov, nebráni len ich vysvetliteľnosť, ale aj ich schopnosť detekcie ochorenia, keďže aj tu je priestor na zlepšenie - napr. úspešnosti klasifikácie do CN, MCI a AD.
 
-TODO: 2.3
-TODO: 2.4
+Pre pochopenie správania sa neurónových sietí poznáme metódy jej interpretovania a vysvetľovania jej rozhodnutí. Interpretovaním neurónovej siete zisťujeme, ako si napríklad neurónová sieť predststavuje jednu z tried, ktorú klasifikuje. Vysvetľovaním jej rozhodnutí zas zisťujeme na základe čoho neurónová sieť spravila svoje rozhodnutie, a teda ktoré zo vstupných vlastnosti pozorovania ju navideli k zaradeniu do určitej triedy. Niektoré z týchto metód (LRP a vedená spätná propagácia) už boli použité pri vysveľovaní rozhodnutí neurónových sietí detekujúcich Alzheimerovu chorobu, avšak zatiaľ len pri binárnej klasifikácii pacientov.
 
 % TODO
 % 1-3 strany
