@@ -153,7 +153,7 @@ Každá z metód má svoje výhody a nevýhody, napríklad výhodou perturbačn�
 
 \subsubsection{Analýza senzitivity}
 
-Analýza senzitivity slúži na vysvetľovanie predikcie neurónovej siete. Táto metóda identifikuje, ktoré z vlastností vstupného pozorovania najviac prispievajú, či už pre alebo proti, výslednej predikcii. Najviac dôležité sú také vlastnosti, ktorých zmenou sa najvýraznejšie zmení výsledná predikcia. Na takéto vlastností je výsledná predikcia najviac senzitívna (resp. citlivá) \cite{montavon2018methods}.
+Analýza senzitivity slúži na vysvetľovanie predikcie neurónovej siete. Táto metóda identifikuje, ktoré z vlastností vstupného pozorovania najviac prispievajú, či už pre alebo proti, výslednej predikcii. Najviac dôležité sú také vlastnosti, ktorých zmenou sa najvýraznejšie zmení výsledná predikcia. Na takéto vlastnosti je výsledná predikcia najviac citlivá \cite{montavon2018methods}.
 
 Výsledok analýzy senzitivity znázornený v tepelnej mape (angl. heatmap) je zobrazený na obrázku \ref{fig:sensitivity_analysis}. Analýza senzitivity zachytáva teda vlastnosti vstupného pozorovania, ktoré k výslednej predikcii prispievajú pozitívne aj negatívne (napr. zmenením určitej vlastnosti vstupu sa výrazne zníži zaradenie do danej triedy). Na výslednej tepelnej mape vlastnosti, ktoré k výslednej predikcii prispievajú pozitívne, a vlastnosti, ktoré k výslednej predikcii prispievajú negatívne (proti), nevieme rozlíšiť. Vieme len, že zmenením danej vlastnosti výrazne ovplyvníme predikciu.
 
@@ -195,7 +195,7 @@ Nasledovné vzorce \ref{eq:lrp_1}, \ref{eq:lrp_2}, \ref{eq:lrp_3} \cite{montavon
 \begin{figure}[h!]
 \centering
 \includegraphics[scale=0.5]{assets/images/lrp.png}
-\caption{\textbf{Výsledné vysvetlenie (v podobe tepelnej mapy) vytvorené použitím LRP s rôznymi hodnotami $\alpha$ a $\beta$ na dátovej sade MNIST. \cite{montavon2018methods}} Pozitívna relevancia je zobrazená červenou farbou . \cite{montavon2018methods} Negatívna relevancia je zobrazená modrou farbou. \cite{montavon2018methods} V prípade, že použijeme $\alpha = 1$ a $\beta = 0$ strácame informáciu o tom, ktoré pixely negatívne (tj. sú proti výslednej predikcii) prispeli k výslednej predikcii (a opačne).}
+\caption{\textbf{Výsledné vysvetlenie (v podobe tepelnej mapy) vytvorené použitím LRP s rôznymi hodnotami $\alpha$ a $\beta$ na dátovej sade MNIST. \cite{montavon2018methods}} Pozitívna relevancia je zobrazená červenou farbou \cite{montavon2018methods}. Negatívna relevancia je zobrazená modrou farbou \cite{montavon2018methods}. V prípade, že použijeme $\alpha = 1$ a $\beta = 0$ strácame informáciu o tom, ktoré pixely negatívne (tj. sú proti výslednej predikcii) prispeli k výslednej predikcii (a opačne).}
 \label{fig:lrp}
 \end{figure}
 
@@ -251,6 +251,9 @@ V prípade klasifikácie do všetkých troch tried - CN, MCI a AD autori tejto p
 
 Autori experimentovali trénovaním dvoch rôznych modelov, jedného jednoduchšieho a druhého zložitejšieho. Lepší bol jednoduchší model, pretože nebol tak náchylný na pretrénovanie. V týchto modeloch použili dropout, $l_2$ regularizáciu a augmentované dáta (obrázky otočili po osi x). Tieto ''vylepšenia'' pridávali postupne a sledovali rozdiel v úspešnosti modelu, každé jedno z týchto vylepšení výrazne zlepšilo úspešnosť modelu. V kroku predspracovania dát odstránili z obrázkov také časti, ktoré nepredstavovali tkanivo mozgu (napr. lebka) technikou s názvom BET (\citeauthor*{smith2002fast} \citeyear{smith2002fast}) \cite{smith2002fast}, pretože z nich sa Alzheimerova choroba nedá diagnostikovať.
 
+Niektoré práce (\citeauthor*{suk2016deep} \citeyear{suk2016deep}) sa zaoberali dokonca klasifikáciou do štyroch tried: AD, CN, pMCI (angl. progressive MCI - pacienti ktorí pokročili k AD do 18 mesiacov), sMCI (angl. stable MC - - pacienti ktorí nepokročili k AD do 18 mesiacov). Táto úloha je samozrejme náročnejšia, najlepší model v tomto prípade dosahoval presnosť 53.72\% \cite{suk2016deep}. V prípade binárnej klasifikácie (AD vs CN) sa autorom podarilo dosiahnuť presnosť až \textbf{95.09}\%, oproti \citeauthor*{esmaeilzadeh2018end} však použili aj rádiologické snímky z PET. Táto práca sa ďalej vyznačuje adaptívnou selekciou čŕt, vďaka ktorej sa autorom podarilo dosiahnuť tak dobré výsledky.
+
+
 % TODO: translate max-pooling, dropout?
 
 \subsection{Vysvetľovanie rozhodnutí neurónových sietí detegujúcich Alzheimerovu chorobu \label{sec:ad_nn_explanation}}
@@ -263,7 +266,7 @@ Existujúce práce sa už zaoberali metódami vysvetľovania rozhodnutí neurón
 \centering
 \includegraphics[scale=0.4]{assets/images/lrp_alzheimer.png}
 \caption{\textbf{Priemerná relevancia (z metódy LRP ($\beta = 0$)) pozorovaní podľa spôsobu zaradenia výslednej predikcie}
-Najviac relevancie je na miestach so žltou farbou.
+Najviac relevancie je na miestach so žltou farbou. \cite{bohle2019layer}
 }
 \label{fig:lrp_alzheimer}
 \end{figure}
@@ -299,7 +302,7 @@ Alzhemierova choroba je bez pochyby veľmi nebezpečnou chorobou, keďže nie je
 
 TODO: 2.2
 
-Neurónové siete už dosiahli pri detekcii Alzheimerovej choroby veľmi dobré výsledky (presnosť až \textbf{94.1\%} (Sek. \ref{sec:nn_ad_prediction})). S takto vysokou úspešnosťou môžu byť veľmi dobrým pomocníkom doktorov. Do úvahy však musíme zobrať, že tieto výsledky boli dosiahnuté bez klasifikácie MCI pacientov. V reálnom svete doktora navštívia všetky typy pacientov - CN, MCI a AD. V tomto prípade najlepšie neurónové siete dosahujú presnosť zatiaľ iba \textbf{61.1\%} (Sek. \ref{sec:nn_ad_prediction}). Tieto výsledky boli taktiež dosiahnuté použitím informácií o veku a pohlaví pacienta. Keďže pravdepodobnosťou výskytu Alzheimerovej choroby po dovŕšení 85 rokov života je až 50\% (Sek. \ref{sec:ad}), je možné, že sa pri vyššom veku pacienta model začne rozhodovať najmä na základe tejto informácie a nie na základe obrazových dát. Preto si myslím, že v produkčnom modely by sa tento atribút mal vynechať. 
+Neurónové siete už dosiahli pri detekcii Alzheimerovej choroby veľmi dobré výsledky (niektoré state-of-the art riešenia dosahujú presnosť až \textbf{95.09\%}, \citeauthor*{suk2016deep}). S takto vysokou úspešnosťou môžu byť veľmi dobrým pomocníkom doktorov. Do úvahy však musíme zobrať, že tieto výsledky boli dosiahnuté bez klasifikácie MCI pacientov. V reálnom svete doktora navštívia všetky typy pacientov - CN, MCI a AD. V tomto prípade neurónové siete dosahujú rádovo nižšiu presnosť. (\citeauthor*{bohle2019layer} - \textbf{61.1\%}). Niektoré práce dosiahli tieto výsledky použitím informácií o veku a pohlaví pacienta. Keďže pravdepodobnosťou výskytu Alzheimerovej choroby po dovŕšení 85 rokov života je až 50\% (Sek. \ref{sec:ad}), je možné, že sa pri vyššom veku pacienta model začne rozhodovať najmä na základe tejto informácie a nie na základe obrazových dát. Zároveň to však môže neurónovej sieti pomôcť, ak nebude brať tento atribút ako hlavný indikátor Alzheimerovej choroby, ale skôr ako pomocný atribút, ktorý bude meniť jej správanie u rôznych typov pacientov. Tu je však dôležité, takúto neurónovú sieť podrobiť dôkladnou analýzou ňjej rozhodnutí. Osobne si ale myslím, že v produkčnom modeli by sa tento atribút mal vynechať. 
 
 Ďaľším problémom neurónových sietí je, že sa správajú ako čierne skrinky. Preto je potrebné ich rozhodnutia interpretovať, aby bolo pre doktora zrejmé na základe čoho neurónová sieť urobila svoju predikciu. V tomto práve môžu pomôcť metódy na vysvetľovanie rozhodnutí neurónovej siete (tzv. white-box metódy), alebo iné black-box metódy.
 

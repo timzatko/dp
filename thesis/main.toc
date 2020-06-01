@@ -9,6 +9,10 @@
 \defcounter {refsection}{0}\relax 
 \contentsline {paragraph}{MCI}{3}{section*.7}
 \defcounter {refsection}{0}\relax 
+\contentsline {paragraph}{MRI}{3}{section*.8}
+\defcounter {refsection}{0}\relax 
+\contentsline {paragraph}{PET}{3}{section*.9}
+\defcounter {refsection}{0}\relax 
 \contentsline {chapter}{\numberline {1}\IeC {\'U}vod}{5}{chapter.1}
 \defcounter {refsection}{0}\relax 
 \contentsline {chapter}{\numberline {2}Anal\IeC {\'y}za}{7}{chapter.2}
@@ -29,9 +33,9 @@
 \defcounter {refsection}{0}\relax 
 \contentsline {subsection}{\numberline {2.2.3}Interpretovanie neur\IeC {\'o}novej siete}{12}{subsection.2.2.3}
 \defcounter {refsection}{0}\relax 
-\contentsline {paragraph}{Maximaliz\IeC {\'a}cia aktiv\IeC {\'a}cie (angl. Activation maximization)}{12}{section*.12}
+\contentsline {paragraph}{Maximaliz\IeC {\'a}cia aktiv\IeC {\'a}cie (angl. Activation maximization)}{12}{section*.14}
 \defcounter {refsection}{0}\relax 
-\contentsline {paragraph}{Maximaliz\IeC {\'a}cia aktiv\IeC {\'a}cie s expertom}{13}{section*.14}
+\contentsline {paragraph}{Maximaliz\IeC {\'a}cia aktiv\IeC {\'a}cie s expertom}{13}{section*.16}
 \defcounter {refsection}{0}\relax 
 \contentsline {subsection}{\numberline {2.2.4}Vysvet\IeC {\v l}ovanie predikcie neur\IeC {\'o}novej siete}{13}{subsection.2.2.4}
 \defcounter {refsection}{0}\relax 
@@ -51,27 +55,29 @@
 \defcounter {refsection}{0}\relax 
 \contentsline {section}{\numberline {2.5}Zhrnutie}{22}{section.2.5}
 \defcounter {refsection}{0}\relax 
-\contentsline {chapter}{\numberline {3}N\IeC {\'a}vrh rie\IeC {\v s}enia}{25}{chapter.3}
+\contentsline {chapter}{\numberline {3}Ciele pr\IeC {\'a}ce }{25}{chapter.3}
 \defcounter {refsection}{0}\relax 
-\contentsline {section}{\numberline {3.1}RISEI - Randomized Input Sampling for Explanation with Inpainting}{26}{section.3.1}
+\contentsline {chapter}{\numberline {4}N\IeC {\'a}vrh rie\IeC {\v s}enia}{29}{chapter.4}
 \defcounter {refsection}{0}\relax 
-\contentsline {paragraph}{Vytvorenie n\IeC {\'a}hodne zamaskovan\IeC {\'y}ch obr\IeC {\'a}zkov}{26}{section*.21}
+\contentsline {section}{\numberline {4.1}RISEI - Randomized Input Sampling for Explanation with Inpainting}{29}{section.4.1}
 \defcounter {refsection}{0}\relax 
-\contentsline {paragraph}{Vytvorenie a vizualiz\IeC {\'a}cia vysvetlenia pomocou tepelnej mapy}{27}{section*.23}
+\contentsline {paragraph}{Vytvorenie n\IeC {\'a}hodne zamaskovan\IeC {\'y}ch obr\IeC {\'a}zkov}{30}{section*.23}
 \defcounter {refsection}{0}\relax 
-\contentsline {section}{\numberline {3.2}Experimenty}{28}{section.3.2}
+\contentsline {paragraph}{Vytvorenie a vizualiz\IeC {\'a}cia vysvetlenia pomocou tepelnej mapy}{31}{section*.25}
 \defcounter {refsection}{0}\relax 
-\contentsline {subsection}{\numberline {3.2.1}D\IeC {\'a}tov\IeC {\'a} sada}{28}{subsection.3.2.1}
+\contentsline {section}{\numberline {4.2}Experimenty}{31}{section.4.2}
 \defcounter {refsection}{0}\relax 
-\contentsline {subsection}{\numberline {3.2.2}Metriky}{28}{subsection.3.2.2}
+\contentsline {subsection}{\numberline {4.2.1}D\IeC {\'a}tov\IeC {\'a} sada}{32}{subsection.4.2.1}
 \defcounter {refsection}{0}\relax 
-\contentsline {paragraph}{Kvalita tepeln\IeC {\'y}ch m\IeC {\'a}p}{28}{section*.24}
+\contentsline {subsection}{\numberline {4.2.2}Metriky}{32}{subsection.4.2.2}
 \defcounter {refsection}{0}\relax 
-\contentsline {paragraph}{Spr\IeC {\'a}vnos\IeC {\v t} tepeln\IeC {\'y}ch m\IeC {\'a}p}{28}{section*.25}
+\contentsline {paragraph}{Kvalita tepeln\IeC {\'y}ch m\IeC {\'a}p}{32}{section*.26}
 \defcounter {refsection}{0}\relax 
-\contentsline {section}{\numberline {3.3}Z\IeC {\'a}ver}{29}{section.3.3}
+\contentsline {paragraph}{Spr\IeC {\'a}vnos\IeC {\v t} tepeln\IeC {\'y}ch m\IeC {\'a}p}{32}{section*.27}
 \defcounter {refsection}{0}\relax 
-\contentsline {chapter}{Literat\IeC {\'u}ra}{31}{chapter*.26}
+\contentsline {section}{\numberline {4.3}Z\IeC {\'a}ver}{33}{section.4.3}
+\defcounter {refsection}{0}\relax 
+\contentsline {chapter}{Literat\IeC {\'u}ra}{35}{chapter*.28}
 \defcounter {refsection}{0}\relax 
  \cftpagenumbersoff {chapter} \cftpagenumbersoff {section} \cftpagenumbersoff {subsection} \cftpagenumbersoff {subsubsection} 
 \defcounter {refsection}{0}\relax 
