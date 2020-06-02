@@ -294,7 +294,7 @@ V prípade klasifikácie do všetkých troch tried - CN, MCI a AD autori tejto p
 
 Autori experimentovali trénovaním dvoch rôznych modelov, jedného jednoduchšieho a druhého zložitejšieho. Lepší bol jednoduchší model, pretože nebol tak náchylný na pretrénovanie. V týchto modeloch použili dropout, $l_2$ regularizáciu a augmentované dáta (obrázky otočili po osi x). Tieto ''vylepšenia'' pridávali postupne a sledovali rozdiel v úspešnosti modelu, každé jedno z týchto vylepšení výrazne zlepšilo úspešnosť modelu. V kroku predspracovania dát odstránili z obrázkov také časti, ktoré nepredstavovali tkanivo mozgu (napr. lebka) technikou s názvom BET (\citeauthor*{smith2002fast} \citeyear{smith2002fast}) \cite{smith2002fast}, pretože z nich sa Alzheimerova choroba nedá diagnostikovať.
 
-Niektoré práce (\citeauthor*{suk2016deep} \citeyear{suk2016deep}) sa zaoberali dokonca klasifikáciou do štyroch tried: AD, CN, pMCI (angl. progressive MCI - pacienti ktorí pokročili k AD do 18 mesiacov), sMCI (angl. stable MC - - pacienti ktorí nepokročili k AD do 18 mesiacov). Táto úloha je samozrejme náročnejšia, najlepší model v tomto prípade dosahoval presnosť 53.72\% \cite{suk2016deep}. V prípade binárnej klasifikácie (AD vs CN) sa autorom podarilo dosiahnuť presnosť až \textbf{95.09}\%, oproti \citeauthor*{esmaeilzadeh2018end} však použili aj rádiologické snímky z PET. Táto práca sa ďalej vyznačuje adaptívnou selekciou čŕt, vďaka ktorej sa autorom podarilo dosiahnuť tak dobré výsledky.
+Niektoré práce (\citeauthor*{suk2016deep} \citeyear{suk2016deep}) sa zaoberali dokonca klasifikáciou do štyroch tried: AD, CN, pMCI (angl. progressive MCI - pacienti ktorí pokročili k AD do 18 mesiacov), sMCI (angl. stable MC - pacienti ktorí nepokročili k AD do 18 mesiacov). Táto úloha je samozrejme náročnejšia, najlepší model v tomto prípade dosahoval presnosť 53.72\% \cite{suk2016deep}. V prípade binárnej klasifikácie (AD vs CN) sa autorom podarilo dosiahnuť presnosť až \textbf{95.09}\%, oproti \citeauthor*{esmaeilzadeh2018end} však použili aj rádiologické snímky z PET. Táto práca sa ďalej vyznačuje adaptívnou selekciou čŕt, vďaka ktorej sa autorom podarilo dosiahnuť tak dobré výsledky.
 
 
 % TODO: translate max-pooling, dropout?
@@ -303,24 +303,55 @@ Niektoré práce (\citeauthor*{suk2016deep} \citeyear{suk2016deep}) sa zaoberali
 
 Existujúce práce sa už zaoberali metódami vysvetľovania rozhodnutí neurónových sietí detekujúcich Alzheimerovu chorobu. \citeauthor{bohle2019layer} \citeyear{bohle2019layer} uviedli možnosti analýzy rozhodnutí za účelom ich vysvetľovania. Konkrétne sa zaoberali metódami vrstvami propagovanej relevancie (LRP) a vedenou spätnou propagáciou (angl. guided backpropagation). Uvádzajú LRP ako metódu na vysvetľovanie invididuálnych rozhodnutí neurónovej siete kde naopak vedenú spätnú propagáciu ako metódu na zistenie oblastí, na ktoré je neurónová sieť senzitívna. Tieto metódy skúmali porovnávaním priemerov tepelných máp (angl. heatmaps) všetkých pozorovaní v predikovaných triedach (2 - AD, HC). Taktiež porovnávali priemerné tepelné mapy pozorovaní podľa spôsobu zaradenia výslednej predikcie (4 - true positive, true negative, false positive, false negative) (Obr. \ref{fig:lrp_alzheimer}). Okrem iného porovnávali mieru relevancie pri metóde LRP v jednotlivých častiach mozgu u pozorovaní s Alzheimerovou chorobou a u pozorovaní bez nej. Možným vylepšením tejto práce je vyskúšanie metódy LRP aj na pacientoch s miernym kognitývnym poškodením (angl. mild-cognitive impairment), nie len na pacientoch s Alzheimerovoch chorobou a zdravých jedincoch.
 
-% TODO: este nejake prace
+% TODO: Este nejake prace...
 
 \begin{figure}[h!]
-\centering
-\includegraphics[scale=0.4]{assets/images/lrp_alzheimer.png}
-\caption{\textbf{Priemerná relevancia (z metódy LRP ($\beta = 0$)) pozorovaní podľa spôsobu zaradenia výslednej predikcie}
-Najviac relevancie je na miestach so žltou farbou. \cite{bohle2019layer}
-}
-\label{fig:lrp_alzheimer}
+    \centering
+    \includegraphics[scale=0.4]{assets/images/lrp_alzheimer.png}
+    \caption{
+        \textbf{Priemerná relevancia (z metódy LRP - $\beta = 0$) pozorovaní podľa spôsobu zaradenia výslednej predikcie} Najviac relevancie je na miestach so žltou farbou. \cite{bohle2019layer}
+    }
+    \label{fig:lrp_alzheimer}
 \end{figure}
 
 \section{Spracovanie obrazu \label{cap:image_processing}}
 
-TODO:
+Keďže pri diagnostike Alzheimerovej choroby sa pracuje s rádiologickými snímkami, čo sú trojrozmerné obrazové dáta, pri jej detekcii neurónovými sieťami je potrebné tieto dáta spracovať technikami spracovania obrazu.
 
-\subsection{Inpainting}
+Metódy spracovania obrazu podľa \citeauthor*{chen2004electrical} \cite{chen2004electrical} rozdeľujeme do nasledovných kategórií:
+\begin{itemize}
+    \item vylepšovanie obrazu (angl. image enhancement)
+    \item rekonštrukcia obrazu (angl. image restoration)
+    \item analýza obrazu (angl. image analysis)
+    \item kompresia obrazu (angl. image compression)
+\end{itemize}
 
-TODO:
+Pri \textbf{vylepšovaní obrazu} je obraz upravovaný predovšetkým heuristickými technikami \cite{chen2004electrical}, môže sa napríkald jednať o upravenie jasu, kontrastu alebo farieb. Cieľom \textbf{rekonštrukcie obrazu} je zrekonštruovať poškodené časti obrazu, napr. pri fotografiách to môžu byť ich vyblednuté časti. Metódy \textbf{analýzy obrazu} umožňujú obraz spracovať tak, že je možné z neho automaticky získať (extrahovať) informácie \cite{chen2004electrical}. Príkladmi analýzy obrazu je segmentácia obrazu, extrakcia hrán alebo analýza textúry. \textbf{Kompresia obrazu} umožňuje zmenšenie veľkosti obrazu znižovaním počtom potrebných bitov na jeho reprezentáciu \cite{chen2004electrical}. Môže sa jednať o zmenšenie rozmerov obrazu, alebo počtu farieb potrebných na jeho reprezentáciu.
+
+V našed doméne budeme pracovať so všetkými týmito technikami. Ako príklad môžem uviesť odstránenie takých častí obrazu, ktoré nepredstavujú mozgové tkanivo (BET - \citeauthor*{smith2002fast} \citeyear{smith2002fast}). Táto technika je kombináciou analýzy obrazu - identifikácia častí na odstránenie a vylepšenia obrazu - samotné odstránenie tých častí. Kompresia obrazu sa používa, v časti predspracovania pred tým ako je samotný snímok použitý ako vstup do neurónovej siete. Metódy rekonštrukcie obrazu sa bežne v tejto oblasti nepoužívajú, avšak my by sme ich chceli v našej práci použiť pri vytváraní novej metódy, preto sa im budeme bližšie venovať.
+
+\subsection{Rekonštrukcia obrazu}
+
+Metódy rekonštrukcie obrazu, alebo inak nazývané aj dokreslenia obrazu (angl. inpainting), podľa \citeauthor{6544390} \cite{6544390} môžeme zaraďiť do nasledovných kategórií:
+\begin{itemize}
+    \item dokresľovanie založené na syntéze textúr
+    \item poloautomatické a rýchle digitálne dokresľovanie
+    \item dokresľovanie založené na parciálnej diferenciálnej rovnici
+    \item dokresľovanie na základe predlohy a vyhľadávania
+    \item hybridné dokresľovanie
+\end{itemize}
+
+Tieto metódy sa líšia rýchlosťou dokresľovania, schopnosti dokreslovať veľké/malé plochy a predovšetkým kvalitou dokreslenia. Metódy dokresľovania založené na syntéze textúr fungujú dobre pre väčšie chýbajúce oblasti, avšak v ich výsledku môžu vzniknúť nežiadúce hrany \cite{6544390}. Dokresľovanie na základe predlohy má zas problémy so zakrivenými štruktúrami \cite{6544390}. Obr. \ref{fig:inpainting} zobrazuje príklady použitia niektorých techník dokreslenia obrazu.
+
+\begin{figure}[h!]
+    \centering
+    \includegraphics[width=10cm]{assets/images/inpainting.png}
+    \caption{
+        \textbf{Príklady dokreslenia obrázkov rôznymi metódami \cite{6544390}.}
+    }
+    \label{fig:inpainting}
+\end{figure}
+
 
 % LOL - Toto neviem ci hej
 % LRP sa taktiež ukázala ako pomerne robustná metóda pre overovanie správnosti modelu, pretože oproti iným metódam na interpretovanie neurónových sietí produkuje stabilnejšie výsledky pri opakovanom trénovaní modelu (tepelné mapy z LRP sú porovnávané po každej epoche s tou predchádzajúcou) \cite{esmaeilzadeh2018end}.

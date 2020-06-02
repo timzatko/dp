@@ -57,37 +57,37 @@
 \defcounter {refsection}{0}\relax 
 \contentsline {section}{\numberline {2.4}Spracovanie obrazu }{26}{section.2.4}
 \defcounter {refsection}{0}\relax 
-\contentsline {subsection}{\numberline {2.4.1}Inpainting}{26}{subsection.2.4.1}
+\contentsline {subsection}{\numberline {2.4.1}Rekon\IeC {\v s}trukcia obrazu}{27}{subsection.2.4.1}
 \defcounter {refsection}{0}\relax 
-\contentsline {section}{\numberline {2.5}Zhrnutie}{26}{section.2.5}
+\contentsline {section}{\numberline {2.5}Zhrnutie}{29}{section.2.5}
 \defcounter {refsection}{0}\relax 
-\contentsline {chapter}{\numberline {3}Ciele pr\IeC {\'a}ce }{29}{chapter.3}
+\contentsline {chapter}{\numberline {3}Ciele pr\IeC {\'a}ce }{31}{chapter.3}
 \defcounter {refsection}{0}\relax 
-\contentsline {section}{\numberline {3.1}Vytvorenie novej, alebo vylep\IeC {\v s}enie existuj\IeC {\'u}cej met\IeC {\'o}dy pre vysvet\IeC {\v l}ovanie rozhodnut\IeC {\'\i } neur\IeC {\'o}nov\IeC {\'y}ch siet\IeC {\'\i } }{29}{section.3.1}
+\contentsline {section}{\numberline {3.1}Vytvorenie novej, alebo vylep\IeC {\v s}enie existuj\IeC {\'u}cej met\IeC {\'o}dy pre vysvet\IeC {\v l}ovanie rozhodnut\IeC {\'\i } neur\IeC {\'o}nov\IeC {\'y}ch siet\IeC {\'\i } }{31}{section.3.1}
 \defcounter {refsection}{0}\relax 
-\contentsline {section}{\numberline {3.2}Vyu\IeC {\v z}itie vytvorenej met\IeC {\'o}dy na ur\IeC {\v c}enie miery spr\IeC {\'a}vnosti modelu neur\IeC {\'o}novej siete detekuj\IeC {\'u}cej Alzheimerovu chorobu }{30}{section.3.2}
+\contentsline {section}{\numberline {3.2}Vyu\IeC {\v z}itie vytvorenej met\IeC {\'o}dy na ur\IeC {\v c}enie miery spr\IeC {\'a}vnosti modelu neur\IeC {\'o}novej siete detekuj\IeC {\'u}cej Alzheimerovu chorobu }{32}{section.3.2}
 \defcounter {refsection}{0}\relax 
-\contentsline {chapter}{\numberline {4}N\IeC {\'a}vrh rie\IeC {\v s}enia}{31}{chapter.4}
+\contentsline {chapter}{\numberline {4}N\IeC {\'a}vrh rie\IeC {\v s}enia}{33}{chapter.4}
 \defcounter {refsection}{0}\relax 
-\contentsline {section}{\numberline {4.1}RISEI - Randomized Input Sampling for Explanation with Inpainting}{32}{section.4.1}
+\contentsline {section}{\numberline {4.1}RISEI - Randomized Input Sampling for Explanation with Inpainting}{34}{section.4.1}
 \defcounter {refsection}{0}\relax 
-\contentsline {paragraph}{Vytvorenie n\IeC {\'a}hodne zamaskovan\IeC {\'y}ch obr\IeC {\'a}zkov.}{32}{section*.28}
+\contentsline {paragraph}{Vytvorenie n\IeC {\'a}hodne zamaskovan\IeC {\'y}ch obr\IeC {\'a}zkov.}{34}{section*.29}
 \defcounter {refsection}{0}\relax 
-\contentsline {paragraph}{Vytvorenie a vizualiz\IeC {\'a}cia vysvetlenia pomocou tepelnej mapy.}{33}{section*.31}
+\contentsline {paragraph}{Vytvorenie a vizualiz\IeC {\'a}cia vysvetlenia pomocou tepelnej mapy.}{35}{section*.32}
 \defcounter {refsection}{0}\relax 
-\contentsline {section}{\numberline {4.2}Overenie rie\IeC {\v s}enia}{34}{section.4.2}
+\contentsline {section}{\numberline {4.2}Overenie rie\IeC {\v s}enia}{36}{section.4.2}
 \defcounter {refsection}{0}\relax 
-\contentsline {subsection}{\numberline {4.2.1}D\IeC {\'a}tov\IeC {\'a} sada}{34}{subsection.4.2.1}
+\contentsline {subsection}{\numberline {4.2.1}D\IeC {\'a}tov\IeC {\'a} sada}{36}{subsection.4.2.1}
 \defcounter {refsection}{0}\relax 
-\contentsline {subsection}{\numberline {4.2.2}Experimenty}{35}{subsection.4.2.2}
+\contentsline {subsection}{\numberline {4.2.2}Experimenty}{37}{subsection.4.2.2}
 \defcounter {refsection}{0}\relax 
-\contentsline {subsubsection}{\numberline {4.2.2.1}Ur\IeC {\v c}enie kvality met\IeC {\'o}dy vysvet\IeC {\v l}ovania rozhodnut\IeC {\'\i } modelu}{35}{subsubsection.4.2.2.1}
+\contentsline {subsubsection}{\numberline {4.2.2.1}Ur\IeC {\v c}enie kvality met\IeC {\'o}dy vysvet\IeC {\v l}ovania rozhodnut\IeC {\'\i } modelu}{37}{subsubsection.4.2.2.1}
 \defcounter {refsection}{0}\relax 
-\contentsline {subsubsection}{\numberline {4.2.2.2}Ur\IeC {\v c}enie spr\IeC {\'a}vnosti modelu}{35}{subsubsection.4.2.2.2}
+\contentsline {subsubsection}{\numberline {4.2.2.2}Ur\IeC {\v c}enie spr\IeC {\'a}vnosti modelu}{37}{subsubsection.4.2.2.2}
 \defcounter {refsection}{0}\relax 
-\contentsline {section}{\numberline {4.3}Z\IeC {\'a}ver}{35}{section.4.3}
+\contentsline {section}{\numberline {4.3}Z\IeC {\'a}ver}{37}{section.4.3}
 \defcounter {refsection}{0}\relax 
-\contentsline {chapter}{Literat\IeC {\'u}ra}{37}{chapter*.32}
+\contentsline {chapter}{Literat\IeC {\'u}ra}{39}{chapter*.33}
 \defcounter {refsection}{0}\relax 
  \cftpagenumbersoff {chapter} \cftpagenumbersoff {section} \cftpagenumbersoff {subsection} \cftpagenumbersoff {subsubsection} 
 \defcounter {refsection}{0}\relax 
