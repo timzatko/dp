@@ -65,7 +65,7 @@
 \defcounter {refsection}{0}\relax 
 \contentsline {section}{\numberline {3.1}Vytvorenie novej, alebo vylep\IeC {\v s}enie existuj\IeC {\'u}cej met\IeC {\'o}dy pre vysvet\IeC {\v l}ovanie rozhodnut\IeC {\'\i } neur\IeC {\'o}nov\IeC {\'y}ch siet\IeC {\'\i } }{31}{section.3.1}
 \defcounter {refsection}{0}\relax 
-\contentsline {section}{\numberline {3.2}Vyu\IeC {\v z}itie vytvorenej met\IeC {\'o}dy na ur\IeC {\v c}enie miery spr\IeC {\'a}vnosti modelu neur\IeC {\'o}novej siete detekuj\IeC {\'u}cej Alzheimerovu chorobu }{32}{section.3.2}
+\contentsline {section}{\numberline {3.2}Vyu\IeC {\v z}itie vytvorenej met\IeC {\'o}dy na ur\IeC {\v c}enie miery spr\IeC {\'a}vnosti modelu neur\IeC {\'o}novej siete deteguj\IeC {\'u}cej Alzheimerovu chorobu }{32}{section.3.2}
 \defcounter {refsection}{0}\relax 
 \contentsline {chapter}{\numberline {4}N\IeC {\'a}vrh rie\IeC {\v s}enia}{33}{chapter.4}
 \defcounter {refsection}{0}\relax 
@@ -93,6 +93,8 @@
 \defcounter {refsection}{0}\relax 
 \contentsline {chapter}{Dodatok \numberline {A}Pl\IeC {\'a}n pr\IeC {\'a}ce }{1}{Dodatok.1.A}
 \defcounter {refsection}{0}\relax 
-\contentsline {section}{\numberline {A.1}Zimn\IeC {\'y} semester}{1}{section.1.A.1}
+\contentsline {section}{\numberline {A.1}Letn\IeC {\'y} semester - DP1}{1}{section.1.A.1}
 \defcounter {refsection}{0}\relax 
-\contentsline {section}{\numberline {A.2}Letn\IeC {\'y} semester}{1}{section.1.A.2}
+\contentsline {section}{\numberline {A.2}Zimn\IeC {\'y} semester - DP2}{1}{section.1.A.2}
+\defcounter {refsection}{0}\relax 
+\contentsline {section}{\numberline {A.3}Letn\IeC {\'y} semester - DP3}{2}{section.1.A.3}
