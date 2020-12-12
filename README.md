@@ -7,6 +7,17 @@ Structure:
 - `colab_notebooks` - contains notebooks which I ran o Google Colaboratory
 - `conda_notebooks` - contains notebooks which I ran in Conda environment
 
+## General Setup
+
+### Prerequisites
+
+- [Python](https://www.python.org/) (for data download)
+
+### Setup
+
+1. `pip install gdown`
+1. Download data from `https://drive.google.com/file/d/1JJIqPQJfwR7GCvwtjtSrAHGY6II0AOTt` and extract them to `tmp/saliencies_and_segmentations_v2`. Run: `sh ./scripts/download_saliences_and_segmentations_v2.sh` 
+
 ## Conda Notebooks
 
 ### Prerequisites
@@ -15,5 +26,4 @@ Structure:
 
 ### Installation
 
-1. `conda config --add channels conda-forge`
-1. `conda install --file requirements.txt`
+1. `conda env create -f environment.yml`

@@ -2,6 +2,9 @@
 .ipynb_checkpoints
 .idea
 
+# Python
+__pycache__
+
 # LaTex
 *.log
 *.aux

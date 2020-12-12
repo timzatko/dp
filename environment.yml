@@ -1,0 +1,14 @@
+name: dp
+
+dependencies:
+  - python=3.7
+  - numpy
+  - matplotlib
+  - pandas
+  - scikit-learn
+  - tensorflow
+  - SimpleITK
+  - scikit-image
+  - tqdm
+  - pillow
+  - opencv

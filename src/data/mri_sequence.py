@@ -2,7 +2,7 @@ import os
 import math
 
 import numpy as np
-import SimpleITK as sitk
+import SimpleITK
 
 from tensorflow.keras.utils import Sequence
 
@@ -11,7 +11,7 @@ from skimage.transform import resize
 
 
 def process_image(path, input_shape, resize_img, normalization):
-    x = sitk.GetArrayFromImage(sitk.ReadImage(path))
+    x = SimpleITK.GetArrayFromImage(SimpleITK.ReadImage(path))
     if resize_img:
         x = resize(x, input_shape[:3])
     if normalization is not None:
@@ -59,11 +59,13 @@ def readfile(file_path):
 
 
 # https://www.tensorflow.org/api_docs/python/tf/keras/utils/Sequence
+#
+# augmentations={ 'random_swap_hemispheres': 0.5 }
 class MRISequence(Sequence):
-    def __init__(self, path, batch_size, input_shape, class_names=['AD', 'CN'],
+    def __init__(self, path, batch_size, input_shape, class_names=('AD', 'CN'),
                  augmentations=None, augmentations_inplace=True, images=True, one_hot=True, class_weight=None,
                  normalization=None, resize_img=True):
-        if one_hot == False:
+        if not one_hot:
             self.encoder = LabelEncoder()
             self.encoder.fit(np.array(class_names))
         else:

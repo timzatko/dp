@@ -1,9 +1,0 @@
-scikit-learn
-tensorflow
-SimpleITK
-scikit-image
-numpy
-tqdm
-pillow
-cv2
-matplotlib
