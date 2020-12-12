@@ -1,5 +1,6 @@
 .DS_Store
 .ipynb_checkpoints
+.idea
 
 # LaTex
 *.log
@@ -11,3 +12,6 @@
 *.blg
 *.fls
 *.toc
+
+# tmp
+tmp
