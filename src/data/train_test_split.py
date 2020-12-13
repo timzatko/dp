@@ -30,13 +30,12 @@ def train_test_split(src, dst, **kwargs):
     print(f"copying to {dst_dir}...\n")
 
     # list of directories to copy
-    src_dirs = os.listdir(src)
-    print('shuffling an array...')
+    src_dirs = list(filter(lambda name: os.path.isdir(os.path.join(src, name)), os.listdir(src)))
     np.random.shuffle(src_dirs)
 
     print('copying files...')
     src_dirs_count = len(src_dirs)
-    for idx, dir in tqdm(enumerate(src_dirs), total=src_dirs_count):
+    for idx, d in tqdm(enumerate(src_dirs), total=src_dirs_count):
         dst_dir = train_dir
 
         if idx > split[0] * src_dirs_count:
@@ -44,6 +43,6 @@ def train_test_split(src, dst, **kwargs):
         if idx > (split[0] + split[1]) * src_dirs_count:
             dst_dir = val_dir
 
-        shutil.copytree(os.path.join(src, dir), os.path.join(dst_dir, dir))
+        shutil.copytree(os.path.join(src, d), os.path.join(dst_dir, d))
 
     return train_dir, test_dir, val_dir

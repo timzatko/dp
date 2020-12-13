@@ -1,4 +1,8 @@
-name: dp
+name: dp-timzatko
+
+channels:
+  - anaconda
+  - conda-forge
 
 dependencies:
   - python=3.7
@@ -6,9 +10,20 @@ dependencies:
   - matplotlib
   - pandas
   - scikit-learn
-  - tensorflow
   - SimpleITK
   - scikit-image
   - tqdm
   - pillow
   - opencv
+  - ipywidgets
+  - scipy
+  - jupyter
+  - libtiff
+  - libxml2
+  - libxslt
+  - lxml
+  - pip
+    - tensorflow=2.3.1
+    - tensorboard=2.4.0
+    - opencv-python
+    - seaborn

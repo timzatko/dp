@@ -131,7 +131,7 @@ def plot_evaluation(image_y, y_pred, eval_seq, title='insertion'):
     ax.set_xlabel(f'voxels')
 
 
-def predict_seq_as_np(model, eval_seq, batch_size, log=False):
+def predict_sequence_as_numpy(model, eval_seq, batch_size, log=False):
     """
     predict_seq_as_np
     eval_seq = sequence to evaluate

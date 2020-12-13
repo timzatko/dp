@@ -15,7 +15,7 @@ Structure:
 
 ### Setup
 
-1. `pip install gdown`
+1. Run - `pip install gdown`
 1. Download data from `https://drive.google.com/file/d/1JJIqPQJfwR7GCvwtjtSrAHGY6II0AOTt` and extract them to `tmp/saliencies_and_segmentations_v2`. Run: `sh ./scripts/download_saliences_and_segmentations_v2.sh` 
 
 ## Conda Notebooks

@@ -62,15 +62,30 @@ def readfile(file_path):
 #
 # augmentations={ 'random_swap_hemispheres': 0.5 }
 class MRISequence(Sequence):
-    def __init__(self, path, batch_size, input_shape, class_names=('AD', 'CN'),
+    def __init__(self, path, batch_size, input_shape, class_names=('CN', 'AD'),
                  augmentations=None, augmentations_inplace=True, images=True, one_hot=True, class_weight=None,
                  normalization=None, resize_img=True):
-        if not one_hot:
-            self.encoder = LabelEncoder()
-            self.encoder.fit(np.array(class_names))
-        else:
+        """
+        MRISequence reads mri images.
+        :param path: path to images
+        :param batch_size: batch size of sequence
+        :param input_shape: images input shape
+        :param class_names: class names
+        :param augmentations: augmentations settings  'random_swap_hemispheres': 0.5 }, if none, augmentations
+                              are disabled
+        :param augmentations_inplace: if false, generates new augmented images, defaults to True
+        :param images:
+        :param one_hot: how y is encoded, one hot (0, 1) or scalar 1
+        :param class_weight: class weights that will be returned by sequence, if not None
+        :param normalization: if to normalize images
+        :param resize_img: if to resize input images to input_shape
+        """
+        if one_hot:
             self.encoder = OneHotEncoder(sparse=False)
             self.encoder.fit(np.array(class_names).reshape(-1, 1))
+        else:
+            self.encoder = LabelEncoder()
+            self.encoder.fit(np.array(class_names))
 
         self.class_weight = class_weight
         self.one_hot = one_hot
@@ -134,6 +149,7 @@ class MRISequence(Sequence):
         return batch_x, batch_y, batch_w
 
     def __encode(self, labels):
+        print(labels);
         if self.one_hot:
             labels = labels.reshape(-1, 1)
         return self.encoder.transform(labels)

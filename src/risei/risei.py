@@ -7,7 +7,6 @@ import numpy as np
 from tqdm import tqdm
 from matplotlib import pyplot as plt
 from skimage.transform import resize
-from skimage.restoration import in_paint
 
 from multiprocessing import Pool
 
@@ -89,7 +88,7 @@ def __get_in_paint_mask_2d(options, image_data, mask, binary_mask):
     inverted_binary_mask = (1 - binary_mask).astype(np.uint8)
 
     for z in range(0, image_data.shape[0]):
-        in_painted_z = cv2.in_paint(
+        in_painted_z = cv2.inpaint(
             image_data[z],
             inverted_binary_mask[z],
             options['in_paint_radius'],
@@ -147,7 +146,7 @@ def __get_binary_mask(options, grid, shift_x, shift_y, shift_z):
     return new_grid[shift_x:input_size[0] + shift_x, shift_y:input_size[1] + shift_y, shift_z:input_size[2] + shift_z]
 
 
-class RISEI():
+class RISEI:
     def __init__(self, input_size, **kwargs):
         self.options = {
             'input_size': input_size,
@@ -157,7 +156,7 @@ class RISEI():
             'b2': kwargs.get('b2', 0.5),  # black mask blend
             'in_paint': kwargs.get('in_paint', '2d'),  # 3d, 2d
             'in_paint_radius': kwargs.get('in_paint_radius', 20),  # in_painting radius
-            'in_paint_algorithm': kwargs.get('in_paint_algorithm', cv2.in_paint_NS),  # cv2.in_paint_TELEA, cv2.in_paint_NS
+            'in_paint_algorithm': kwargs.get('in_paint_algorithm', cv2.INPAINT_NS),  # cv2.INPAINT_TELEA, cv2.INPAINT_NS
             'in_paint_blending': kwargs.get('in_paint_blending', True),
             # if the in_paint is gradually blended into the image
             'debug': kwargs.get('debug', False),
@@ -171,27 +170,27 @@ class RISEI():
 
         self.__get_grid_size()
 
-    def generate_masks(self, N, image, log=True, seed=None):
+    def generate_masks(self, n, image, log=True, seed=None):
         # if we are setting a new seed, save the original seed
         if seed is not None:
             st0 = np.random.get_state()
             np.random.seed(seed)
 
-        self.__initialize_cache(N, image)
+        self.__initialize_cache(n, image)
 
-        grids = self.__get_empty_grids(N)
-        images_data = self.__get_empty_images_data(N)
-        images_mask = self.__get_empty_images_data(N)
+        grids = self.__get_empty_grids(n)
+        images_data = self.__get_empty_images_data(n)
+        images_mask = self.__get_empty_images_data(n)
 
-        params = [{'i': i, 'options': self.options, 'grid': grids[i], 'image_data': image} for i in range(0, N)]
+        params = [{'i': i, 'options': self.options, 'grid': grids[i], 'image_data': image} for i in range(0, n)]
 
         # use process pool only when more than a one process is used
-        # in google colab it causes memory leaks
+        # in google colaboratory it causes memory leaks
         if self.options['processes'] > 1:
             process_pool = Pool(processes=self.options['processes'])
 
             with process_pool as p:
-                with tqdm(desc='Generating masks', total=N, disable=not log) as pbar:
+                with tqdm(desc='Generating masks', total=n, disable=not log) as bar:
                     for i, new_image, mask, cache in p.imap_unordered(generate_mask, params):
                         images_data[i, :, :, :] = new_image
                         images_mask[i, :, :, :] = mask
@@ -199,11 +198,11 @@ class RISEI():
                         if cache is not None:
                             self.__save_to_cache(i, new_image, mask, cache)
 
-                        pbar.update()
+                        bar.update()
 
             process_pool.close()
         else:
-            with tqdm(desc='Generating masks', total=N, disable=not log) as pbar:
+            with tqdm(desc='Generating masks', total=n, disable=not log) as bar:
                 for i, new_image, mask, cache in map(generate_mask, params):
                     images_data[i, :, :, :] = new_image
                     images_mask[i, :, :, :] = mask
@@ -211,7 +210,7 @@ class RISEI():
                     if cache is not None:
                         self.__save_to_cache(i, new_image, mask, cache)
 
-                    pbar.update()
+                    bar.update()
 
         # set back original random seet
         if seed is not None:

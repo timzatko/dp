@@ -2,8 +2,8 @@ import time
 
 import numpy as np
 
-from src.heatmap.evaluation.evaluation import EvaluationSequence, predict_seq_as_np, evaluation_auc
-from src.heatmap.heatmap import get_heatmap
+from src.heatmaps.evaluation.evaluation import EvaluationSequence, predict_sequence_as_numpy, evaluation_auc
+from src.heatmaps.heatmaps import get_heatmap
 
 
 def evaluate_sequence(model,
@@ -71,7 +71,7 @@ def evaluate_sequence(model,
                 print(
                     f'evaluate heatmaps (voxels: {eval_seq.max_steps * eval_seq.step_size}, step_size: {evaluation_step_size}, max_steps: {evaluation_max_steps})...')
 
-            y_pred_heatmap = predict_seq_as_np(model, eval_seq, batch_size, log=verbose > 1)
+            y_pred_heatmap = predict_sequence_as_numpy(model, eval_seq, batch_size, log=verbose > 1)
             end_a = time.time()
             if log:
                 print(f'...finished in {end_a - start_a}s')
@@ -97,7 +97,7 @@ def evaluate_sequence(model,
     return auc, arr_auc, arr_heatmap, arr_x, arr_y, arr_y_pred, arr_y_pred_heatmap
 
 
-def batch_evaluation_heatmap(idx, fn, arr_heatmap, arr_x, arr_y, arr_y_pred, arr_y_pred_heatmap):
+def evaluate_sequence_heatmap(idx, fn, arr_heatmap, arr_x, arr_y, arr_y_pred, arr_y_pred_heatmap):
     if arr_y_pred_heatmap is not None:
         print(f'y_pred_heatmap: {np.average(arr_y_pred[idx], axis=0)}')
     return fn(arr_x[idx], arr_y[idx], arr_y_pred[idx], arr_heatmap[idx], 56)

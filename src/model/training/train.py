@@ -4,17 +4,18 @@ import datetime
 import tensorflow as tf
 import numpy as np
 
-from src.data.augmentations import augment_invert_img, augment, get_class_weight
+from src.data.augmentations import augment, get_class_weight
 from src.data.sequence_to_numpy import sequence_to_numpy
 from src.model.training.mri_tensorboard_callback import MRITensorBoardCallback
 
 
 def train(model,
           train_seq,
-          val_seq,
           test_seq,
+          val_seq,
           checkpoint_directory,
           log_directory,
+          data_directory,
           tpu=False,
           validation='val',
           epochs=50,
@@ -23,13 +24,10 @@ def train(model,
           tensorboard_update_freq='epoch',
           mri_tensorboard_callback=False,
           model_checkpoint_callback=True,
-          use_tpu=False,
-          batch_size=8,
-          workers=1):
+          batch_size=8):
     """
     Start training the model.
     """
-    batch_size = train_seq.batch_size
     input_shape = train_seq.input_shape
 
     if model_key is None:
@@ -40,8 +38,8 @@ def train(model,
     checkpoint_dir = os.path.join(checkpoint_directory, model_key)
     log_dir = os.path.join(log_directory, model_key)
 
-    print(f'checkpoint dir - {checkpoint_dir}')
-    print(f'log dir - {log_dir}')
+    print(f'checkpoint dir: {checkpoint_dir}')
+    print(f'log dir: {log_dir}')
 
     callbacks = [
         # https://www.tensorflow.org/api_docs/python/tf/keras/callbacks/EarlyStopping
@@ -74,11 +72,11 @@ def train(model,
         callback = MRITensorBoardCallback(val_seq, model, z_index=z_index, freq=1, log_dir=log_dir, debug=False)
         callbacks.append(callback)
 
-    train_x, train_y = sequence_to_numpy(train_seq, os.path.join('/content/gdrive/My Drive/data-v2'), 'train')
-    val_x, val_y = sequence_to_numpy(val_seq, os.path.join('/content/gdrive/My Drive/data-v2'), 'val')
+    train_x, train_y = sequence_to_numpy(train_seq, data_directory, 'train')
+    val_x, val_y = sequence_to_numpy(val_seq, data_directory, 'val')
 
     if validation == 'val_test':
-        test_x, test_y = sequence_to_numpy(test_seq, os.path.join('/content/gdrive/My Drive/data-v2'), 'test')
+        test_x, test_y = sequence_to_numpy(test_seq, data_directory, 'test')
 
         val_x = np.concatenate([test_x, val_x], axis=0)
         val_y = np.concatenate([test_y, val_y], axis=0)
@@ -87,11 +85,11 @@ def train(model,
 
     train_dataset = tf.data.Dataset.from_tensor_slices((train_x, train_y))
 
-    if use_tpu:
+    if tpu:
         train_dataset = train_dataset.map(lambda x, y: (
             tf.py_function(func=augment, inp=[x], Tout=tf.float32),
             y, tf.py_function(func=get_class_weight, inp=[y], Tout=tf.float32)))
-    else:
+    # else:
         # train_dataset = train_dataset.map(lambda x, y: (
         #     augment_invert_img(x) if tf.random.uniform([], 0, 1) > 0.5 else x, y,
         #     tf.py_function(func=get_class_weight, inp=[y], Tout=tf.float32)))

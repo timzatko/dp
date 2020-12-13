@@ -62,7 +62,7 @@ def img_norm(image_x):
 def show_heatmap(image_x, heatmap, z=None, alpha=0.5):
     """
     image_x - source image of shape (z, x, y, 1)
-    heatmap - a generated heatmap of shape (z, x, y)
+    heatmaps - a generated heatmaps of shape (z, x, y)
     """
     if z is None:
         z = math.ceil(image_x.shape[0] / 2)

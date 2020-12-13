@@ -71,5 +71,5 @@ def augment(x):
 
 
 def get_class_weight(y):
-    class_weight = {0: 0.8271604938271606, 1: 1.2641509433962266}
+    class_weight = {0: 1.2641509433962266, 1: 0.8271604938271606}
     return class_weight[int(np.argmax(y.numpy(), axis=0))]

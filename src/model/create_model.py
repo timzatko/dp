@@ -32,14 +32,14 @@ def create_model(
     # the proportions of our input shape
     l2 = None
     if l2_beta is not None:
-        l2 = tf.keras.regularizers.L2(l=l2_beta)
+        l2 = tf.keras.regularizers.l2(l=l2_beta)
     model.add(tf.keras.layers.Conv3D(32, kernel_size=3, activation='relu', padding='same', kernel_regularizer=l2,
                                      input_shape=input_shape))
 
     if is_complex:
         l2 = None
         if l2_beta is not None:
-            l2 = tf.keras.regularizers.L2(l=l2_beta)
+            l2 = tf.keras.regularizers.l2(l=l2_beta)
         model.add(tf.keras.layers.Conv3D(32, kernel_size=3, activation='relu', padding='same', kernel_regularizer=l2))
 
     if batch_norm:
@@ -55,13 +55,13 @@ def create_model(
     # L4, L5
     l2 = None
     if l2_beta is not None:
-        l2 = tf.keras.regularizers.L2(l=l2_beta)
+        l2 = tf.keras.regularizers.l2(l=l2_beta)
     model.add(tf.keras.layers.Conv3D(64, kernel_size=3, activation='relu', padding='same', kernel_regularizer=l2))
 
     if is_complex:
         l2 = None
         if l2_beta is not None:
-            l2 = tf.keras.regularizers.L2(l=l2_beta)
+            l2 = tf.keras.regularizers.l2(l=l2_beta)
 
         model.add(tf.keras.layers.Conv3D(64, kernel_size=3, activation='relu', padding='same', kernel_regularizer=l2))
 
@@ -78,14 +78,14 @@ def create_model(
     # L7, L8
     l2 = None
     if l2_beta is not None:
-        l2 = tf.keras.regularizers.L2(l=l2_beta)
+        l2 = tf.keras.regularizers.l2(l=l2_beta)
 
     model.add(tf.keras.layers.Conv3D(128, kernel_size=3, activation='relu', padding='same', kernel_regularizer=l2))
 
     if is_complex:
         l2 = None
         if l2_beta is not None:
-            l2 = tf.keras.regularizers.L2(l=l2_beta)
+            l2 = tf.keras.regularizers.l2(l=l2_beta)
 
         model.add(tf.keras.layers.Conv3D(128, kernel_size=3, activation='relu', padding='same', kernel_regularizer=l2))
 
@@ -106,7 +106,7 @@ def create_model(
     if is_complex:
         l2 = None
         if l2_beta is not None:
-            l2 = tf.keras.regularizers.L2(l=l2_beta)
+            l2 = tf.keras.regularizers.l2(l=l2_beta)
         model.add(tf.keras.layers.Dense(512, kernel_regularizer=l2))
 
     # Dropout
@@ -119,7 +119,7 @@ def create_model(
     # L11
     l2 = None
     if l2_beta is not None:
-        l2 = tf.keras.regularizers.L2(l=l2_beta)
+        l2 = tf.keras.regularizers.l2(l=l2_beta)
     model.add(tf.keras.layers.Dense(256, kernel_regularizer=l2))
 
     # Dropout
