@@ -87,7 +87,7 @@ class MRISequence(Sequence):
             self.encoder = LabelEncoder()
             self.encoder.fit(np.array(class_names))
 
-        self.class_weight = class_weights
+        self.class_weights = class_weights
         self.one_hot = one_hot
         self.input_shape = input_shape
         self.resize_img = resize_img
@@ -142,10 +142,10 @@ class MRISequence(Sequence):
                     batch_x = np.concatenate((batch_x, new_batch_x), axis=0)
                     batch_y = np.concatenate((batch_y, new_batch_y), axis=0)
 
-        if self.class_weight is None:
-            return batch_x, batch_y
+        if self.class_weights is None:
+            return batch_x, batch_
 
-        batch_w = np.array([self.class_weight[y] for y in self.__decode(batch_y)])
+        batch_w = np.array([self.class_weights[y] for y in self.__decode(batch_y)])
         return batch_x, batch_y, batch_w
 
     def __encode(self, labels):
