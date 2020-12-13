@@ -61,7 +61,7 @@ def train(model,
             monitor='val_loss',
             save_weights_only=True,
             verbose=2,
-            save_best_only=model_checkpoint_callback != 'save_best_only'
+            save_best_only=model_checkpoint_callback == 'save_best_only'
         )),
 
     if mri_tensorboard_callback:
