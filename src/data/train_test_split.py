@@ -6,7 +6,12 @@ import numpy as np
 from tqdm import tqdm
 
 
-def train_test_split(src, dst, **kwargs):
+def train_test_split(src, dst, seed=None, **kwargs):
+    # if we are setting a new seed, save the original seed
+    if seed is not None:
+        st0 = np.random.get_state()
+        np.random.seed(seed)
+
     split = kwargs.get('split', (0.8, 0.1, 0.1))
     dirname = kwargs.get('dirname', str(int(time.time())))
 
@@ -44,5 +49,8 @@ def train_test_split(src, dst, **kwargs):
             dst_dir = val_dir
 
         shutil.copytree(os.path.join(src, d), os.path.join(dst_dir, d))
+
+    if seed is not None:
+        np.random.set_state(st0)
 
     return train_dir, test_dir, val_dir

@@ -212,7 +212,7 @@ class RISEI:
 
                     bar.update()
 
-        # set back original random seet
+        # set back original random seed
         if seed is not None:
             np.random.set_state(st0)
 
