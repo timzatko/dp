@@ -98,7 +98,7 @@ def train(model,
     print('training...')
     history = model.fit(
         batched_train,
-        validation_data=val_dataset,
+        validation_data=batched_val,
         epochs=epochs,
         # class_weight=class_weight,
         callbacks=callbacks)
