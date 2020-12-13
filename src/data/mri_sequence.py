@@ -143,7 +143,7 @@ class MRISequence(Sequence):
                     batch_y = np.concatenate((batch_y, new_batch_y), axis=0)
 
         if self.class_weights is None:
-            return batch_x, batch_
+            return batch_x, batch_y
 
         batch_w = np.array([self.class_weights[y] for y in self.__decode(batch_y)])
         return batch_x, batch_y, batch_w
