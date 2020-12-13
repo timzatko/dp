@@ -41,7 +41,7 @@ def train(model,
     callbacks = [
         # https://www.tensorflow.org/api_docs/python/tf/keras/callbacks/EarlyStopping
         tf.keras.callbacks.EarlyStopping(
-            monitor='val_loss',
+            monitor='val_auc',
             patience=patience,  # Number of epochs with no improvement after which training will be stopped.
             restore_best_weights=True,
         ),
