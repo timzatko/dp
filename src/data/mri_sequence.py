@@ -149,7 +149,6 @@ class MRISequence(Sequence):
         return batch_x, batch_y, batch_w
 
     def __encode(self, labels):
-        print(labels);
         if self.one_hot:
             labels = labels.reshape(-1, 1)
         return self.encoder.transform(labels)
