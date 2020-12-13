@@ -58,7 +58,7 @@ def train(model,
     if model_checkpoint_callback is not False:
         callbacks.append(tf.keras.callbacks.ModelCheckpoint(
             os.path.join(checkpoint_dir, 'cp-{epoch:04d}.ckpt'),
-            monitor='val_loss',
+            monitor='val_auc',
             save_weights_only=True,
             verbose=2,
             save_best_only=model_checkpoint_callback == 'save_best_only'
