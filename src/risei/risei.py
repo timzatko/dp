@@ -1,4 +1,3 @@
-import os
 import time
 import cv2
 
@@ -270,7 +269,7 @@ class RISEI:
         return Image.fromarray(new_image.astype(np.uint8), 'RGB')
 
     def show_image_from_last_run(self, i, z):
-        if self.cache == None:
+        if self.cache is None:
             raise Exception('Cache is not defined! Initialize algorithm with debug=True')
 
         return self.cache['image'][z, :, :]
@@ -282,7 +281,7 @@ class RISEI:
         return self.__get_from_cache('images_data', i)[z, :, :]
 
     def __get_from_cache(self, key, i):
-        if self.cache == None:
+        if self.cache is None:
             raise Exception('Cache is not defined! Initialize algorithm with debug=True')
         if len(self.cache[key]) <= i:
             raise Exception(f'Index {i} does not exist!')

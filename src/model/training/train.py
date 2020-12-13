@@ -14,13 +14,13 @@ def train(model,
           checkpoint_directory,
           log_directory,
           data_directory,
-          tpu=False,
           epochs=50,
           patience=10,
           model_key=None,
           tensorboard_update_freq='epoch',
           mri_tensorboard_callback=False,
           model_checkpoint_callback=True,
+          augmentations=True,
           batch_size=8):
     """
     Start training the model.
@@ -73,18 +73,16 @@ def train(model,
     val_x, val_y = sequence_to_numpy(val_seq, data_directory, 'val')
 
     train_dataset = tf.data.Dataset.from_tensor_slices((train_x, train_y))
-
-    if tpu:
+    if augmentations:
         train_dataset = train_dataset.map(lambda x, y: (
             tf.py_function(func=augment, inp=[x], Tout=tf.float32),
             y, tf.py_function(func=get_class_weight, inp=[y], Tout=tf.float32)))
     else:
-        # train_dataset = train_dataset.map(lambda x, y: (
-        #     augment_invert_img(x) if tf.random.uniform([], 0, 1) > 0.5 else x, y,
-        #     tf.py_function(func=get_class_weight, inp=[y], Tout=tf.float32)))
         train_dataset = train_dataset.map(lambda x, y: (
-            tf.py_function(func=augment, inp=[x], Tout=tf.float32),
-            y, tf.py_function(func=get_class_weight, inp=[y], Tout=tf.float32)))
+            x,
+            y,
+            tf.py_function(func=get_class_weight, inp=[y],
+                           Tout=tf.float32)))
 
     # create batches from train dataset
     batched_train = train_dataset.batch(batch_size)
@@ -97,22 +95,12 @@ def train(model,
 
     # train the model
     # https://www.tensorflow.org/api_docs/python/tf/keras/Model#fit
-    if not tpu:
-        print('training on gpu...')
-        history = model.fit(
-            batched_train,
-            validation_data=batched_val,
-            epochs=epochs,
-            # class_weight=class_weight,
-            callbacks=callbacks)
-    else:
-        print('training on tpu...')
-
-        history = model.fit(
-            batched_train,
-            validation_data=val_dataset,
-            epochs=epochs,
-            # class_weight=class_weight,
-            callbacks=callbacks)
+    print('training...')
+    history = model.fit(
+        batched_train,
+        validation_data=val_dataset,
+        epochs=epochs,
+        # class_weight=class_weight,
+        callbacks=callbacks)
 
     return model, checkpoint_dir, history
