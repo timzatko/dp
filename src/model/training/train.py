@@ -19,14 +19,19 @@ def train(model,
           model_key=None,
           tensorboard_update_freq='epoch',
           mri_tensorboard_callback=False,
-          model_checkpoint_callback=True,
-          model_checkpoint_callback_monitor='val_auc',
-          early_stopping_monitor='val_auc',
+          model_checkpoint_callback=None,
+          early_stopping_monitor=None,
           augmentations=True,
           batch_size=8):
     """
     Start training the model.
     """
+    if model_checkpoint_callback is None:
+        model_checkpoint_callback = {'monitor': 'val_auc', 'mode': 'min', 'save_best_only': True}
+
+    if early_stopping_monitor is None:
+        early_stopping_monitor = {'monitor': 'val_auc', 'mode': 'min'}
+
     input_shape = train_seq.input_shape
 
     if model_key is None:
@@ -43,7 +48,8 @@ def train(model,
     callbacks = [
         # https://www.tensorflow.org/api_docs/python/tf/keras/callbacks/EarlyStopping
         tf.keras.callbacks.EarlyStopping(
-            monitor=early_stopping_monitor,
+            monitor=early_stopping_monitor['monitor'],
+            mode=early_stopping_monitor['mode'],
             patience=patience,  # Number of epochs with no improvement after which training will be stopped.
             restore_best_weights=True,
         ),
@@ -60,10 +66,11 @@ def train(model,
     if model_checkpoint_callback is not False:
         callbacks.append(tf.keras.callbacks.ModelCheckpoint(
             os.path.join(checkpoint_dir, 'cp-{epoch:04d}.ckpt'),
-            monitor=model_checkpoint_callback_monitor,
+            monitor=model_checkpoint_callback['monitor'],
+            mode=model_checkpoint_callback['mode'],
             save_weights_only=True,
             verbose=2,
-            save_best_only=model_checkpoint_callback == 'save_best_only'
+            save_best_only=model_checkpoint_callback['save_best_only']
         )),
 
     if mri_tensorboard_callback:
