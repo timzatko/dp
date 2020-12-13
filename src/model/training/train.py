@@ -20,6 +20,8 @@ def train(model,
           tensorboard_update_freq='epoch',
           mri_tensorboard_callback=False,
           model_checkpoint_callback=True,
+          model_checkpoint_callback_monitor='val_auc',
+          early_stopping_monitor='val_auc',
           augmentations=True,
           batch_size=8):
     """
@@ -41,7 +43,7 @@ def train(model,
     callbacks = [
         # https://www.tensorflow.org/api_docs/python/tf/keras/callbacks/EarlyStopping
         tf.keras.callbacks.EarlyStopping(
-            monitor='val_auc',
+            monitor=early_stopping_monitor,
             patience=patience,  # Number of epochs with no improvement after which training will be stopped.
             restore_best_weights=True,
         ),
@@ -58,7 +60,7 @@ def train(model,
     if model_checkpoint_callback is not False:
         callbacks.append(tf.keras.callbacks.ModelCheckpoint(
             os.path.join(checkpoint_dir, 'cp-{epoch:04d}.ckpt'),
-            monitor='val_auc',
+            monitor=model_checkpoint_callback_monitor,
             save_weights_only=True,
             verbose=2,
             save_best_only=model_checkpoint_callback == 'save_best_only'
