@@ -2,7 +2,6 @@ import os
 import datetime
 
 import tensorflow as tf
-import numpy as np
 
 from src.data.augmentations import augment, get_class_weight
 from src.data.sequence_to_numpy import sequence_to_numpy
@@ -11,13 +10,11 @@ from src.model.training.mri_tensorboard_callback import MRITensorBoardCallback
 
 def train(model,
           train_seq,
-          test_seq,
           val_seq,
           checkpoint_directory,
           log_directory,
           data_directory,
           tpu=False,
-          validation='val',
           epochs=50,
           patience=10,
           model_key=None,
@@ -75,21 +72,13 @@ def train(model,
     train_x, train_y = sequence_to_numpy(train_seq, data_directory, 'train')
     val_x, val_y = sequence_to_numpy(val_seq, data_directory, 'val')
 
-    if validation == 'val_test':
-        test_x, test_y = sequence_to_numpy(test_seq, data_directory, 'test')
-
-        val_x = np.concatenate([test_x, val_x], axis=0)
-        val_y = np.concatenate([test_y, val_y], axis=0)
-
-        print(f'train: {len(train_x)}, val: {len(val_x)}')
-
     train_dataset = tf.data.Dataset.from_tensor_slices((train_x, train_y))
 
     if tpu:
         train_dataset = train_dataset.map(lambda x, y: (
             tf.py_function(func=augment, inp=[x], Tout=tf.float32),
             y, tf.py_function(func=get_class_weight, inp=[y], Tout=tf.float32)))
-    # else:
+    else:
         # train_dataset = train_dataset.map(lambda x, y: (
         #     augment_invert_img(x) if tf.random.uniform([], 0, 1) > 0.5 else x, y,
         #     tf.py_function(func=get_class_weight, inp=[y], Tout=tf.float32)))
