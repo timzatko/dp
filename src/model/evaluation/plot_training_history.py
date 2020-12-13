@@ -13,16 +13,18 @@ def plot_training_history(history):
 
     for n, metric in enumerate(metrics):
         name = metric.replace("_", " ").capitalize()
+
         plt.subplot(n_cols, n_rows, n + 1)
         plt.plot(history.epoch, history.history[metric], color=colors[0], label='Train')
         plt.plot(history.epoch, history.history['val_' + metric], color=colors[0], linestyle="--", label='Val')
         plt.xlabel('Epoch')
         plt.ylabel(name)
         plt.xlim([0, len(history.epoch)])
+
         if metric == 'loss':
             plt.ylim([0, plt.ylim()[1]])
         elif metric == 'auc':
-            plt.ylim([0.8, 1])
+            plt.ylim([0.5, 1])
         else:
             plt.ylim([0, 1])
 
