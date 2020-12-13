@@ -62,7 +62,7 @@ def readfile(file_path):
 #
 # augmentations={ 'random_swap_hemispheres': 0.5 }
 class MRISequence(Sequence):
-    def __init__(self, path, batch_size, input_shape, class_names=('CN', 'AD'),
+    def __init__(self, path, batch_size, input_shape, class_names=('AD', 'CN'),
                  augmentations=None, augmentations_inplace=True, images=True, one_hot=True, class_weights=None,
                  normalization=None, resize_img=True):
         """
