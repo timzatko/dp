@@ -24,7 +24,7 @@ def plot_training_history(history):
         if metric == 'loss':
             plt.ylim([0, plt.ylim()[1]])
         elif metric == 'auc':
-            plt.ylim([0.5, 1])
+            plt.ylim([0, 1])
         else:
             plt.ylim([0, 1])
 
