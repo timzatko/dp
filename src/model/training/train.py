@@ -84,14 +84,14 @@ def train(model,
     train_dataset = tf.data.Dataset.from_tensor_slices((train_x, train_y))
     if augmentations:
         train_dataset = train_dataset.map(lambda x, y: (
-            tf.py_function(func=augment, inp=[x], Tout=tf.float32),
-            y, tf.py_function(func=get_class_weight, inp=[y], Tout=tf.float32)))
+            tf.ensure_shape(tf.py_function(func=augment, inp=[x], Tout=tf.float32), input_shape),
+            y,
+            tf.py_function(func=get_class_weight, inp=[y], Tout=tf.float32)))
     else:
         train_dataset = train_dataset.map(lambda x, y: (
             x,
             y,
-            tf.py_function(func=get_class_weight, inp=[y],
-                           Tout=tf.float32)))
+            tf.py_function(func=get_class_weight, inp=[y], Tout=tf.float32)))
 
     # create batches from train dataset
     batched_train = train_dataset.batch(batch_size)

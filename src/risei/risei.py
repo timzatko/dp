@@ -6,6 +6,7 @@ import numpy as np
 from tqdm import tqdm
 from matplotlib import pyplot as plt
 from skimage.transform import resize
+from skimage.restoration import inpaint_biharmonic
 
 from multiprocessing import Pool
 
@@ -64,20 +65,25 @@ def __merge(options, original_image, mask, in_paint_mask):
 
 def __get_in_paint_mask(options, image_data, mask, binary_mask):
     if options['in_paint'] == '3d':
-        return __get_in_paint_mask_3d(options, image_data, binary_mask)
+        return __get_in_paint_mask_3d(options, image_data, mask, binary_mask)
     return __get_in_paint_mask_2d(options, image_data, mask, binary_mask)
 
 
-def __get_in_paint_mask_3d(options, image_data, binary_mask):
+def __get_in_paint_mask_3d(options, image_data, mask, binary_mask):
     start = time.time()
 
+    output = np.zeros(image_data.shape)
     inverted_binary_mask = 1 - binary_mask.astype(np.uint8)
-    in_painted = in_paint.in_paint_biharmonic(image_data, inverted_binary_mask, multichannel=False);
+    in_painted = inpaint_biharmonic(image_data, inverted_binary_mask, multichannel=False);
 
+    if options['in_paint_blending']:
+        # in_paint with gradual blending of edges (soft edges)
+        output = image_data * mask + in_painted * (1 - mask)
+    
     end = time.time()
     print(f"in: {end - start}")
 
-    return in_painted
+    return output
 
 
 def __get_in_paint_mask_2d(options, image_data, mask, binary_mask):
@@ -86,20 +92,65 @@ def __get_in_paint_mask_2d(options, image_data, mask, binary_mask):
     in_painted = np.zeros(image_data.shape)
     inverted_binary_mask = (1 - binary_mask).astype(np.uint8)
 
-    for z in range(0, image_data.shape[0]):
-        in_painted_z = cv2.inpaint(
-            image_data[z],
-            inverted_binary_mask[z],
-            options['in_paint_radius'],
-            options['in_paint_algorithm']
-        )
+    if not options['in_paint_2d_to_3d']:
+        for z in range(0, image_data.shape[0]):
+            in_painted_z = cv2.inpaint(
+                image_data[z],
+                inverted_binary_mask[z],
+                options['in_paint_radius'],
+                options['in_paint_algorithm']
+            )
 
-        if options['in_paint_blending']:
-            # in_paint with gradual blending of edges (soft edges)
-            in_painted_z = image_data[z] * mask[z] + in_painted_z * (1 - mask[z])
+            if options['in_paint_blending']:
+                # in_paint with gradual blending of edges (soft edges)
+                in_painted_z = image_data[z] * mask[z] + in_painted_z * (1 - mask[z])
 
-        in_painted[z] = in_painted_z
+            in_painted[z] = in_painted_z
+    else:
+        for i in range(0, image_data.shape[0]):
+            in_painted_i = cv2.inpaint(
+                image_data[i, :, :],
+                inverted_binary_mask[i, :, :],
+                options['in_paint_radius'],
+                options['in_paint_algorithm']
+            )
 
+            if options['in_paint_blending']:
+                # in_paint with gradual blending of edges (soft edges)
+                in_painted_i = image_data[i, :, :] * mask[i, :, :] + in_painted_i * (1 - mask[i, :, :])
+
+            in_painted[i, :, :] += in_painted_i
+        
+        for i in range(0, image_data.shape[1]):
+            in_painted_i = cv2.inpaint(
+                image_data[:, i, :],
+                inverted_binary_mask[:, i, :],
+                options['in_paint_radius'],
+                options['in_paint_algorithm']
+            )
+
+            if options['in_paint_blending']:
+                # in_paint with gradual blending of edges (soft edges)
+                in_painted_i = image_data[:, i, :] * mask[:, i, :] + in_painted_i * (1 - mask[:, i, :])
+
+            in_painted[:, i, :] += in_painted_i
+        
+        for i in range(0, image_data.shape[2]):
+            in_painted_i = cv2.inpaint(
+                image_data[:, :, i],
+                inverted_binary_mask[:, :, i],
+                options['in_paint_radius'],
+                options['in_paint_algorithm']
+            )
+
+            if options['in_paint_blending']:
+                # in_paint with gradual blending of edges (soft edges)
+                in_painted_i = image_data[:, :, i] * mask[:, :, i] + in_painted_i * (1 - mask[:, :, i])
+
+            in_painted[:, :, i] += in_painted_i
+        
+        in_painted /= 3
+    
     end = time.time()
 
     # print(f"in: {end - start}")
@@ -145,6 +196,16 @@ def __get_binary_mask(options, grid, shift_x, shift_y, shift_z):
     return new_grid[shift_x:input_size[0] + shift_x, shift_y:input_size[1] + shift_y, shift_z:input_size[2] + shift_z]
 
 
+def get_image(image, dim, i):
+    if dim == 0:
+        return image[i, :, :]
+    elif dim == 1:
+        return image[:, i, :]
+    elif dim == 2:
+        return image[:, :, i]
+    else:
+        raise Exception('dimension should be >= 0 and <= 2')
+
 class RISEI:
     def __init__(self, input_size, **kwargs):
         self.options = {
@@ -157,6 +218,7 @@ class RISEI:
             'in_paint_radius': kwargs.get('in_paint_radius', 20),  # in_painting radius
             'in_paint_algorithm': kwargs.get('in_paint_algorithm', cv2.INPAINT_NS),  # cv2.INPAINT_TELEA, cv2.INPAINT_NS
             'in_paint_blending': kwargs.get('in_paint_blending', True),
+            'in_paint_2d_to_3d': kwargs.get('in_paint_blending', False),
             # if the in_paint is gradually blended into the image
             'debug': kwargs.get('debug', False),
             'mask_size': None,
@@ -217,13 +279,13 @@ class RISEI:
 
         return images_data, images_mask
 
-    def show_from_last_run(self, i, z, figsize=(12, 8), ncols=3, nrows=2):
-        original_image = self.show_image_from_last_run(i, z)
-        mask = self.show_mask_from_last_run(i, z)
-        binary_mask = self.show_binary_mask_from_last_run(i, z)
-        in_paint = self.show_in_paint_from_last_run(i, z) if self.options['b1'] > 0 else self.show_image_from_last_run(i,
-                                                                                                                     z)
-        result = self.show_result_from_last_run(i, z)
+    def show_from_last_run(self, i, z, figsize=(12, 8), ncols=3, nrows=2, dim=0):
+        original_image = self.show_image_from_last_run(i, z, dim)
+        mask = self.show_mask_from_last_run(i, z, dim)
+        binary_mask = self.show_binary_mask_from_last_run(i, z, dim)
+        in_paint = self.show_in_paint_from_last_run(i, z, dim) if self.options['b1'] > 0 else self.show_image_from_last_run(i,
+                                                                                                                     z, dim)
+        result = self.show_result_from_last_run(i, z, dim)
 
         fig, axes = plt.subplots(ncols=ncols, nrows=nrows, figsize=figsize)
         ax = axes.ravel()
@@ -249,36 +311,35 @@ class RISEI:
         fig.tight_layout()
         plt.show()
 
-    def show_mask_from_last_run(self, i, z):
+    def show_mask_from_last_run(self, i, z, dim):
         mask = self.__get_from_cache('masks', i)
-        _, y, x = self.options['input_size']
 
-        image = 255 * np.ones((y, x, 3), dtype=np.uint8)
-        new_image = image * mask[z, :, :].reshape(self.options['input_size'][1], self.options['input_size'][2], 1)
+        new_image = get_image(mask, dim, z)
+        image = 255 * np.ones((*new_image.shape, 3), dtype=np.uint8)
+        new_image = image * new_image.reshape((*new_image.shape, 1))
 
         return Image.fromarray(new_image.astype(np.uint8), 'RGB')
 
-    def show_binary_mask_from_last_run(self, i, z):
+    def show_binary_mask_from_last_run(self, i, z, dim):
         binary_mask = self.__get_from_cache('binary_masks', i)
-        _, y, x = self.options['input_size']
 
-        image = 255 * np.ones((y, x, 3), dtype=np.uint8)
-        new_image = image * binary_mask[z, :, :].reshape(self.options['input_size'][1], self.options['input_size'][2],
-                                                         1)
+        new_image = get_image(binary_mask, dim, z)
+        image = 255 * np.ones((*new_image.shape, 3), dtype=np.uint8)
+        new_image = image * new_image.reshape((*new_image.shape, 1))
 
         return Image.fromarray(new_image.astype(np.uint8), 'RGB')
 
-    def show_image_from_last_run(self, i, z):
+    def show_image_from_last_run(self, i, z, dim):
         if self.cache is None:
             raise Exception('Cache is not defined! Initialize algorithm with debug=True')
 
-        return self.cache['image'][z, :, :]
+        return get_image(self.cache['image'], dim, z)
 
-    def show_in_paint_from_last_run(self, i, z):
-        return self.__get_from_cache('in_paint_masks', i)[z, :, :]
+    def show_in_paint_from_last_run(self, i, z, dim):
+        return get_image(self.__get_from_cache('in_paint_masks', i), dim, z)
 
-    def show_result_from_last_run(self, i, z):
-        return self.__get_from_cache('images_data', i)[z, :, :]
+    def show_result_from_last_run(self, i, z, dim):
+        return get_image(self.__get_from_cache('images_data', i), dim, z)
 
     def __get_from_cache(self, key, i):
         if self.cache is None:

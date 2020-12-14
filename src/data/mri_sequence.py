@@ -10,8 +10,11 @@ from sklearn.preprocessing import LabelEncoder, OneHotEncoder
 from skimage.transform import resize
 
 
-def process_image(path, input_shape, resize_img, normalization):
+def process_image(path, input_shape, resize_img, normalization, crop_img):
     x = SimpleITK.GetArrayFromImage(SimpleITK.ReadImage(path))
+    if crop_img:
+        # x = x[15:145, :, 9:141]
+        x = x[15:145, :, 10:140] # crop one more "relevant voxel from 3rd dimension"
     if resize_img:
         x = resize(x, input_shape[:3])
     if normalization is not None:
@@ -64,7 +67,7 @@ def readfile(file_path):
 class MRISequence(Sequence):
     def __init__(self, path, batch_size, input_shape, class_names=('AD', 'CN'),
                  augmentations=None, augmentations_inplace=True, images=True, one_hot=True, class_weights=None,
-                 normalization=None, resize_img=True):
+                 normalization=None, resize_img=True, crop_img=False):
         """
         MRISequence reads mri images.
         :param path: path to images
@@ -91,6 +94,7 @@ class MRISequence(Sequence):
         self.one_hot = one_hot
         self.input_shape = input_shape
         self.resize_img = resize_img
+        self.crop_img = crop_img
         self.class_names = class_names
         self.images = images
         self.augmentations = augmentations
@@ -123,7 +127,7 @@ class MRISequence(Sequence):
             batch_x = np.array([None for image_dir in images_dirs])
         else:
             batch_x = np.array([process_image(os.path.join(image_dir, 'data.nii'), self.input_shape, self.resize_img,
-                                              self.normalization) for image_dir in images_dirs])
+                                              self.normalization, self.crop_img) for image_dir in images_dirs])
 
             if self.augmentations:
                 if self.augmentations_inplace:
