@@ -3,7 +3,7 @@ import tensorflow as tf
 from tensorflow.keras.applications import ResNet50V2
 
 
-def res_net(input_shape, class_names, l2_beta=None, dropout=None, output_bias=None):
+def res_net(input_shape, class_names, batch_norm=None, l2_beta=None, dropout=None, output_bias=None):
     input_layer = tf.keras.layers.Input(shape=input_shape, name="InputLayer")
     reshape_layer = tf.keras.layers.Reshape(input_shape[:-1])(input_layer)
 
@@ -17,6 +17,9 @@ def res_net(input_shape, class_names, l2_beta=None, dropout=None, output_bias=No
     model = tf.keras.models.Sequential(res_net)
     model.add(res_net_50_v2)
 
+    if batch_norm:
+        model.add(tf.keras.layers.BatchNormalization())
+
     if dropout is not None:
         model.add(tf.keras.layers.Dropout(dropout))
 
@@ -25,6 +28,9 @@ def res_net(input_shape, class_names, l2_beta=None, dropout=None, output_bias=No
         l2 = tf.keras.regularizers.l2(l=l2_beta)
 
     model.add(tf.keras.layers.Dense(512, kernel_regularizer=l2))
+
+    if batch_norm:
+        model.add(tf.keras.layers.BatchNormalization())
 
     if dropout is not None:
         model.add(tf.keras.layers.Dropout(dropout))
