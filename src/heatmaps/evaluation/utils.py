@@ -35,8 +35,10 @@ def plot_evaluation(image_y, y_pred, eval_seq, title='insertion'):
     idx = image_y.argmax(axis=0)
     x, y = get_curve(image_y, y_pred, eval_seq.step_size)
     auc = evaluation_auc(image_y, y_pred, eval_seq.step_size)
+
     plt.title(f'{title}: auc={auc}, y_true={idx}, voxel_count:{eval_seq.max_voxels:,} / {len(eval_seq.voxels):,})')
     plt.plot(x, y, linewidth=2)
+
     ax = plt.gca()
     ax.set_ylabel(f'activation')
     ax.set_xlabel(f'voxels')

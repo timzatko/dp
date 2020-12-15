@@ -1,5 +1,7 @@
 import time
 
+import numpy as np
+
 from src.heatmaps.evaluation.evaluation_sequence import EvaluationSequence
 from src.heatmaps.evaluation.utils import evaluation_auc, predict_sequence_as_numpy
 from src.heatmaps.evaluation.heatmap_evaluation_history import HeatmapEvaluationHistory
@@ -102,15 +104,15 @@ class HeatmapEvaluation:
                 )
 
                 if log:
+                    vx = np.sum(image_x.shape) if eval_seq.max_steps < 0 else eval_seq.step_size * eval_seq.max_steps
                     print(
-                        f'evaluate heatmaps (voxels: {eval_seq.max_steps * eval_seq.step_size},'
+                        f'evaluate heatmaps (voxels: {vx}, '
                         f'step_size: {self.evaluation_step_size}, max_steps: {self.evaluation_max_steps})...')
 
                 y_pred_heatmap = predict_sequence_as_numpy(self.model, eval_seq, self.batch_size, log=verbose > 1)
                 end_a = time.time()
                 if log:
                     print(f'...finished in {end_a - start_a}s')
-
                 auc = evaluation_auc(image_y, y_pred_heatmap, eval_seq.step_size)
 
                 arr_heatmap.append(heatmap)
