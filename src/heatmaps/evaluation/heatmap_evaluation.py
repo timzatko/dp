@@ -1,7 +1,5 @@
 import time
 
-import numpy as np
-
 from src.heatmaps.evaluation.evaluation_sequence import EvaluationSequence
 from src.heatmaps.evaluation.utils import evaluation_auc, predict_sequence_as_numpy
 from src.heatmaps.evaluation.heatmap_evaluation_history import HeatmapEvaluationHistory
@@ -126,9 +124,3 @@ class HeatmapEvaluation:
         auc = sum(arr_auc) / evaluations
 
         return HeatmapEvaluationHistory(auc, arr_auc, arr_heatmap, arr_x, arr_y, arr_y_pred, arr_y_pred_heatmap)
-
-
-def evaluate_sequence_heatmap(idx, fn, arr_heatmap, arr_x, arr_y, arr_y_pred, arr_y_pred_heatmap):
-    if arr_y_pred_heatmap is not None:
-        print(f'y_pred_heatmap: {np.average(arr_y_pred[idx], axis=0)}')
-    return fn(arr_x[idx], arr_y[idx], arr_y_pred[idx], arr_heatmap[idx], 56)
