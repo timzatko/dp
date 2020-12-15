@@ -9,7 +9,7 @@ def res_net(input_shape, class_names, batch_norm=None, l2_beta=None, dropout=Non
 
     res_net_50_v2 = ResNet50V2(
         input_tensor=reshape_layer,
-        weights='imagenet',
+        weights=None,
         input_shape=input_shape[:-1],
         pooling='max',
         classes=1024,
