@@ -14,6 +14,17 @@ def res_net(input_shape, class_names, batch_norm=None, l2_beta=None, dropout=Non
         pooling='max',
         classes=1024,
     )
+    res_net_50_v2.trainable = True
+
+    # add regularization to layers of res net
+    if l2_beta is not None:
+        r = tf.keras.regularizers.l2(l2_beta)
+
+        for layer in res_net_50_v2.layers:
+            for attr in ['kernel_regularized']:
+                if hasattr(layer, attr):
+                    setattr(layer, attr, r)
+
     model = tf.keras.models.Sequential(res_net)
     model.add(res_net_50_v2)
 

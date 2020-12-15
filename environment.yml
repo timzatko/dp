@@ -29,3 +29,4 @@ dependencies:
     - opencv-python
     - seaborns
     - ipyparams
+    - ipyvolume
