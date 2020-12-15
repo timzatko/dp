@@ -45,8 +45,8 @@ class HeatmapEvaluationHistory:
 
     def save(self, path, filename):
         p = os.path.join(path, f'{filename}.cls')
-        if not os.path.exists(p):
-            os.mkdir(p)
+        if not os.path.exists(path):
+            os.mkdir(path)
         with open(p, 'wb') as file:
             pickle.dump(self, file, protocol=pickle.HIGHEST_PROTOCOL)
             print(f'saved to: {p}')
