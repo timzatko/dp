@@ -1,4 +1,5 @@
-from src.model import cnn_3d, res_net
+from src.model.cnn_3d import cnn_3d
+from src.model.res_net import res_net
 
 
 def create_model(model_type, options):
