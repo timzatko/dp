@@ -1,11 +1,11 @@
 import tensorflow as tf
 
 
-def res_net_18(input_shape, class_names, batch_norm=None, l2_beta=None, dropout=None, output_bias=None):
+def res_net(input_shape, class_names, batch_norm=None, l2_beta=None, dropout=None, output_bias=None):
     input_layer = tf.keras.layers.Input(shape=input_shape, name='InputLayer')
     reshape_layer = tf.keras.layers.Reshape(input_shape[:-1])
 
-    core = ResNet18(
+    core = res_net_18(
         classes=1024,
         activation='relu'
     )
@@ -146,9 +146,9 @@ def make_basic_block_layer(filter_num, blocks, stride=1):
     return res_block
 
 
-def ResNet18(classes, activation):
+def res_net_18(classes, activation):
     return ResNet([2, 2, 2, 2], classes, activation)
 
 
-def ResNet34(classes, activation):
+def res_net_34(classes, activation):
     return ResNet([3, 4, 6, 3], classes, activation)
