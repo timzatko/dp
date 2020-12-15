@@ -1,7 +1,6 @@
 import numpy as np
 
-import sklearn
-
+from sklearn import metrics
 from matplotlib import pyplot as plt
 
 
@@ -20,7 +19,7 @@ def evaluation_auc(image_y, y_pred, step_size):
     Get area under curve from activation over time (inserted/deleted pixels).
     """
     x, y = get_curve(image_y, y_pred, step_size)
-    return sklearn.metrics.auc(x, y)
+    return metrics.auc(x, y)
 
 
 def plot_evaluation(image_y, y_pred, step_size, voxels, max_voxels, title='insertion'):
