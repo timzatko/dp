@@ -54,7 +54,7 @@ def augment_random_gaussian_noise(x, var=None):
     x = np.array(x.reshape(x.shape[:3]))
     seed = None if 'RANDOM_SEED' not in globals() else globals()['RANDOM_SEED']
     var = tf.random.uniform([], 0, 1) * var
-    x = random_noise(x, mode='gaussian', seed=None, var=var, clip=True)
+    x = random_noise(x, mode='gaussian', seed=seed, var=var, clip=True)
     return x.reshape((*x.shape, 1))
 
 
