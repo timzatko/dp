@@ -65,13 +65,13 @@ class HeatmapEvaluation:
         for batch_x, batch_y, *_ in self.seq:
             batch_y_pred = self.model.predict(batch_x)
             
-            if max_evaluations is not None and max_evaluations == evaluations + 1:
+            if max_evaluations is not None and evaluations > max_evaluations:
                 if log:
                     print(f'max evaluations ({max_evaluations}) reached!')
                 break
 
             for i, image in enumerate(zip(batch_x, batch_y)):
-                if max_evaluations is not None and max_evaluations == evaluations + 1:
+                if max_evaluations is not None and evaluations > max_evaluations:
                     break
 
                 image_x, image_y = image
