@@ -35,9 +35,10 @@ class HeatmapEvaluation:
         self.evaluation_batch_size = evaluation_batch_size
         self.cache = None
 
-    def evaluate(self, method='deletion', log=False, verbose=0, seed=None):
+    def evaluate(self, method='deletion', log=False, verbose=0, seed=None, max_evaluations=None):
         """
         Evaluate sequence with provided method.
+        :param max_evaluations: maximum number of evaluated images
         :param method:
         :param log:
         :param verbose:
@@ -59,6 +60,11 @@ class HeatmapEvaluation:
             batch_y_pred = self.model.predict(batch_x)
 
             for i, image in enumerate(zip(batch_x, batch_y)):
+                if max_evaluations is not None and max_evaluations == evaluations + 1:
+                    if log:
+                        print(f'max evaluations ({max_evaluations}) reached!')
+                    break
+
                 image_x, image_y = image
                 y_pred = batch_y_pred[i]
                 start = time.time()
