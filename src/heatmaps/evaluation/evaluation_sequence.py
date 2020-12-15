@@ -86,7 +86,7 @@ class EvaluationSequence(Sequence):
             step = idx * self.batch_size + i
             # print(f'step: {step}')
 
-            if 0 < self.max_steps <= step:
+            if self.max_steps < step:
                 break
 
             start = step * self.step_size
@@ -117,6 +117,5 @@ class EvaluationSequence(Sequence):
         return batch_x
 
     def __get_max_steps(self, max_steps):
-        return min(math.ceil(len(self.voxels) / self.step_size), max_steps)
-
-
+        steps = math.ceil(len(self.voxels) / self.step_size)
+        return min(steps, max_steps) if max_steps >= 0 else steps

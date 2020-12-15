@@ -60,11 +60,14 @@ class HeatmapEvaluation:
         print(f'sequence len: {length}, method: {method}')
         for batch_x, batch_y, *_ in self.seq:
             batch_y_pred = self.model.predict(batch_x)
+            
+            if max_evaluations is not None and max_evaluations == evaluations + 1:
+                if log:
+                    print(f'max evaluations ({max_evaluations}) reached!')
+                break
 
             for i, image in enumerate(zip(batch_x, batch_y)):
                 if max_evaluations is not None and max_evaluations == evaluations + 1:
-                    if log:
-                        print(f'max evaluations ({max_evaluations}) reached!')
                     break
 
                 image_x, image_y = image
@@ -76,6 +79,7 @@ class HeatmapEvaluation:
                     print(f'get heatmap (masks: {self.masks_count})...')
 
                 start_a = time.time()
+                # get heatmap for the image
                 heatmap, _, _ = get_heatmap(
                     image_x,
                     image_y,
@@ -92,6 +96,8 @@ class HeatmapEvaluation:
                 print(f'...finished in {end_a - start_a}s')
 
                 start_a = time.time()
+                # create a sequence of images, by removing/insering voxels
+                # from the image, and evaluate a them on the model
                 eval_seq = EvaluationSequence(
                     method,
                     image_x,
