@@ -70,17 +70,17 @@ class EvaluationSequence(Sequence):
         if self.log:
             print(f'max_steps: {self.max_steps}, batch_size: {self.batch_size}')
 
-        self.bar = None
+        self.progress_bar = None
         if self.log:
-            self.bar = tqdm(total=self.__len__())
+            self.progress_bar = tqdm(total=self.__len__())
 
     def __len__(self):
         return math.ceil(self.max_steps / self.batch_size)
 
     def __getitem__(self, idx):
         batch_x = []
-        if self.bar is not None:
-            self.bar.update()
+        if self.progress_bar is not None:
+            self.progress_bar.update()
 
         for i in range(self.batch_size):
             step = idx * self.batch_size + i

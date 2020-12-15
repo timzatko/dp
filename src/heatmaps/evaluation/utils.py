@@ -27,10 +27,10 @@ def plot_evaluation(image_y, y_pred, step_size, voxels, max_voxels, title='inser
     """
     Plot evaluation graph.
     :param max_voxels: number of voxels evaluated (inserted/deleted) voxels
-    :param voxels: number of voxels in image
-    :param step_size:
-    :param image_y:
-    :param y_pred:
+    :param voxels: number of voxels in the image
+    :param step_size: step size of evaluation sequence
+    :param image_y: true y
+    :param y_pred: predictions from evaluation sequence
     :param title: title of the plot
     :return:
     """
