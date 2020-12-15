@@ -7,9 +7,21 @@ import matplotlib.pyplot as plt
 from PIL import Image
 
 
-def get_heatmap(x, y, model, risei, batch_size=8, masks_count=24, risei_batch_size=480, debug=False, log=True):
+def get_heatmap(x, y, model, risei,
+                batch_size=8, masks_count=24, risei_batch_size=480, debug=False, log=True, seed=None):
     """
-    batch_size - model batch size
+    Get heatmap for an image.
+    :param x:
+    :param y:
+    :param model:
+    :param risei:
+    :param batch_size:
+    :param masks_count:
+    :param risei_batch_size:
+    :param debug:
+    :param log:
+    :param seed:
+    :return:
     """
     cls_idx = np.argmax(y)
 
@@ -28,8 +40,7 @@ def get_heatmap(x, y, model, risei, batch_size=8, masks_count=24, risei_batch_si
         batch_masks_count = min(risei_batch_size, masks_count - batch_idx * risei_batch_size)
         # Reshape input to risei without channels,
         # then reshape masks back with channels.
-        batch_x, masks = risei.generate_masks(batch_masks_count, x.reshape(x.shape[:3]), log=log)
-        batch_y = [y for _ in range(batch_masks_count)]
+        batch_x, masks = risei.generate_masks(batch_masks_count, x.reshape(x.shape[:3]), log=log, seed=seed)
 
         y_pred_per_mask = model.predict(batch_x.reshape((-1, *x.shape)), batch_size=batch_size)
 
@@ -55,7 +66,7 @@ def to_gray_scale(img):
     return (img * 255).astype(np.uint8)
 
 
-def img_norm(image_x):
+def normalize_image(image_x):
     return (image_x - image_x.min()) / (image_x.max() - image_x.min())
 
 
@@ -69,12 +80,12 @@ def show_heatmap(image_x, heatmap, z=None, alpha=0.5):
 
     # we need to convert a colormap because 0 is red and 1 is blue
     heatmap_grayscale = to_gray_scale(1 - heatmap[z])
-    heatmap_cmap = cv2.applyColorMap(heatmap_grayscale, cv2.COLORMAP_JET)
+    heatmap_color_map = cv2.applyColorMap(heatmap_grayscale, cv2.COLORMAP_JET)
 
-    image_x_grayscale = to_gray_scale(img_norm(image_x[z].reshape(image_x[z].shape[:2])))
-    image_x_cmap = cv2.applyColorMap(image_x_grayscale, cv2.COLORMAP_BONE)
+    image_x_grayscale = to_gray_scale(normalize_image(image_x[z].reshape(image_x[z].shape[:2])))
+    image_x_color_map = cv2.applyColorMap(image_x_grayscale, cv2.COLORMAP_BONE)
 
-    return Image.blend(Image.fromarray(image_x_cmap, mode='RGB'), Image.fromarray(heatmap_cmap, mode='RGB'), alpha)
+    return Image.blend(Image.fromarray(image_x_color_map, mode='RGB'), Image.fromarray(heatmap_color_map, mode='RGB'), alpha)
 
 
 def show_mask(index, masks_x, masks_y, z):

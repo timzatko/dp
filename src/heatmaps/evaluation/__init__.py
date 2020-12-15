@@ -1,2 +1,2 @@
-from .evaluate import *
-from .evaluation import *
+from .heatmap_evaluation import *
+from .evaluation_sequence import *

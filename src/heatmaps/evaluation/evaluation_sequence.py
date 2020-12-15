@@ -1,19 +1,19 @@
 import math
-import sklearn
 
 import numpy as np
-import matplotlib.pyplot as plt
 
 from tqdm import tqdm
 from tensorflow.keras.utils import Sequence
 
 
-def my_cmp(v):
-    return v[0]
-
-
-# [heat, voxel, (z, y, x)]
 def value_to_index(heatmap, image_x, sort='ASC'):
+    """
+    Reindex heatmap and image to: [heat/activation, voxel, (z, y, x)]
+    :param heatmap:
+    :param image_x:
+    :param sort:
+    :return:
+    """
     values = []
 
     for z, _ in enumerate(heatmap):
@@ -24,13 +24,25 @@ def value_to_index(heatmap, image_x, sort='ASC'):
                 values.append((heat, voxel, (z, y, x)))
 
     reverse = sort == 'DESC'
-    values.sort(reverse=reverse, key=my_cmp)
+    values.sort(reverse=reverse, key=lambda v: v[0])
 
     return np.array(values)
 
 
 class EvaluationSequence(Sequence):
     def __init__(self, t, image, heatmap, step_size=1, max_steps=1000, batch_size=8, debug=False, log=True):
+        """
+        Create a sequence of images from original image and heatmap, by removing/inserting most
+        important pixels from it.
+        :param t: type - insertion or deletion
+        :param image: original image
+        :param heatmap: calculated heatmap for that image
+        :param step_size: how many voxels are deleted/inserted in one step - image
+        :param max_steps: maximum number of steps - generated images
+        :param batch_size: how many images return in one batch
+        :param debug: enable debug mode
+        :param log: enable logs
+        """
         self.t = t
         self.log = log
         self.debug = debug
@@ -58,24 +70,24 @@ class EvaluationSequence(Sequence):
         if self.log:
             print(f'max_steps: {self.max_steps}, batch_size: {self.batch_size}')
 
-        self.tqdm = None
+        self.bar = None
         if self.log:
-            self.tqdm = tqdm(total=self.__len__())
+            self.bar = tqdm(total=self.__len__())
 
     def __len__(self):
         return math.ceil(self.max_steps / self.batch_size)
 
     def __getitem__(self, idx):
         batch_x = []
-        if self.tqdm is not None:
-            self.tqdm.update()
+        if self.bar is not None:
+            self.bar.update()
 
         for i in range(self.batch_size):
             step = idx * self.batch_size + i
             # print(f'step: {step}')
 
-            if step >= self.max_steps:
-                break;
+            if 0 < self.max_steps <= step:
+                break
 
             start = step * self.step_size
             end = start + self.step_size
@@ -108,45 +120,3 @@ class EvaluationSequence(Sequence):
         return min(math.ceil(len(self.voxels) / self.step_size), max_steps)
 
 
-def get_curve(image_y, y_pred, step_size):
-    idx = image_y.argmax(axis=0)
-    y = y_pred[:, idx]
-    x = np.array(list(map(lambda s: s * step_size, range(len(y)))))
-    return x, y
-
-
-def evaluation_auc(image_y, y_pred, step_size):
-    x, y = get_curve(image_y, y_pred, step_size)
-    return sklearn.metrics.auc(x, y)
-
-
-def plot_evaluation(image_y, y_pred, eval_seq, title='insertion'):
-    idx = image_y.argmax(axis=0)
-    x, y = get_curve(image_y, y_pred, eval_seq.step_size)
-    auc = evaluation_auc(image_y, y_pred, eval_seq.step_size)
-    plt.title(f'{title}: auc={auc}, y_true={idx}, voxel_count:{eval_seq.max_voxels:,} / {len(eval_seq.voxels):,})')
-    plt.plot(x, y, linewidth=2)
-    ax = plt.gca()
-    ax.set_ylabel(f'activation')
-    ax.set_xlabel(f'voxels')
-
-
-def predict_sequence_as_numpy(model, eval_seq, batch_size, log=False):
-    """
-    predict_seq_as_np
-    eval_seq = sequence to evaluate
-    batch_size = model.predict() batch size
-    """
-    y_pred = None
-    count = len(eval_seq)
-
-    for i, batch_x in enumerate(eval_seq):
-        if log:
-            print(f'evaluating batch {i}/{count} of length {len(batch_x)}...')
-        batch_y_pred = model.predict(batch_x, batch_size=batch_size)
-        if y_pred is None:
-            y_pred = batch_y_pred
-        else:
-            y_pred = np.concatenate([y_pred, batch_y_pred], axis=0)
-
-    return y_pred
