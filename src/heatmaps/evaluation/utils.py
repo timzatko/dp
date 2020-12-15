@@ -23,20 +23,22 @@ def evaluation_auc(image_y, y_pred, step_size):
     return sklearn.metrics.auc(x, y)
 
 
-def plot_evaluation(image_y, y_pred, eval_seq, title='insertion'):
+def plot_evaluation(image_y, y_pred, step_size, voxels, max_voxels, title='insertion'):
     """
     Plot evaluation graph.
+    :param max_voxels: number of voxels evaluated (inserted/deleted) voxels
+    :param voxels: number of voxels in image
+    :param step_size:
     :param image_y:
     :param y_pred:
-    :param eval_seq:
-    :param title:
+    :param title: title of the plot
     :return:
     """
     idx = image_y.argmax(axis=0)
-    x, y = get_curve(image_y, y_pred, eval_seq.step_size)
-    auc = evaluation_auc(image_y, y_pred, eval_seq.step_size)
+    x, y = get_curve(image_y, y_pred, step_size)
+    auc = evaluation_auc(image_y, y_pred, step_size)
 
-    plt.title(f'{title}: auc={auc}, y_true={idx}, voxel_count:{eval_seq.max_voxels:,} / {len(eval_seq.voxels):,})')
+    plt.title(f'{title}: auc={auc}, y_true={idx}, voxel_count:{max_voxels:,} / {len(voxels):,})')
     plt.plot(x, y, linewidth=2)
 
     ax = plt.gca()

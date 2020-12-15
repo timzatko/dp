@@ -1,4 +1,5 @@
 import time
+import datetime
 
 import numpy as np
 
@@ -56,6 +57,9 @@ class HeatmapEvaluation:
         arr_y = []
         arr_y_pred = []
         arr_y_pred_heatmap = []
+        arr_voxels = []
+        arr_max_voxels = []
+        arr_step_size = []
 
         print(f'sequence len: {length}, method: {method}')
         for batch_x, batch_y, *_ in self.seq:
@@ -93,10 +97,10 @@ class HeatmapEvaluation:
                     log=log and verbose > 1
                 )
                 end_a = time.time()
-                print(f'...finished in {end_a - start_a}s')
+                print(f'...finished in {datetime.time(0, 0, int(end_a - start_a)).strftime("%M:%S")}s')
 
                 start_a = time.time()
-                # create a sequence of images, by removing/insering voxels
+                # create a sequence of images, by removing/inserting voxels
                 # from the image, and evaluate a them on the model
                 eval_seq = EvaluationSequence(
                     method,
@@ -127,14 +131,19 @@ class HeatmapEvaluation:
                 arr_y_pred_heatmap.append(y_pred_heatmap)
                 arr_y_pred.append(y_pred)
                 arr_auc.append(auc)
+                arr_voxels.append(eval_seq.voxels)
+                arr_max_voxels.append(eval_seq.max_voxels)
+                arr_step_size.append(eval_seq.step_size)
+
                 evaluations += 1
 
                 end = time.time()
 
                 if log:
-                    print(f'auc: {auc} ({end - start}s)')
+                    print(f'auc: {auc} ({datetime.time(0, 0, int(end - start)).strftime("%M:%S")}s)')
                     print()
 
         auc = sum(arr_auc) / evaluations
 
-        return HeatmapEvaluationHistory(auc, arr_auc, arr_heatmap, arr_x, arr_y, arr_y_pred, arr_y_pred_heatmap)
+        return HeatmapEvaluationHistory(auc, arr_auc, arr_heatmap, arr_x, arr_y, arr_y_pred,
+                                        arr_y_pred_heatmap, arr_voxels, arr_max_voxels, arr_step_size)
