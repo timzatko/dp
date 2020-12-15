@@ -65,6 +65,11 @@ class HeatmapEvaluationHistory:
         f_grid.axes[0][0].set_title('Distribution of AUC metric for generated heatmaps')
         return f_grid
 
+    def list_auc(self, round_auc=False):
+        arr = np.sort(np.array(self.arr_auc))
+        for i, auc in enumerate(arr):
+            print(f'idx: {i}, auc: {round(auc) if round_auc else auc:,}')
+
     def plot_evaluation(self, idx):
         self.__ensure_idx(idx)
         return plot_evaluation(self.arr_y[idx], self.arr_y_pred_heatmap[idx], self.arr_step_size[idx],
