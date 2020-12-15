@@ -1,5 +1,8 @@
 from src.heatmaps.evaluation import plot_evaluation
 
+import numpy as np
+import seaborn as sns
+
 
 class HeatmapEvaluationHistory:
     def __init__(self, method, auc, arr_auc, arr_heatmap, arr_x, arr_y, arr_y_pred, arr_y_pred_heatmap,
@@ -29,6 +32,19 @@ class HeatmapEvaluationHistory:
         self.arr_voxels = arr_voxels
         self.arr_max_voxels = arr_max_voxels
         self.arr_step_size = arr_step_size
+
+    def description(self):
+        print(f'auc')
+        print(f'\tmean: {np.mean(self.auc):,}')
+        print(f'\tmedian: {np.median(self.auc):,}')
+        print(f'\tmax: {np.max(self.auc):,}')
+        print(f'\tmin: {np.min(self.auc):,}')
+        print(f'\tstd: {np.std(self.auc):,}')
+
+    def plot_auc(self):
+        ax = sns.distplot(self.auc, axlabel='AUC (area under curve)')
+        ax.set_title('Distribution of AUC metric for generated heatmaps')
+        return ax
 
     def plot_evaluation(self, idx):
         self.__ensure_idx(idx)
