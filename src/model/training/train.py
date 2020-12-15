@@ -3,7 +3,7 @@ import datetime
 
 import tensorflow as tf
 
-from src.data.augmentations import augment, get_class_weight
+from src.data.augmentations import get_augment_fn, get_class_weight
 from src.data.sequence_to_numpy import sequence_to_numpy
 from src.model.training.mri_tensorboard_callback import MRITensorBoardCallback
 
@@ -82,11 +82,14 @@ def train(model,
     val_x, val_y = sequence_to_numpy(val_seq, data_directory, 'val')
 
     train_dataset = tf.data.Dataset.from_tensor_slices((train_x, train_y))
-    if augmentations:
+    if augmentations is not False:
+        augment = get_augment_fn(augmentations)
         train_dataset = train_dataset.map(lambda x, y: (
             tf.ensure_shape(tf.py_function(func=augment, inp=[x], Tout=tf.float32), input_shape),
             y,
-            tf.py_function(func=get_class_weight, inp=[y], Tout=tf.float32)))
+            tf.py_function(func=get_class_weight, inp=[y], Tout=tf.float32)),
+            num_parallel_calls=tf.data.experimental.AUTOTUNE
+        )
     else:
         train_dataset = train_dataset.map(lambda x, y: (
             x,
