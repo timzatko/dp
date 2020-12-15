@@ -22,6 +22,8 @@ def train(model,
           model_checkpoint_callback=None,
           early_stopping_monitor=None,
           augmentations=True,
+          dataset_key=None,
+          input_shape=None,
           batch_size=8):
     """
     Start training the model.
@@ -78,8 +80,10 @@ def train(model,
         callback = MRITensorBoardCallback(val_seq, model, z_index=z_index, freq=1, log_dir=log_dir, debug=False)
         callbacks.append(callback)
 
-    train_x, train_y = sequence_to_numpy(train_seq, data_directory, 'train')
-    val_x, val_y = sequence_to_numpy(val_seq, data_directory, 'val')
+    train_key = 'train' if dataset_key is None else f'train-{dataset_key}'
+    val_key = 'train' if dataset_key is None else f'val-{dataset_key}'
+    train_x, train_y = sequence_to_numpy(train_seq, data_directory, train_key, input_shape)
+    val_x, val_y = sequence_to_numpy(val_seq, data_directory, val_key, input_shape)
 
     train_dataset = tf.data.Dataset.from_tensor_slices((train_x, train_y))
     if augmentations is not False:

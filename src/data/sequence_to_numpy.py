@@ -2,12 +2,15 @@ import os
 import numpy as np
 
 
-def sequence_to_numpy(seq, path, name):
+def sequence_to_numpy(seq, path, name, input_shape=None):
     """
     Converts sequence to numpy array. If the sequence exists in storage, load it.
     """
     path_x = os.path.join(path, f'{name}_x.npy')
     path_y = os.path.join(path, f'{name}_y.npy')
+
+    if input_shape is None:
+        input_shape = seq.input_shape
 
     if os.path.exists(path_x):
         print(f'loading {path_x}, {path_y}...')
@@ -17,7 +20,7 @@ def sequence_to_numpy(seq, path, name):
         with open(path_y, 'rb') as f:
             train_y = np.load(f, allow_pickle=True)
 
-        return train_x.reshape((-1, *seq.input_shape)), train_y.reshape(-1, len(seq.class_names))
+        return train_x.reshape((-1, *input_shape)), train_y.reshape(-1, len(seq.class_names))
 
     print(f'generating {path_x}, {path_y}...')
 
@@ -35,4 +38,4 @@ def sequence_to_numpy(seq, path, name):
     with open(path_y, 'wb') as f:
         np.save(f, np.array(train_y))
 
-    return np.array(train_x).reshape((-1, *seq.input_shape)), np.array(train_y).reshape(-1, len(seq.class_names))
+    return np.array(train_x).reshape((-1, *input_shape)), np.array(train_y).reshape(-1, len(seq.class_names))
