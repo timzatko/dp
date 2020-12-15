@@ -81,7 +81,7 @@ def train(model,
         callbacks.append(callback)
 
     train_key = 'train' if dataset_key is None else f'train-{dataset_key}'
-    val_key = 'train' if dataset_key is None else f'val-{dataset_key}'
+    val_key = 'val' if dataset_key is None else f'val-{dataset_key}'
     train_x, train_y = sequence_to_numpy(train_seq, data_directory, train_key, input_shape)
     val_x, val_y = sequence_to_numpy(val_seq, data_directory, val_key, input_shape)
 

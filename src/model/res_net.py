@@ -91,16 +91,15 @@ class BasicBlock(tf.keras.layers.Layer):
 
 
 class ResNet(tf.keras.Model):
-    def get_config(self):
-        pass
-
-    def __init__(self, layer_params, classes, activation):
-        super(ResNet, self).__init__()
+    def __init__(self, layer_params, classes, activation, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        print('q')
 
         self.conv1 = tf.keras.layers.Conv2D(filters=64,
                                             kernel_size=(7, 7),
                                             strides=2,
                                             padding="same")
+        print('q')
         self.bn1 = tf.keras.layers.BatchNormalization()
         self.pool1 = tf.keras.layers.MaxPool2D(pool_size=(3, 3),
                                                strides=2,
@@ -117,6 +116,7 @@ class ResNet(tf.keras.Model):
         self.layer4 = make_basic_block_layer(filter_num=512,
                                              blocks=layer_params[3],
                                              stride=2)
+        print('a')
 
         self.avg_pool = tf.keras.layers.GlobalAveragePooling2D()
         self.fc = tf.keras.layers.Dense(units=classes, activation=activation)
@@ -131,9 +131,8 @@ class ResNet(tf.keras.Model):
         x = self.layer3(x, training=training)
         x = self.layer4(x, training=training)
         x = self.avg_pool(x)
-        output = self.fc(x)
 
-        return output
+        return self.fc(x)
 
 
 def make_basic_block_layer(filter_num, blocks, stride=1):
@@ -141,6 +140,7 @@ def make_basic_block_layer(filter_num, blocks, stride=1):
     res_block.add(BasicBlock(filter_num, stride=stride))
 
     for _ in range(1, blocks):
+        print('make_basic_block_layer', blocks)
         res_block.add(BasicBlock(filter_num, stride=1))
 
     return res_block

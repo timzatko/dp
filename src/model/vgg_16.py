@@ -17,12 +17,10 @@ def vgg_16(input_shape, class_names, batch_norm=None, l2_beta=None, dropout=None
 
     # add regularization to layers of res net
     if l2_beta is not None:
-        r = tf.keras.regularizers.l2(l2_beta)
-
         for layer in core.layers:
-            for attr in ['kernel_regularized']:
+            for attr in ['kernel_regularizer']:
                 if hasattr(layer, attr):
-                    setattr(layer, attr, r)
+                    setattr(layer, attr, tf.keras.regularizers.l2(l2_beta))
 
     model = tf.keras.models.Sequential()
     model.add(core)

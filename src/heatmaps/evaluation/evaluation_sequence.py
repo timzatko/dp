@@ -16,13 +16,13 @@ def value_to_index(heatmap, image_x, sort='ASC'):
     """
     values = []
 
-    for z, in range(heatmap):
-        for y in range(heatmap[z]):
-            for x in range(heatmap[z][y]):
+    for z in range(len(heatmap)):
+        for y in range(len(heatmap[z])):
+            for x in range(len(heatmap[z][y])):
                 heat = heatmap[z][y][x]
                 voxel = image_x[z][y][x]
                 values.append((heat, voxel, (z, y, x)))
-
+      
     reverse = sort == 'DESC'
     values.sort(reverse=reverse, key=lambda v: v[0])
 
@@ -65,7 +65,7 @@ class EvaluationSequence(Sequence):
         self.step_size = step_size
         self.steps = 0
         self.max_steps = self.__get_max_steps(max_steps)
-        self.max_voxels = self.max_steps * step_size
+        self.max_voxels = self.new_image.shape[0] * self.new_image.shape[1] * self.new_image.shape[2]
 
         if self.log:
             print(f'max_steps: {self.max_steps}, batch_size: {self.batch_size}')
