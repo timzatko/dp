@@ -42,9 +42,10 @@ class HeatmapEvaluationHistory:
         print(f'\tstd: {np.std(self.auc):,}')
 
     def plot_auc(self):
-        ax = sns.distplot(self.auc, axlabel='AUC (area under curve)')
-        ax.set_title('Distribution of AUC metric for generated heatmaps')
-        return ax
+        f_grid = sns.distplot(self.auc)
+        f_grid.set_axis_labels('AUC (area under curve)')
+        f_grid.axes[0][0].set_title('Distribution of AUC metric for generated heatmaps')
+        return f_grid
 
     def plot_evaluation(self, idx):
         self.__ensure_idx(idx)
