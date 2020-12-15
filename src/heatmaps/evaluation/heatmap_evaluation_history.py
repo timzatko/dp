@@ -45,6 +45,8 @@ class HeatmapEvaluationHistory:
 
     def save(self, path, filename):
         p = os.path.join(path, f'{filename}.cls')
+        if not os.path.exists(p):
+            os.mkdir(p)
         with open(p, 'wb') as file:
             pickle.dump(self, file, protocol=pickle.HIGHEST_PROTOCOL)
             print(f'saved to: {p}')
@@ -73,11 +75,11 @@ class HeatmapEvaluationHistory:
         self.__ensure_idx(idx)
         plot_heatmap_x(self.arr_x[idx], self.arr_y[idx], self.arr_y_pred[idx], self.arr_heatmap[idx], i)
 
-    def plot_heatmap_y(self, idx, i):
+    def plot_heatmap_y(self, idx, i=None):
         self.__ensure_idx(idx)
         plot_heatmap_y(self.arr_x[idx], self.arr_y[idx], self.arr_y_pred[idx], self.arr_heatmap[idx], i)
 
-    def plot_heatmap_z(self, idx, i):
+    def plot_heatmap_z(self, idx, i=None):
         self.__ensure_idx(idx)
         plot_heatmap_z(self.arr_x[idx], self.arr_y[idx], self.arr_y_pred[idx], self.arr_heatmap[idx], i)
 
