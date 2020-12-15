@@ -52,6 +52,7 @@ class HeatmapEvaluationHistory:
             print(f'saved to: {p}')
 
     def description(self):
+        print(f'evaluated heatmaps: {len(self.arr_heatmap)}')
         print(f'auc')
         print(f'\tmean: {np.mean(self.auc):,}')
         print(f'\tmedian: {np.median(self.auc):,}')
