@@ -54,11 +54,11 @@ class HeatmapEvaluationHistory:
     def description(self):
         print(f'evaluated heatmaps: {len(self.arr_heatmap)}')
         print(f'auc')
-        print(f'\tmean: {np.mean(self.auc):,}')
-        print(f'\tmedian: {np.median(self.auc):,}')
-        print(f'\tmax: {np.max(self.auc):,}')
-        print(f'\tmin: {np.min(self.auc):,}')
-        print(f'\tstd: {np.std(self.auc):,}')
+        print(f'\tmean: {np.mean(self.auc):20,}')
+        print(f'\tmedian: {np.median(self.auc):20,}')
+        print(f'\tmax: {np.max(self.auc):20,}')
+        print(f'\tmin: {np.min(self.auc):20,}')
+        print(f'\tstd: {np.std(self.auc):20,}')
 
     def plot_auc(self):
         f_grid = sns.displot(self.arr_auc)
@@ -71,7 +71,7 @@ class HeatmapEvaluationHistory:
         arr.sort(key=lambda v: v[1])
 
         for i, auc in arr:
-            print(f'idx: {i}, auc: {round(auc) if round_auc else auc:,}')
+            print(f'idx: {i,4}, auc: {round(auc) if round_auc else auc:20s,}')
 
     def plot_evaluation(self, idx):
         self.__ensure_idx(idx)
