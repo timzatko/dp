@@ -4,6 +4,9 @@ from src.heatmaps.evaluation import plot_evaluation
 import numpy as np
 import seaborn as sns
 
+import os
+import pickle
+
 
 class HeatmapEvaluationHistory:
     def __init__(self, method, auc, arr_auc, arr_heatmap, arr_x, arr_y, arr_y_pred, arr_y_pred_heatmap,
@@ -33,6 +36,18 @@ class HeatmapEvaluationHistory:
         self.arr_voxels = arr_voxels
         self.arr_max_voxels = arr_max_voxels
         self.arr_step_size = arr_step_size
+
+    @staticmethod
+    def load(path, filename):
+        p = os.path.join(path, f'{filename}.cls')
+        with open(p, 'rb') as file:
+            return pickle.load(file)
+
+    def save(self, path, filename):
+        p = os.path.join(path, f'{filename}.cls')
+        with open(p, 'wb') as file:
+            pickle.dump(self, file, protocol=pickle.HIGHEST_PROTOCOL)
+            print(f'saved to: {p}')
 
     def description(self):
         print(f'auc')
