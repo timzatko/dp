@@ -112,12 +112,15 @@ def plot_heatmap(image_x, image_y, y_pred, heatmap):
 
 
 def plot_heatmap_z(image_x, image_y, y_pred, heatmap, z):
+    z = z if z is not None else heatmap.shape[0] // 2
     plot_heatmap(image_x[z, :, :], image_y, y_pred, heatmap[z, :, :])
 
 
 def plot_heatmap_y(image_x, image_y, y_pred, heatmap, y):
+    y = y if y is not None else heatmap.shape[1] // 2
     plot_heatmap(image_x[:, y, :], image_y, y_pred, heatmap[:, y, :])
 
 
 def plot_heatmap_x(image_x, image_y, y_pred, heatmap, x):
+    x = x if x is not None else heatmap.shape[2] // 2
     plot_heatmap(image_x[:, :, x], image_y, y_pred, heatmap[:, :, x])

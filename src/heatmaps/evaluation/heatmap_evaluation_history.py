@@ -1,3 +1,4 @@
+from src.heatmaps import plot_heatmap_x, plot_heatmap_y, plot_heatmap_z
 from src.heatmaps.evaluation import plot_evaluation
 
 import numpy as np
@@ -52,6 +53,18 @@ class HeatmapEvaluationHistory:
         return plot_evaluation(self.arr_y[idx], self.arr_y_pred_heatmap[idx], self.arr_step_size[idx],
                                self.arr_voxels[idx],
                                self.arr_max_voxels[idx], self.method)
+
+    def plot_heatmap_x(self, idx, i=None):
+        self.__ensure_idx(idx)
+        plot_heatmap_x(self.arr_x[idx], self.arr_y[idx], self.arr_y_pred[idx], self.arr_heatmap[idx], i)
+
+    def plot_heatmap_y(self, idx, i):
+        self.__ensure_idx(idx)
+        plot_heatmap_y(self.arr_x[idx], self.arr_y[idx], self.arr_y_pred[idx], self.arr_heatmap[idx], i)
+
+    def plot_heatmap_z(self, idx, i):
+        self.__ensure_idx(idx)
+        plot_heatmap_z(self.arr_x[idx], self.arr_y[idx], self.arr_y_pred[idx], self.arr_heatmap[idx], i)
 
     def __ensure_idx(self, idx):
         if idx >= len(self.arr_x):
