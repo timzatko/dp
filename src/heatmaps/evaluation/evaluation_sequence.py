@@ -16,9 +16,9 @@ def value_to_index(heatmap, image_x, sort='ASC'):
     """
     values = []
 
-    for z, _ in enumerate(heatmap):
-        for y, _ in enumerate(heatmap[z]):
-            for x, _ in enumerate(heatmap[z][y]):
+    for z, in range(heatmap):
+        for y in range(heatmap[z]):
+            for x in range(heatmap[z][y]):
                 heat = heatmap[z][y][x]
                 voxel = image_x[z][y][x]
                 values.append((heat, voxel, (z, y, x)))

@@ -131,7 +131,7 @@ class HeatmapEvaluation:
                 arr_y_pred_heatmap.append(y_pred_heatmap)
                 arr_y_pred.append(y_pred)
                 arr_auc.append(auc)
-                arr_voxels.append(eval_seq.voxels)
+                arr_voxels.append(len(eval_seq.voxels))
                 arr_max_voxels.append(eval_seq.max_voxels)
                 arr_step_size.append(eval_seq.step_size)
 

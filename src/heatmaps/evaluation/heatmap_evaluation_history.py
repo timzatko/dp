@@ -32,7 +32,8 @@ class HeatmapEvaluationHistory:
 
     def plot_evaluation(self, idx):
         self.__ensure_idx(idx)
-        return plot_evaluation(self.arr_y[idx], self.arr_y_pred_heatmap[idx], self.arr_step_size[idx], self.arr_voxels[idx],
+        return plot_evaluation(self.arr_y[idx], self.arr_y_pred_heatmap[idx], self.arr_step_size[idx],
+                               self.arr_voxels[idx],
                                self.arr_max_voxels[idx], self.method)
 
     def __ensure_idx(self, idx):
