@@ -2,7 +2,8 @@ from src.heatmaps.evaluation import plot_evaluation
 
 
 class HeatmapEvaluationHistory:
-    def __init__(self, method, auc, arr_auc, arr_heatmap, arr_x, arr_y, arr_y_pred, arr_y_pred_heatmap, arr_voxels, arr_max_voxels, arr_step_size):
+    def __init__(self, method, auc, arr_auc, arr_heatmap, arr_x, arr_y, arr_y_pred, arr_y_pred_heatmap,
+                 arr_voxels, arr_max_voxels, arr_step_size):
         self.method = method
         self.auc = auc
         self.arr_auc = arr_auc
