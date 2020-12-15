@@ -67,8 +67,10 @@ class HeatmapEvaluationHistory:
         return f_grid
 
     def list_auc(self, round_auc=False):
-        arr = np.sort(np.array(self.arr_auc))
-        for i, auc in enumerate(arr):
+        arr = list(enumerate(list(np.copy(np.array(self.arr_auc)))))
+        arr.sort(key=lambda v: v[1])
+
+        for i, auc in arr:
             print(f'idx: {i}, auc: {round(auc) if round_auc else auc:,}')
 
     def plot_evaluation(self, idx):
