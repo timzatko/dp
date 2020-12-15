@@ -1,5 +1,5 @@
 from src.heatmaps import plot_heatmap_x, plot_heatmap_y, plot_heatmap_z
-from src.heatmaps.evaluation import plot_evaluation
+from src.heatmaps.evaluation.utils import plot_evaluation
 
 import numpy as np
 import seaborn as sns
