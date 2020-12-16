@@ -1,7 +1,7 @@
 import tensorflow as tf
 
 # https://github.com/calmisential/TensorFlow2.0_ResNets
-def res_net(input_shape, class_names, batch_norm=None, l2_beta=None, dropout=None, output_bias=None):
+def res_net(input_shape, class_names, l2_beta=None, dropout=None, output_bias=None):
     input_layer = tf.keras.layers.Input(shape=input_shape, name='InputLayer')
     reshape_layer = tf.keras.layers.Reshape(input_shape[:-1])
 
@@ -16,7 +16,7 @@ def res_net(input_shape, class_names, batch_norm=None, l2_beta=None, dropout=Non
         r = tf.keras.regularizers.l2(l2_beta)
 
         for layer in core.layers:
-            for attr in ['kernel_regularized']:
+            for attr in ['kernel_regularizer']:
                 if hasattr(layer, attr):
                     setattr(layer, attr, r)
 
@@ -25,8 +25,14 @@ def res_net(input_shape, class_names, batch_norm=None, l2_beta=None, dropout=Non
     model.add(reshape_layer)
     model.add(core)
 
-    if batch_norm:
-        model.add(tf.keras.layers.BatchNormalization())
+    if dropout is not None:
+        model.add(tf.keras.layers.Dropout(dropout))
+
+    l2 = None
+    if l2_beta is not None:
+        l2 = tf.keras.regularizers.l2(l=l2_beta)
+
+    model.add(tf.keras.layers.Dense(512, activation='relu', kernel_regularizer=l2))
 
     if dropout is not None:
         model.add(tf.keras.layers.Dropout(dropout))
@@ -35,19 +41,11 @@ def res_net(input_shape, class_names, batch_norm=None, l2_beta=None, dropout=Non
     if l2_beta is not None:
         l2 = tf.keras.regularizers.l2(l=l2_beta)
 
-    model.add(tf.keras.layers.Dense(512, kernel_regularizer=l2))
-
-    if batch_norm:
-        model.add(tf.keras.layers.BatchNormalization())
-
+    model.add(tf.keras.layers.Dense(256, activation='relu', kernel_regularizer=l2))
+    
+    # Dropout
     if dropout is not None:
         model.add(tf.keras.layers.Dropout(dropout))
-
-    l2 = None
-    if l2_beta is not None:
-        l2 = tf.keras.regularizers.l2(l=l2_beta)
-
-    model.add(tf.keras.layers.Dense(256, kernel_regularizer=l2))
     
     if output_bias is not None:
         output_bias = tf.keras.initializers.Constant(output_bias)
