@@ -50,6 +50,9 @@ def res_net_50_v2(input_shape, class_names, batch_norm=None, l2_beta=None, dropo
 
     model.add(tf.keras.layers.Dense(256, kernel_regularizer=l2))
 
+    if output_bias is not None:
+        output_bias = tf.keras.initializers.Constant(output_bias)
+        
     model.add(tf.keras.layers.Dense(len(class_names), activation='softmax', bias_initializer=output_bias))
 
     return model

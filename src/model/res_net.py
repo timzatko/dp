@@ -1,6 +1,6 @@
 import tensorflow as tf
 
-
+# https://github.com/calmisential/TensorFlow2.0_ResNets
 def res_net(input_shape, class_names, batch_norm=None, l2_beta=None, dropout=None, output_bias=None):
     input_layer = tf.keras.layers.Input(shape=input_shape, name='InputLayer')
     reshape_layer = tf.keras.layers.Reshape(input_shape[:-1])
@@ -48,6 +48,9 @@ def res_net(input_shape, class_names, batch_norm=None, l2_beta=None, dropout=Non
         l2 = tf.keras.regularizers.l2(l=l2_beta)
 
     model.add(tf.keras.layers.Dense(256, kernel_regularizer=l2))
+    
+    if output_bias is not None:
+        output_bias = tf.keras.initializers.Constant(output_bias)
 
     model.add(tf.keras.layers.Dense(len(class_names), activation='softmax', bias_initializer=output_bias))
 
@@ -90,16 +93,15 @@ class BasicBlock(tf.keras.layers.Layer):
         return output
 
 
-class ResNet(tf.keras.Model):
+class MyResNet(tf.keras.Model):
     def __init__(self, layer_params, classes, activation, *args, **kwargs):
         super().__init__(*args, **kwargs)
-        print('q')
 
         self.conv1 = tf.keras.layers.Conv2D(filters=64,
                                             kernel_size=(7, 7),
                                             strides=2,
                                             padding="same")
-        print('q')
+        
         self.bn1 = tf.keras.layers.BatchNormalization()
         self.pool1 = tf.keras.layers.MaxPool2D(pool_size=(3, 3),
                                                strides=2,
@@ -116,8 +118,7 @@ class ResNet(tf.keras.Model):
         self.layer4 = make_basic_block_layer(filter_num=512,
                                              blocks=layer_params[3],
                                              stride=2)
-        print('a')
-
+        
         self.avg_pool = tf.keras.layers.GlobalAveragePooling2D()
         self.fc = tf.keras.layers.Dense(units=classes, activation=activation)
 
@@ -140,15 +141,14 @@ def make_basic_block_layer(filter_num, blocks, stride=1):
     res_block.add(BasicBlock(filter_num, stride=stride))
 
     for _ in range(1, blocks):
-        print('make_basic_block_layer', blocks)
         res_block.add(BasicBlock(filter_num, stride=1))
 
     return res_block
 
 
 def res_net_18(classes, activation):
-    return ResNet([2, 2, 2, 2], classes, activation)
+    return MyResNet([2, 2, 2, 2], classes, activation)
 
 
 def res_net_34(classes, activation):
-    return ResNet([3, 4, 6, 3], classes, activation)
+    return MyResNet([3, 4, 6, 3], classes, activation)

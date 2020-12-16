@@ -49,6 +49,9 @@ def vgg_16(input_shape, class_names, batch_norm=None, l2_beta=None, dropout=None
 
     model.add(tf.keras.layers.Dense(256, kernel_regularizer=l2))
 
+    if output_bias is not None:
+        output_bias = tf.keras.initializers.Constant(output_bias)
+        
     model.add(tf.keras.layers.Dense(len(class_names), activation='softmax', bias_initializer=output_bias))
 
     return model
