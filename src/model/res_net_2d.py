@@ -1,10 +1,8 @@
 import tensorflow as tf
 
-# https://github.com/calmisential/TensorFlow2.0_ResNets
-def res_net(input_shape, class_names, l2_beta=None, dropout=None, output_bias=None):
-    input_layer = tf.keras.layers.Input(shape=input_shape, name='InputLayer')
-    reshape_layer = tf.keras.layers.Reshape(input_shape[:-1])
 
+# https://github.com/calmisential/TensorFlow2.0_ResNets
+def res_net_2d(input_shape, class_names, l2_beta=None, dropout=None, output_bias=None):
     core = res_net_18(
         classes=1024,
         activation='relu'
@@ -21,8 +19,8 @@ def res_net(input_shape, class_names, l2_beta=None, dropout=None, output_bias=No
                     setattr(layer, attr, r)
 
     model = tf.keras.models.Sequential()
-    model.add(input_layer)
-    model.add(reshape_layer)
+    model.add(tf.keras.layers.Input(shape=input_shape, name='InputLayer'))
+    model.add(tf.keras.layers.Reshape(input_shape[:-1]))
     model.add(core)
 
     if dropout is not None:
@@ -42,11 +40,11 @@ def res_net(input_shape, class_names, l2_beta=None, dropout=None, output_bias=No
         l2 = tf.keras.regularizers.l2(l=l2_beta)
 
     model.add(tf.keras.layers.Dense(256, activation='relu', kernel_regularizer=l2))
-    
+
     # Dropout
     if dropout is not None:
         model.add(tf.keras.layers.Dropout(dropout))
-    
+
     if output_bias is not None:
         output_bias = tf.keras.initializers.Constant(output_bias)
 
@@ -99,7 +97,7 @@ class MyResNet(tf.keras.Model):
                                             kernel_size=(7, 7),
                                             strides=2,
                                             padding="same")
-        
+
         self.bn1 = tf.keras.layers.BatchNormalization()
         self.pool1 = tf.keras.layers.MaxPool2D(pool_size=(3, 3),
                                                strides=2,
@@ -116,9 +114,12 @@ class MyResNet(tf.keras.Model):
         self.layer4 = make_basic_block_layer(filter_num=512,
                                              blocks=layer_params[3],
                                              stride=2)
-        
+
         self.avg_pool = tf.keras.layers.GlobalAveragePooling2D()
         self.fc = tf.keras.layers.Dense(units=classes, activation=activation)
+
+    def get_config(self):
+        return super(MyResNet, self).get_config()
 
     def call(self, inputs, training=None, mask=None):
         x = self.conv1(inputs)
