@@ -122,8 +122,7 @@ class HeatmapEvaluation:
                 y_pred_heatmap = predict_sequence_as_numpy(self.model, eval_seq, self.batch_size, log=verbose > 1)
                 end_a = time.time()
                 if log:
-                    print(f'...finished in {str(datetime.timedelta(seconds=end_a - start_a))}s')
-                auc = evaluation_auc(image_y, y_pred_heatmap, eval_seq.step_size)
+                    print(f'...finished in {str(datetime.timedelta(seconds=int(end_a - start_a)))}')
 
                 arr_heatmap.append(heatmap)
                 arr_x.append(image_x)

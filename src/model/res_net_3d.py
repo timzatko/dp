@@ -2,9 +2,9 @@ import tensorflow as tf
 
 
 # https://github.com/calmisential/TensorFlow2.0_ResNets
-def res_net_3d(input_shape, class_names, l2_beta=None, dropout=None, output_bias=None):
+def res_net_3d(input_shape, class_names, l2_beta=None, dropout=None, output_bias=None, is_complex=True):
     core = res_net_18(
-        classes=1024,
+        classes=1024 if is_complex else 512,
         activation='relu'
     )
     core.trainable = True
@@ -22,14 +22,15 @@ def res_net_3d(input_shape, class_names, l2_beta=None, dropout=None, output_bias
     model.add(tf.keras.layers.Input(shape=input_shape, name='InputLayer'))
     model.add(core)
 
-    if dropout is not None:
-        model.add(tf.keras.layers.Dropout(dropout))
+    if is_complex:
+        if dropout is not None:
+            model.add(tf.keras.layers.Dropout(dropout))
 
-    l2 = None
-    if l2_beta is not None:
-        l2 = tf.keras.regularizers.l2(l=l2_beta)
+        l2 = None
+        if l2_beta is not None:
+            l2 = tf.keras.regularizers.l2(l=l2_beta)
 
-    model.add(tf.keras.layers.Dense(512, activation='relu', kernel_regularizer=l2))
+        model.add(tf.keras.layers.Dense(512, activation='relu', kernel_regularizer=l2))
 
     if dropout is not None:
         model.add(tf.keras.layers.Dropout(dropout))
@@ -56,19 +57,19 @@ class BasicBlock(tf.keras.layers.Layer):
     def __init__(self, filter_num, stride=1):
         super(BasicBlock, self).__init__()
         self.conv1 = tf.keras.layers.Conv3D(filters=filter_num,
-                                            kernel_size=(3, 3),
+                                            kernel_size=(3, 3, 3),
                                             strides=stride,
                                             padding="same")
         self.bn1 = tf.keras.layers.BatchNormalization()
         self.conv2 = tf.keras.layers.Conv3D(filters=filter_num,
-                                            kernel_size=(3, 3),
+                                            kernel_size=(3, 3, 3),
                                             strides=1,
                                             padding="same")
         self.bn2 = tf.keras.layers.BatchNormalization()
         if stride != 1:
             self.down_sample = tf.keras.Sequential()
             self.down_sample.add(tf.keras.layers.Conv3D(filters=filter_num,
-                                                        kernel_size=(1, 1),
+                                                        kernel_size=(1, 1, 1),
                                                         strides=stride))
             self.down_sample.add(tf.keras.layers.BatchNormalization())
         else:
@@ -93,12 +94,12 @@ class MyResNet(tf.keras.Model):
         super().__init__(*args, **kwargs)
 
         self.conv1 = tf.keras.layers.Conv3D(filters=64,
-                                            kernel_size=(7, 7),
+                                            kernel_size=(7, 7, 7),
                                             strides=2,
                                             padding="same")
 
         self.bn1 = tf.keras.layers.BatchNormalization()
-        self.pool1 = tf.keras.layers.MaxPool2D(pool_size=(3, 3),
+        self.pool1 = tf.keras.layers.MaxPool3D(pool_size=(3, 3, 3),
                                                strides=2,
                                                padding="same")
 
@@ -114,7 +115,7 @@ class MyResNet(tf.keras.Model):
                                              blocks=layer_params[3],
                                              stride=2)
 
-        self.avg_pool = tf.keras.layers.GlobalAveragePooling2D()
+        self.avg_pool = tf.keras.layers.GlobalAveragePooling3D()
         self.fc = tf.keras.layers.Dense(units=classes, activation=activation)
 
     def get_config(self):

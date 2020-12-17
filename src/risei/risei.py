@@ -237,7 +237,7 @@ class RISEI:
         grids = self.__get_empty_grids(n)
         images_data = self.__get_empty_images_data(n)
         images_mask = self.__get_empty_images_data(n)
-        random_shift = self.__get_random_shift(n)
+        random_shift = self.__get_random_shifts(n)
 
         params = [
             {
@@ -377,9 +377,9 @@ class RISEI:
         grids = np.random.rand(N, self.options['s'], self.options['s'], self.options['s']) < self.options['p1']
         return grids.astype('float32')
 
-    def __get_random_shift(self, N):
-        return np.array([np.random.rand(3) * self.options['over_image_size'] for _ in range(N)], dtype=np.uint32)
-
+    def __get_random_shifts(self, N):
+        return np.array([np.array(np.random.rand(3) * self.options['over_image_size'], dtype=np.uint) for _ in range(N)])
+    
     def __get_empty_images_data(self, N):
         return np.empty((N, *self.options['input_size']))
 
