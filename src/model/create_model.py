@@ -15,7 +15,7 @@ def create_model(model_type, options):
         return res_net_50_v2(**options)
     elif model_type == 'VGG16':
         return vgg_16(**options)
-    elif model_type == 'deep_3d':
+    elif model_type == '3d_deep':
         return deep_3d(**options)
     else:
         return cnn_3d(**options)
