@@ -1,4 +1,4 @@
-# DP
+# My Master's Thesis @ FIIT STU BA
 
 The thesis is located in [thesis/main.pdf](./thesis/main.pdf).
 
@@ -27,3 +27,9 @@ Structure:
 ### Installation
 
 1. `conda env create -f environment.yml`
+
+
+## Google Cloud Setup
+
+1. Use "Tensorflow" pre-configured vm from Google Cloud Marketplace
+2. Add ingress firewall rules for jupyter notebook ([tutorial](https://www.datacamp.com/community/tutorials/google-cloud-data-science))
