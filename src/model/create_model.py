@@ -1,4 +1,5 @@
 from src.model.cnn_3d import cnn_3d
+from src.model.deep_3d import deep_3d
 from src.model.res_net_2d import res_net_2d
 from src.model.res_net_3d import res_net_3d
 from src.model.res_net_50_v2 import res_net_50_v2
@@ -14,5 +15,7 @@ def create_model(model_type, options):
         return res_net_50_v2(**options)
     elif model_type == 'VGG16':
         return vgg_16(**options)
+    elif model_type == 'deep_3d':
+        return deep_3d(**options)
     else:
         return cnn_3d(**options)
