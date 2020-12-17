@@ -18,8 +18,7 @@ def generate_mask(params):
     options = params['options']
     i = params['i']
     image_data = params['image_data']
-
-    shift_x, shift_y, shift_z = __get_random_shift(options)
+    shift_x, shift_y, shift_z = params['random_shift']
 
     # mask has a soft corners
     mask = __get_mask(options, grid, shift_x, shift_y, shift_z)
@@ -79,7 +78,7 @@ def __get_in_paint_mask_3d(options, image_data, mask, binary_mask):
     if options['in_paint_blending']:
         # in_paint with gradual blending of edges (soft edges)
         output = image_data * mask + in_painted * (1 - mask)
-    
+
     end = time.time()
     print(f"in: {end - start}")
 
@@ -120,7 +119,7 @@ def __get_in_paint_mask_2d(options, image_data, mask, binary_mask):
                 in_painted_i = image_data[i, :, :] * mask[i, :, :] + in_painted_i * (1 - mask[i, :, :])
 
             in_painted[i, :, :] += in_painted_i
-        
+
         for i in range(0, image_data.shape[1]):
             in_painted_i = cv2.inpaint(
                 image_data[:, i, :],
@@ -134,7 +133,7 @@ def __get_in_paint_mask_2d(options, image_data, mask, binary_mask):
                 in_painted_i = image_data[:, i, :] * mask[:, i, :] + in_painted_i * (1 - mask[:, i, :])
 
             in_painted[:, i, :] += in_painted_i
-        
+
         for i in range(0, image_data.shape[2]):
             in_painted_i = cv2.inpaint(
                 image_data[:, :, i],
@@ -148,9 +147,9 @@ def __get_in_paint_mask_2d(options, image_data, mask, binary_mask):
                 in_painted_i = image_data[:, :, i] * mask[:, :, i] + in_painted_i * (1 - mask[:, :, i])
 
             in_painted[:, :, i] += in_painted_i
-        
+
         in_painted /= 3
-    
+
     end = time.time()
 
     # print(f"in: {end - start}")
@@ -158,21 +157,16 @@ def __get_in_paint_mask_2d(options, image_data, mask, binary_mask):
     return in_painted
 
 
-def __get_random_shift(options):
-    shift_x = np.random.randint(0, options['over_image_size'][0])
-    shift_y = np.random.randint(0, options['over_image_size'][1])
-    shift_z = np.random.randint(0, options['over_image_size'][2])
-
-    return shift_x, shift_y, shift_z
-
-
 def __get_mask(options, grid, shift_x, shift_y, shift_z):
-    return resize(grid,
-                  options['mask_size'],
-                  order=1,
-                  mode='reflect',
-                  anti_aliasing=False)[shift_y:shift_y + options['input_size'][0],
-           shift_x:shift_x + options['input_size'][1], shift_z:shift_z + options['input_size'][2]]
+    return resize(
+        grid,
+        options['mask_size'],
+        order=1,
+        mode='reflect',
+        anti_aliasing=False)[
+           shift_y:shift_y + options['input_size'][0],
+           shift_x:shift_x + options['input_size'][1],
+           shift_z:shift_z + options['input_size'][2]]
 
 
 def __get_binary_mask(options, grid, shift_x, shift_y, shift_z):
@@ -205,6 +199,7 @@ def get_image(image, dim, i):
         return image[:, :, i]
     else:
         raise Exception('dimension should be >= 0 and <= 2')
+
 
 class RISEI:
     def __init__(self, input_size, **kwargs):
@@ -242,8 +237,16 @@ class RISEI:
         grids = self.__get_empty_grids(n)
         images_data = self.__get_empty_images_data(n)
         images_mask = self.__get_empty_images_data(n)
+        random_shift = self.__get_random_shift(n)
 
-        params = [{'i': i, 'options': self.options, 'grid': grids[i], 'image_data': image} for i in range(0, n)]
+        params = [
+            {
+                'i': i,
+                'options': self.options,
+                'grid': grids[i],
+                'random_shift': random_shift[i],
+                'image_data': image
+            } for i in range(0, n)]
 
         # use process pool only when more than a one process is used
         # in google colaboratory it causes memory leaks
@@ -283,8 +286,10 @@ class RISEI:
         original_image = self.show_image_from_last_run(i, z, dim)
         mask = self.show_mask_from_last_run(i, z, dim)
         binary_mask = self.show_binary_mask_from_last_run(i, z, dim)
-        in_paint = self.show_in_paint_from_last_run(i, z, dim) if self.options['b1'] > 0 else self.show_image_from_last_run(i,
-                                                                                                                     z, dim)
+        in_paint = self.show_in_paint_from_last_run(i, z, dim) if self.options[
+                                                                      'b1'] > 0 else self.show_image_from_last_run(i,
+                                                                                                                   z,
+                                                                                                                   dim)
         result = self.show_result_from_last_run(i, z, dim)
 
         fig, axes = plt.subplots(ncols=ncols, nrows=nrows, figsize=figsize)
@@ -371,6 +376,9 @@ class RISEI:
     def __get_empty_grids(self, N):
         grids = np.random.rand(N, self.options['s'], self.options['s'], self.options['s']) < self.options['p1']
         return grids.astype('float32')
+
+    def __get_random_shift(self, N):
+        return np.array([np.random.rand(3) * self.options['over_image_size'] for _ in range(N)], dtype=np.uint32)
 
     def __get_empty_images_data(self, N):
         return np.empty((N, *self.options['input_size']))

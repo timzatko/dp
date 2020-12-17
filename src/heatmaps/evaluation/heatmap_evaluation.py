@@ -97,7 +97,7 @@ class HeatmapEvaluation:
                     log=log and verbose > 1
                 )
                 end_a = time.time()
-                print(f'...finished in {datetime.time(0, 0, int(end_a - start_a)).strftime("%M:%S")}s')
+                print(f'...finished in {str(datetime.timedelta(seconds=int(end_a - start_a)))}s')
 
                 start_a = time.time()
                 # create a sequence of images, by removing/inserting voxels
@@ -122,7 +122,7 @@ class HeatmapEvaluation:
                 y_pred_heatmap = predict_sequence_as_numpy(self.model, eval_seq, self.batch_size, log=verbose > 1)
                 end_a = time.time()
                 if log:
-                    print(f'...finished in {end_a - start_a}s')
+                    print(f'...finished in {str(datetime.timedelta(seconds=end_a - start_a))}s')
                 auc = evaluation_auc(image_y, y_pred_heatmap, eval_seq.step_size)
 
                 arr_heatmap.append(heatmap)
@@ -140,7 +140,7 @@ class HeatmapEvaluation:
                 end = time.time()
 
                 if log:
-                    print(f'auc: {auc} ({datetime.time(0, 0, int(end - start)).strftime("%M:%S")}s)')
+                    print(f'auc: {auc} ({str(datetime.timedelta(seconds=int(end - start)))}s)')
                     print()
 
         auc = sum(arr_auc) / evaluations

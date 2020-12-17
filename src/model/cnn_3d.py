@@ -67,7 +67,7 @@ def cnn_3d(
         model.add(tf.keras.layers.Conv3D(64, kernel_size=3, padding='same', kernel_regularizer=l2))
         if batch_norm:
             model.add(tf.keras.layers.BatchNormalization())
-            model.add(tf.keras.layers.Activation('relu'))
+        model.add(tf.keras.layers.Activation('relu'))
 
     # L6
     model.add(tf.keras.layers.MaxPool3D(pool_size=(3, 3, 3)))
@@ -79,7 +79,7 @@ def cnn_3d(
     model.add(tf.keras.layers.Conv3D(128, kernel_size=3, padding='same', kernel_regularizer=l2))
     if batch_norm:
         model.add(tf.keras.layers.BatchNormalization())
-        model.add(tf.keras.layers.Activation('relu'))
+    model.add(tf.keras.layers.Activation('relu'))
 
     if is_complex:
         l2 = None
@@ -88,7 +88,7 @@ def cnn_3d(
         model.add(tf.keras.layers.Conv3D(128, kernel_size=3, padding='same', kernel_regularizer=l2))
         if batch_norm:
             model.add(tf.keras.layers.BatchNormalization())
-            model.add(tf.keras.layers.Activation('relu'))
+        model.add(tf.keras.layers.Activation('relu'))
 
     # L9
     model.add(tf.keras.layers.MaxPool3D(pool_size=(4, 4, 4)))
@@ -106,10 +106,9 @@ def cnn_3d(
         if l2_beta is not None:
             l2 = tf.keras.regularizers.l2(l=l2_beta)
         model.add(tf.keras.layers.Dense(512, activation='relu', kernel_regularizer=l2))
-
-    # Dropout
-    if dropout is not None:
-        model.add(tf.keras.layers.Dropout(dropout))
+        # Dropout
+        if dropout is not None:
+            model.add(tf.keras.layers.Dropout(dropout))
 
     # L11
     l2 = None
