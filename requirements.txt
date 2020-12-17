@@ -1,0 +1,15 @@
+tensorflow
+tensorboard
+opencv-python
+seaborn
+ipyparams
+jupyter
+tqdm
+pillow
+scikit-image
+SimpleITK
+pandas
+matplotlib
+numpy
+pandas
+gdown
