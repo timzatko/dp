@@ -10,7 +10,7 @@ def show_metrics(model, test_seq, class_names):
     y_pred = np.array([]).reshape(-1, len(class_names))
 
     for batch in test_seq:
-        x, y = batch
+        x, y, *_ = batch
 
         pred = model.predict(x)
 
