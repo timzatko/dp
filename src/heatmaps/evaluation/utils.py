@@ -42,6 +42,7 @@ def plot_evaluation(image_y, y_pred, step_size, voxels, max_voxels, title='inser
 
     ax = plt.gca()
     ax.set_ylabel(f'activation')
+    ax.set_ylim(0, 1)
     ax.set_xlabel(f'voxels')
 
 

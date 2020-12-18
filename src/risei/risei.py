@@ -164,9 +164,10 @@ def __get_mask(options, grid, shift_x, shift_y, shift_z):
         order=1,
         mode='reflect',
         anti_aliasing=False)[
-           shift_y:shift_y + options['input_size'][0],
-           shift_x:shift_x + options['input_size'][1],
-           shift_z:shift_z + options['input_size'][2]]
+        shift_y:shift_y + options['input_size'][0],
+        shift_x:shift_x + options['input_size'][1],
+        shift_z:shift_z + options['input_size'][2]
+    ]
 
 
 def __get_binary_mask(options, grid, shift_x, shift_y, shift_z):
@@ -204,7 +205,7 @@ def get_image(image, dim, i):
 class RISEI:
     def __init__(self, input_size, **kwargs):
         self.options = {
-            'input_size': input_size,
+            'input_size': np.array(input_size, dtype=np.uint),
             's': kwargs.get('s', 8),  # size of the "grid" - binary mask
             'p1': kwargs.get('p1', 0.5),  # probability of cell being white - transparent
             'b1': kwargs.get('b1', 0.8),  # in_paint mask blend

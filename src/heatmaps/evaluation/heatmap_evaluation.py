@@ -123,6 +123,7 @@ class HeatmapEvaluation:
                 end_a = time.time()
                 if log:
                     print(f'...finished in {str(datetime.timedelta(seconds=int(end_a - start_a)))}')
+                auc = evaluation_auc(image_y, y_pred_heatmap, eval_seq.step_size)
 
                 arr_heatmap.append(heatmap)
                 arr_x.append(image_x)
