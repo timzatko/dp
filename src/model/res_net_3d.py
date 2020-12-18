@@ -2,6 +2,7 @@ import tensorflow as tf
 
 
 # https://github.com/calmisential/TensorFlow2.0_ResNets
+# ResNet: https://arxiv.org/pdf/1512.03385.pdf
 def res_net_3d(input_shape, class_names, l2_beta=None, dropout=None, output_bias=None, blocks=(2, 2, 2, 2),
                filters=(64, 128, 256, 512)):
     model = tf.keras.models.Sequential()
