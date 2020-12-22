@@ -45,7 +45,7 @@ def generate_mask(params):
 
 
 def __merge(options, original_image, mask, in_paint_mask):
-    original_image = (original_image - original_image.min())
+    # original_image = (original_image - original_image.min())
 
     # blend original image with in_paint mask if exists
     new_image = original_image
@@ -57,7 +57,16 @@ def __merge(options, original_image, mask, in_paint_mask):
             new_image = in_paint_mask
 
     # blend original image with in_paint mask with mask
-    new_image = new_image * (1 - ((1 - mask) * options['b2']))
+    if options['b2'] > 0:
+        if options['b2_value'] != 0:
+            value = 1
+            if options['b2_value'] == 'mean':
+                value = np.mean(original_image)
+            elif options['b2_value'] == 'median':
+                value = np.median(original_image)
+            new_image = (mask * options['b2']) * new_image + ((1 - mask) * value * options['b2'])
+        else:
+            new_image = (mask * options['b2']) * new_image
 
     return new_image
 
@@ -217,6 +226,7 @@ class RISEI:
             'in_paint_2d_to_3d': kwargs.get('in_paint_blending', False),
             # if the in_paint is gradually blended into the image
             'debug': kwargs.get('debug', False),
+            'b2_value': kwargs.get('b2_value', 0), # 0, 1, (min, max, mean, meadian) - implement
             'mask_size': None,
             'cell_size': None,
             'over_image_size': None,
