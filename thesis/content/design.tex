@@ -3,18 +3,26 @@
 Pre použitie neurónových sietí v bežnej praxi doktorov pri diagnostike Alzheimerovej choroby je nevyhnutné, aby sa rozhodnutia neurónových sietí dali vysvetliť. Preto navrhujeme metódu na vyvsvetľovanie rozhodnutí neurónových sietí, ktorú overíme na MRI snímkoch u pacientov (CN, MCI a AD).
 
 Vychádzajúc cieľa práce \textit{\ref{sec:goals_1} Vytvorenie novej alebo vylepšenie existujúcej metódy pre vysvetľovanie rozhodnutí neurónových sietí} navrhujeme metódu, ktorá vychádza z už existujúcej metódy \textit{RISE} (Sek. \ref{sec:rise}). Táto metóda dosiahla veľmi dobré výsledky oproti metódam GradCAM a LIME a je, teda vhodným základom na možné vylepšenia. Táto metóda funguje na pricípe zakrývania častí obrázka (tak ako iné perturbačné metódy). Po takomto prekrytí u iných perturbačných metódach vznikajú ostré hrany, čo môže neurónovú sieť mýliť, RISE tento problém ale nemá. Avšak tento prekryv býva zvyčajne v jednej hodnote. Keďže metóda RISE bola pôvodne použitá na obrázky vo farebnej schéme RGB, tento prekryv sa zvyčajne robí v čiernej farbe - tj. v (r = 0, g = 0, b = 0). MRI snímky nepoužívajú žiadnu farebnú schému, ale zachytávajú intenzitu (hodnoty sú zväčša reálne čísla). V tomto prípade môžeme zakrývať maximálnou alebo minimálnou hodnotou (minimálna hodnota je ekvivalentná RGB v prípade šedej). Toto zakrutie môže byť práve ďalším zdrojom zmätenia pre neurónovú sieť, keďže úbytky tkaniva sú vyjadrené nízkymi hodnotami na snímkoch. Preto navrhujeme zakrývané miesta dokresliť určitou metódou spracovania obrazu (Sek. \ref{cap:image_processing}) alebo na zakrytie použiť inú hodnotu.
+Pôvodná metóda bola ale narvhnutá pre obrázky (tj. 2D) a nie 3D volumetrické dáta, preto budeme musieť metódu RISEI upraviť aby vedela pracovať s 3D dátami - tj. budeme generovať 3D masky a podobne.
 
 \section{RISEI - Randomized Input Sampling for Explanation with Inpainting}
 
 Metódu sme pomenovali \textit{Randomized Input Sampling for Explanation with Inpainting} (tj. náhodné vzorkovanie vstupu pre vysvetlovanie s dokreslovaním) so skratkou \text{RISEI}.
 
-Keďže metóda vychádza už z existujúcej metódy, časť našej metódy je samozrejme rovnaká. Proces vytvorenia vysvetlenia klasifikácie do triedy $T$ pre obrázok $O$ modelom je teda nasledovný:
+Keďže metóda vychádza už z existujúcej metódy, časť našej metódy je samozrejme rovnaká. Proces vytvorenia vysvetlenia klasifikácie (Obr. \ref{fig:risei_heatmap_generation}) do triedy $T$ pre obrázok $O$ modelom je teda nasledovný:
 
 \begin{enumerate}
     \item Vytvorenie \textit{N} náhodne zamaskovaných obrázkov z obrázka $O$.
     \item Vloženie zamaskovaných obrázkov do modelu a následné získanie pravdepodobností pre triedu $T$.
     \item Vytvorenie a vizualizácia vysvetlenia pomocou tepelnej mapy.
 \end{enumerate}
+
+\begin{figure}[h!]
+    \centering
+    \includegraphics[scale=0.35]{assets/images/risei_heatmap_generation.png}
+    \caption{Proces vysvetlenia klasifikácie - vytvorenia tepelnej mapy.}
+    \label{fig:risei_heatmap_generation}
+\end{figure}
 
 Toto sú 3 hlavné kroky z ktorých pozostáva táto metóda, ďalej bližšie popíšeme jednotlivé z nich.
 
@@ -31,7 +39,7 @@ Vytvorenie náhodne zamaskovaných obrázkov tiež pozostáva z niekoľkých kro
 
 Oproti metóde \textit{RISE} vytvárame o jednu masku naviac, a teda je originálny obrázok prekrytý s viacerými maskami. Jednotlivé masky cez seba prekryjeme, pričom každej z nich nastavíme určité množstvo priehľadnosti. S týmto pomerom môžeme ďalej experimentovať a výsledky porovnávať. Môžeme porovnať použitie iba dokreslenej masky s iba ''čiernou'' maskou a tiež s použitím oboch v rôznych pomeroch.
 
-Vytvorenie ''čiernej'' masky je rovnaké, ako pri metóde \textit{RISE}. Dokreslená maska vznikne dokreslením zakrytých (zamaskovaných) častí obrázka pomocou jedného z algoritmov na dokreslovanie (angl. inpainting). Tieto algoritmy sme popísali v sekcii \ref{cap:image_processing} Spracovanie obrazu. Obrázok \ref{fig:risei_inpainting_example} je príkladom dokreslenia častí vzorového obrázka na základe masky náhodne vygenerovanej masky. V našej metóde budeme experimentovať s rôznymi hodnotami prekrytia.
+Vytvorenie ''čiernej'' masky je rovnaké, ako pri metóde \textit{RISE}. Dokreslená maska vznikne dokreslením zakrytých (zamaskovaných) častí obrázka pomocou jedného z algoritmov na dokreslovanie (angl. inpainting). Tieto algoritmy sme popísali v sekcii \ref{cap:image_processing} Spracovanie obrazu. Obrázok \ref{fig:risei_inpainting_example} je príkladom dokreslenia častí vzorového obrázka na základe masky náhodne vygenerovanej masky (tento príklad je v 2D, naša metóda bude pracovať s 3D). V našej metóde budeme experimentovať s rôznymi hodnotami prekrytia (priemer, maximum, minimum, medián).
 
 \begin{figure}[h!]
     \centering
@@ -42,14 +50,14 @@ Vytvorenie ''čiernej'' masky je rovnaké, ako pri metóde \textit{RISE}. Dokres
 
 \paragraph{Vytvorenie a vizualizácia vysvetlenia pomocou tepelnej mapy.}
 
-Tento krok je identický s originálnou metódou \textit{RISE}. Nasledovný vzorec \ref{eq:risei_heatmap_1} vyjadruje výpočet dôležitosti $I$ pre každý pixel $[x, y]$ obrázka, kde $n$ je počet všetkých zamaskovaných obrázkov. Funkcia $p(k, x, y)$ vracia $0$ ak pixel $[x, y]$ bol v danom zamaskovanom obrázku $k$ prekrytý, inak vracia predikciu (pravdepodobnosť) z modelu pre zamaskovaný obrázok $k$.
+Tento krok je identický s originálnou metódou \textit{RISE}. Nasledovný vzorec \ref{eq:risei_heatmap_1} vyjadruje výpočet dôležitosti $I$ pre každý voxel $[x, y, z]$ snímku, kde $n$ je počet všetkých zamaskovaných snímkov. Funkcia $p(k, x, y, z)$ vracia vracia predikciu (tj. aktiváciu v kontexte neurónových sietí) pre predikovanú triedu (v prípade binárnej klasifikácie) z modelu pre zamaskovaný snímok $k$. Funkcia $c(k, x, y, z)$ vracia mieru zakrytia/dokreslenia maskou, pričom $H(c) = <0, 1>$, kde $1$ znamená úplné prekrytie/dokreslenie a $0$ žiadne prekrytie/dokreslenie. Rovnako, ako metóde \textit{RISE}, počítame vážený priemer.
 
-\begin{equation}
-    I_{x, y} = \frac{\sum_{k}^{n} p(k, x, y)}{n}
+\begin{equation} 
+    I_{x, y, z} = \frac{\sum_{k}^{n} p(k, x, y, z) * (1 - c(k, x, y, z))}{\sum_{k}^{n} p(k, x, y, z)}
     \label{eq:risei_heatmap_1}
 \end{equation}
 
-Táto metóda do orignálnej pridáva niekoľko parametrov a najmä výpočtovo náročné dokreslovanie, preto bude nutné nájsť vhodné nastavenie parametrov, aby výpočet vysvetlenia nebol príliš časovo náročný. Práve výpočtová náročnosť môže jednou zo slabín tejto metódy. Takisto aj samotná dokreslená časť obrázka môže byť príčinou zmätenia neurónovej siete.
+Navrhovaná metóda do orignálnej metódy pridáva niekoľko parametrov a najmä výpočtovo náročné dokreslovanie, preto bude nutné nájsť vhodné nastavenie parametrov, aby výpočet vysvetlenia nebol príliš časovo náročný. Práve výpočtová náročnosť môže jednou zo slabín tejto metódy. Takisto aj samotná dokreslená časť obrázka môže byť príčinou zmätenia neurónovej siete.
 
 \section{Overenie riešenia}
 
