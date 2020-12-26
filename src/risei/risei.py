@@ -99,8 +99,8 @@ def __get_in_paint_mask_2d(options, image_data, mask, binary_mask):
 
     in_painted = np.zeros(image_data.shape)
     inverted_binary_mask = (1 - binary_mask).astype(np.uint8)
-
-    if not options['in_paint_2d_to_3d']:
+    
+    if options['in_paint_2d_to_3d'] is not True:
         for z in range(0, image_data.shape[0]):
             in_painted_z = cv2.inpaint(
                 image_data[z],

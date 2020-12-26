@@ -51,23 +51,27 @@ class HeatmapEvaluationHistory:
             pickle.dump(self, file, protocol=pickle.HIGHEST_PROTOCOL)
             print(f'saved to: {p}')
 
-    def description(self):
+    def description(self, percentage=True):
+        arr_auc = self.__get_arr_auc(percentage)
+        
         print(f'evaluated heatmaps: {len(self.arr_heatmap)}')
         print(f'auc')
-        print(f'\tmean:   {np.mean(self.arr_auc):20,}')
-        print(f'\tmedian: {np.median(self.arr_auc):20,}')
-        print(f'\tmax:    {np.max(self.arr_auc):20,}')
-        print(f'\tmin:    {np.min(self.arr_auc):20,}')
-        print(f'\tstd:    {np.std(self.arr_auc):20,}')
+        print(f'\tmean:   {np.mean(arr_auc):20,}')
+        print(f'\tmedian: {np.median(arr_auc):20,}')
+        print(f'\tmax:    {np.max(arr_auc):20,}')
+        print(f'\tmin:    {np.min(arr_auc):20,}')
+        print(f'\tstd:    {np.std(arr_auc):20,}')
 
-    def plot_auc(self):
-        f_grid = sns.displot(self.arr_auc)
+    def plot_auc(self, percentage=True):
+        arr_auc = self.__get_arr_auc(percentage)
+        f_grid = sns.displot(arr_auc)
         f_grid.set_axis_labels('AUC (area under curve)')
         f_grid.axes[0][0].set_title('Distribution of AUC metric for generated heatmaps')
         return f_grid
 
-    def list_auc(self, round_auc=False):
-        arr = list(enumerate(list(np.copy(np.array(self.arr_auc)))))
+    def list_auc(self, round_auc=False, percentage=True):
+        arr_auc = self.__get_arr_auc(percentage)
+        arr = list(enumerate(list(np.copy(np.array(arr_auc)))))
         arr.sort(key=lambda v: v[1])
 
         for i, auc in arr:
@@ -94,3 +98,8 @@ class HeatmapEvaluationHistory:
     def __ensure_idx(self, idx):
         if idx >= len(self.arr_x):
             raise Exception(f'image with index {idx} does not exist in the history!')
+    
+    def __get_arr_auc(self, percentage):
+        div = self.arr_max_voxels[0] if percentage and len(self.arr_max_voxels) else 1
+        return np.array(self.arr_auc) / div
+    
