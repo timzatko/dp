@@ -5,7 +5,7 @@ Pre použitie neurónových sietí v bežnej praxi doktorov pri diagnostike Alzh
 Vychádzajúc cieľa práce \textit{\ref{sec:goals_1} Vytvorenie novej alebo vylepšenie existujúcej metódy pre vysvetľovanie rozhodnutí neurónových sietí} navrhujeme metódu, ktorá vychádza z už existujúcej metódy \textit{RISE} (Sek. \ref{sec:rise}). Táto metóda dosiahla veľmi dobré výsledky oproti metódam GradCAM a LIME a je, teda vhodným základom na možné vylepšenia. Táto metóda funguje na pricípe zakrývania častí obrázka (tak ako iné perturbačné metódy). Po takomto prekrytí u iných perturbačných metódach vznikajú ostré hrany, čo môže neurónovú sieť mýliť, RISE tento problém ale nemá. Avšak tento prekryv býva zvyčajne v jednej hodnote. Keďže metóda RISE bola pôvodne použitá na obrázky vo farebnej schéme RGB, tento prekryv sa zvyčajne robí v čiernej farbe - tj. v (r = 0, g = 0, b = 0). MRI snímky nepoužívajú žiadnu farebnú schému, ale zachytávajú intenzitu (hodnoty sú zväčša reálne čísla). V tomto prípade môžeme zakrývať maximálnou alebo minimálnou hodnotou (minimálna hodnota je ekvivalentná RGB v prípade šedej). Toto zakrutie môže byť práve ďalším zdrojom zmätenia pre neurónovú sieť, keďže úbytky tkaniva sú vyjadrené nízkymi hodnotami na snímkoch. Preto navrhujeme zakrývané miesta dokresliť určitou metódou spracovania obrazu (Sek. \ref{cap:image_processing}) alebo na zakrytie použiť inú hodnotu.
 Pôvodná metóda bola ale narvhnutá pre obrázky (tj. 2D) a nie 3D volumetrické dáta, preto budeme musieť metódu RISEI upraviť aby vedela pracovať s 3D dátami - tj. budeme generovať 3D masky a podobne.
 
-\section{RISEI - Randomized Input Sampling for Explanation with Inpainting}
+\section{RISEI - Randomized Input Sampling for Explanation with Inpainting \label{sec:risei}}
 
 Metódu sme pomenovali \textit{Randomized Input Sampling for Explanation with Inpainting} (tj. náhodné vzorkovanie vstupu pre vysvetlovanie s dokreslovaním) so skratkou \text{RISEI}.
 
@@ -69,7 +69,7 @@ Našu metódu budeme najskôr porovnávať s originálnou metódou RISE (tj. či
 
 Najskôr budeme vyhodnocovať nami navrhnutú metódu pomocou sledovania kvality tepelných máp. Následne budeme overovať správnosť modelu pomocou nami navrhnutej metódy, avšak je nutné aby metóda generovala kavlitné tepelné mapy.
 
-\subsubsection{Určenie kvality metódy vysvetľovania rozhodnutí modelu}
+\subsubsection{Určenie kvality metódy vysvetľovania rozhodnutí modelu \label{sec:evaluation_design_method_quality}}
 
 Kvalitu metódy vysvetľovania rozhodnutí modelu budeme sledovať určovaním kvality tepelnej mapy. Tá v kontexte našej práce hovorí o tom, do akej miery táto mapa odzrkadľuje to, na základe čoho sa model rozhoduje. Toto budeme merať metrikami \textit{insertion (AUC)} a \textit{deletion (AUC)}, ktoré sme bližšie popísali v sekcii \ref{sec:rise}. Táto metrika nám povie, ako dobrá je naša metóda na vysvetľovanie.
 

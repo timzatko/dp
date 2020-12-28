@@ -124,13 +124,13 @@ Kompletný zoznam parametrov metódy RISEI sa nachádza v tabuľke \ref{tab:rise
 \begin{table}[]
     \begin{tabular}{p{0.25\linewidth} | p{0.15\linewidth} | p{0.5\linewidth}}
         \hline
-        Názov              & Dátový typ & Popis                                                               \\ \hline
-        size              & int       & Veľkosť strany binárnej 3D matice.                                        \\
-        probability       & float     & Pravdepodobnosť, že plocha nebude prekrytá maskou.                        \\
-        b1                & float     & Miera prekrytia medzi originálnym snímkom a dokresleným snímkom.          \\
-        b2                & float     & Miera prekrytia s ''čiernou'' maskou.                                     \\
-        b2\_value         & string    & Hodnota ''čiernej'' masky, môže to byť minimum, maximum, medián, priemer. \\
-        in\_paint\_radius & float     & Polomer dokreslenia algoritmom z knižnice OpenCV.                         \\ \hline
+        Názov             & Dátový typ & Popis                                                               \\ \hline
+        s                 & int        & Veľkosť strany binárnej 3D matice.                                        \\
+        p                 & float      & Pravdepodobnosť, že plocha nebude prekrytá maskou.                        \\
+        b1                & float      & Miera prekrytia medzi originálnym snímkom a dokresleným snímkom.          \\
+        b2                & float      & Miera prekrytia s ''čiernou'' maskou.                                     \\
+        b2\_value         & string     & Hodnota ''čiernej'' masky, môže to byť minimum, maximum, medián, priemer. \\
+        in\_paint\_radius & float      & Polomer dokreslenia algoritmom z knižnice OpenCV.                         \\ \hline
         \end{tabular}
     \caption{Zoznam parametrov metódy RISEI.}
     \label{tab:rise_params}
@@ -138,6 +138,63 @@ Kompletný zoznam parametrov metódy RISEI sa nachádza v tabuľke \ref{tab:rise
 
 \subsection{Vytvorenie tepelných máp}
 
-% TODO:
+Na základe návrhu (Sekcia \ref{sec:risei}) sme implementovali vytváranie tepelných máp. Keďže generovanie tepelnej mapy si vyžaduje vygenerovať veľký počet zamaskovaných snímkov, ktoré v istom momente musia byť všetky uložené v pamäti, generujeme a vyhodnocujeme zamaskované snímky v dávkach (angl. batch). Zdrojový kód nižšie, implementuje vytvorenie jednej tepelnej mapy.
+
+\begin{lstlisting}
+# image_x float[z, x, y, 1] - original image
+# masks_count int - how many masks are generated to create a heatmap
+# batch_size - how many masks to evaluate on model
+# risei_batch_size int - how many masks to generate in one batch
+# seed int int - seed for mask generation
+# cls_idx int - index of target class in model output vector
+# model tf.keras.Model - instance of tensorflow model
+
+risei = RISEI(s=8, p=0.5, b1=0.5, b2=0.5, b2_value='median', in_paint_radius=5)
+heatmap = np.zeros(shape=image_x.shape[:3])
+batch_count = math.ceil(masks_count / risei_batch_size)
+weights = 0
+
+for batch_idx in range(batch_count):
+    batch_masks_count = min(risei_batch_size, masks_count - batch_idx * risei_batch_size)
+    # reshape input for RISEI since it works with [z, y, x] shape
+    # batch_x float[z, x, y] - images to evaluate with masks already applied
+    # masks float[z, x, y] - interpolated binary masks (so we know which places we inpainted or masked)
+    batch_x, masks = risei.generate_masks(batch_masks_count, image_x.reshape(image_x.shape[:3]), seed=seed)
+    y_pred_batch_x = model.predict(batch_x.reshape((-1, *image_x.shape)), batch_size=batch_size)
+
+    for mask, y_pred in zip(masks, y_pred_batch_x):
+        # invert the mask, since 1 is for no masking
+        # y_pred is the activation for the input masked image on last layer (softmax)
+        heatmap = heatmap + y_pred[cls_idx] * (1 - mask)
+        weights += y_pred[cls_idx]
+
+heatmap = heatmap / weights
+\end{lstlisting}
+
+\subsection{Vyhodnotenie tepelných máp}
+
+Zatiaľ sme implementovali, podľa návrhu riešenia (Sekcia \ref{sec:evaluation_design_method_quality}), iba metriky \textit{insertion} a \textit{deletion}.
+
+\subsubsection{Metriky insertion \& deletion}
+
+Tieto metriky fungujú tak, že postupne odstraňujeme/pridávame pixely z obrázku a tieto obrázky vkladáme do modelu a zaznamenávame si aktiváciu na poslednej vrstve pre predikovanú triedu. V prípade obrázkov, a teda dvojrozmerných dát je to ešte výpočtovo zvládnutelné, avšak v prípade trojdimenzionálnych rádiologických simkov to už môže byť problém. Naše vstupné snímky majú po zmenšení rozmer \textit{[104, 128, 104]}, čiže ak aby sme odstraňovali zo snímku po jednom voxeli, museli by sme vykonať \textit{1 384 448} evaluácii pomocou nášho modelu (čo trvá niekoľko hodín, aj pri evaluovaní v maximálnych možných dávkach vzhľadom na pamäť grafickej karty). Preto sme sa rozhodli, že budeme pridávať po $n$ (~100) voxeloch v každom kroku. V prípade metódy insertion vkladáme do snímku plného núl (môžeme prípadne aj jednotiek). Keďže kód je rozsiahlejší, uvedieme len pseudokód.
+
+\begin{lstlisting}
+method = 'insertion'
+step_size = 150 # how many voxels to insert/delete in one evaluation
+image_x, image_y = get_image()
+image_y_pred = model.predict(image_x)
+heatmap = get_heatmap()
+voxels = get_ordered_voxels_by_heat(heatmaps)
+sequence = get_images_sequence(voxels, step_size) # create a sequence from images where each next image has n inserted/deleted voxels
+y_pred = []
+
+for batch_x, batch_y in sequence:
+    batch_y_pred = model.predict(batch_x)
+    for y in batch_y_pred:
+        y_pred.append(y)
+
+auc = metrics.auc([i * step_size for i in range(len(y_pred))], y_pred) / get_voxels_count(image_x)
+\end{lstlisting}
 
 \section{Model na detekciu Alzheimerovej choroby na základe MRI snímkov}
