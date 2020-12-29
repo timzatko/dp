@@ -48,6 +48,8 @@ def augment_random_shear(x, angle=None):
 def augment_random_gaussian_blur(x, sigma=None):
     # TODO: fix this, sigma should be also random from an sinterval
     x = np.array(x.reshape(x.shape[:3]))
+    seed = None if 'RANDOM_SEED' not in globals() else globals()['RANDOM_SEED']
+    sigma = sigma + tf.random.uniform([3], 0, 1) * (1 - sigma)
     return filters.gaussian(x, multichannel=True, sigma=sigma).reshape((*x.shape, 1))
 
 
