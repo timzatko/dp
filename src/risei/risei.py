@@ -96,11 +96,10 @@ def __get_in_paint_mask_3d(options, image_data, mask, binary_mask):
 
 def __get_in_paint_mask_2d(options, image_data, mask, binary_mask):
     start = time.time()
-
     in_painted = np.zeros(image_data.shape)
     inverted_binary_mask = (1 - binary_mask).astype(np.uint8)
     
-    if options['in_paint_2d_to_3d'] is not True:
+    if options['in_paint_2d_to_3d'] is False:
         for z in range(0, image_data.shape[0]):
             in_painted_z = cv2.inpaint(
                 image_data[z],
@@ -108,7 +107,7 @@ def __get_in_paint_mask_2d(options, image_data, mask, binary_mask):
                 options['in_paint_radius'],
                 options['in_paint_algorithm']
             )
-
+            
             if options['in_paint_blending']:
                 # in_paint with gradual blending of edges (soft edges)
                 in_painted_z = image_data[z] * mask[z] + in_painted_z * (1 - mask[z])
@@ -122,11 +121,6 @@ def __get_in_paint_mask_2d(options, image_data, mask, binary_mask):
                 options['in_paint_radius'],
                 options['in_paint_algorithm']
             )
-
-            if options['in_paint_blending']:
-                # in_paint with gradual blending of edges (soft edges)
-                in_painted_i = image_data[i, :, :] * mask[i, :, :] + in_painted_i * (1 - mask[i, :, :])
-
             in_painted[i, :, :] += in_painted_i
 
         for i in range(0, image_data.shape[1]):
@@ -136,11 +130,6 @@ def __get_in_paint_mask_2d(options, image_data, mask, binary_mask):
                 options['in_paint_radius'],
                 options['in_paint_algorithm']
             )
-
-            if options['in_paint_blending']:
-                # in_paint with gradual blending of edges (soft edges)
-                in_painted_i = image_data[:, i, :] * mask[:, i, :] + in_painted_i * (1 - mask[:, i, :])
-
             in_painted[:, i, :] += in_painted_i
 
         for i in range(0, image_data.shape[2]):
@@ -150,14 +139,13 @@ def __get_in_paint_mask_2d(options, image_data, mask, binary_mask):
                 options['in_paint_radius'],
                 options['in_paint_algorithm']
             )
-
-            if options['in_paint_blending']:
-                # in_paint with gradual blending of edges (soft edges)
-                in_painted_i = image_data[:, :, i] * mask[:, :, i] + in_painted_i * (1 - mask[:, :, i])
-
             in_painted[:, :, i] += in_painted_i
-
+                
         in_painted /= 3
+        
+        if options['in_paint_blending']:
+            # in_paint with gradual blending of edges (soft edges)
+            in_painted = image_data * mask + in_painted * (1 - mask)
 
     end = time.time()
 
@@ -223,7 +211,7 @@ class RISEI:
             'in_paint_radius': kwargs.get('in_paint_radius', 20),  # in_painting radius
             'in_paint_algorithm': kwargs.get('in_paint_algorithm', cv2.INPAINT_NS),  # cv2.INPAINT_TELEA, cv2.INPAINT_NS
             'in_paint_blending': kwargs.get('in_paint_blending', True),
-            'in_paint_2d_to_3d': kwargs.get('in_paint_blending', False),
+            'in_paint_2d_to_3d': kwargs.get('in_paint_2d_to_3d', False),
             # if the in_paint is gradually blended into the image
             'debug': kwargs.get('debug', False),
             'b2_value': kwargs.get('b2_value', 0), # 0, 1, (min, max, mean, meadian) - implement
