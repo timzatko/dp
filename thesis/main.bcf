@@ -2032,7 +2032,7 @@
     <bcf:citekey order="37">haykin2009neural</bcf:citekey>
     <bcf:citekey order="38">simonyan2014very</bcf:citekey>
     <bcf:citekey order="39">he2016deep</bcf:citekey>
-    <bcf:citekey order="40">szegedy20s15going</bcf:citekey>
+    <bcf:citekey order="40">szegedy2015going</bcf:citekey>
     <bcf:citekey order="41">he2016deep</bcf:citekey>
     <bcf:citekey order="42">he2016deep</bcf:citekey>
     <bcf:citekey order="43">montavon2018methods</bcf:citekey>
@@ -2127,6 +2127,7 @@
     <bcf:citekey order="132">esmaeilzadeh2018end</bcf:citekey>
     <bcf:citekey order="133">esmaeilzadeh2018end</bcf:citekey>
     <bcf:citekey order="134">ioffe2015batch</bcf:citekey>
+    <bcf:citekey order="135">esmaeilzadeh2018end</bcf:citekey>
   </bcf:section>
   <!-- SORTING TEMPLATES -->
   <bcf:sortingtemplate name="none">

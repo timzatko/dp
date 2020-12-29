@@ -131,7 +131,7 @@ Kompletný zoznam parametrov metódy RISEI sa nachádza v tabuľke \ref{tab:rise
         b2                & float      & Miera prekrytia s ''čiernou'' maskou.                                     \\
         b2\_value         & string     & Hodnota ''čiernej'' masky, môže to byť minimum, maximum, medián, priemer. \\
         in\_paint\_radius & float      & Polomer dokreslenia algoritmom z knižnice OpenCV.                         \\ \hline
-        \end{tabular}
+    \end{tabular}
     \caption{Zoznam parametrov metódy RISEI.}
     \label{tab:rise_params}
 \end{table}
@@ -233,8 +233,8 @@ Keďže máme málo dát, rozhodli sme sa dáta augmentovať (Obr. \ref{fig:augm
 \begin{itemize}
     \item Vymenenie hemisfér mozgu (\citeauthor*{esmaeilzadeh2018end}) s pravdepodobnosťou 50\%
     \item Náhodná rotácia o 0 až 5 stupňov s pravdepodobnosťou 20\%
-    \item Náhodné priblíženie do 75\% veľkosti snímku s pravdepodobnosťou 20\%
-    \item Náhodné gaussovské rozmazanie (max $sigma = 0.8$) s pravdepodobnosťou 20\%
+    \item Náhodné priblíženie do 80\% veľkosti snímku s pravdepodobnosťou 20\%
+    \item Náhodné gaussovské rozmazanie (max $sigma = <0.85, 1>$) s pravdepodobnosťou 20\%
     \item Náhodný gaussovský šum pravdepodobnosťou 20\%
 \end{itemize}
 
@@ -262,11 +262,41 @@ Pri trénovaní sme použili:
 \begin{itemize}
     \item kategorickú entropiu (angl. categorical crossentropy) ako chybovú funkciu s podporou pre nevyvážené triedy (tj. táto funkcia brala ohľad na váhy tried, ktoré sme nastavili),
     \item optimizér Adam s prevolenými nastaveniami,
-    \item exponenciálne tlmenie rýchlosti učenia (angl. learning rate decay)
-    \item skoré zastavenie trénovania ak sa metrika AUC (plocha pod krivkou) nezlepšila za posledných 25 epoch
-    \item veľkosť dávky (angl. batch size) -- 10 (vždy tak, aby sme naplno využili pamäť grafickej karty)
+    \item exponenciálne tlmenie rýchlosti učenia (angl. learning rate decay), $0,96$ každých 25 epoch
+    \item skoré zastavenie trénovania ak sa metrika AUC (plocha pod krivkou) nezlepšila za posledných 25 epoch,
+    \item veľkosť dávky (angl. batch size) -- 10 (vždy tak, aby sme naplno využili pamäť grafickej karty),
+    \item $l2$ regularizáciu (rovnako ako \citeauthor*{esmaeilzadeh2018end}).
 \end{itemize}
+
+Trénovali sme iteratívne, pričom sme začali obyčajným modelom a postupne sme pridávali augmentácie, dávkovú normalizáciu, dropout a regularizáciu. Najlepšie výsledky sme dosiahli ... s presnosťou ...\% (Tabuľka \ref{tab:model_training_results}). Nepodarilo sa nám ... TODO:
+
+\begin{landscape}
+    \begin{table}[]
+    \centering
+    \begin{tabular}{l|rrr|rrr|rrr|}
+    \cline{2-10}
+    \multirow{2}{*}{}    & \multicolumn{3}{c|}{3D CNN} & \multicolumn{3}{c|}{3D ResNET} & \multicolumn{3}{c|}{2D ResNET} \\ \cline{2-10} 
+     &
+      \multicolumn{1}{c|}{Acc.} &
+      \multicolumn{1}{c|}{Sens.} &
+      \multicolumn{1}{c|}{Spec.} &
+      \multicolumn{1}{c|}{Acc.} &
+      \multicolumn{1}{c|}{Sens.} &
+      \multicolumn{1}{c|}{Spec.} &
+      \multicolumn{1}{c|}{Acc.} &
+      \multicolumn{1}{c|}{Sens.} &
+      \multicolumn{1}{c|}{Spec} \\ \hline
+    Baseline             & 0.00    & 0.00    & 0.00    & 0.00     & 0.00     & 0.00     & 0.00     & 0.00     & 0.00     \\
+    + Augmentácie        & 0.00    & 0.00    & 0.00    & 0.00     & 0.00     & 0.00     & 0.00     & 0.00     & 0.00     \\
+    + Batch Norm         & 0.00    & 0.00    & 0.00    & 0.00     & 0.00     & 0.00     & 0.00     & 0.00     & 0.00     \\
+    + Dropout            & 0.00    & 0.00    & 0.00    & 0.00     & 0.00     & 0.00     & 0.00     & 0.00     & 0.00     \\
+    + Regularizácia (l2) & 0.00    & 0.00    & 0.00    & 0.00     & 0.00     & 0.00     & 0.00     & 0.00     & 0.00    
+    \end{tabular}
+    \caption{\textbf{Výsledky trénovania.} Acc. = presnosť (angl. Accouracy), Sens. = senzitivita (angl. Sensitivity), Spec. = Špecificita (anlg. Specificity)}
+    \label{tab:model_training_results}
+\end{table}
+\end{landscape}
 
 \section{Záver}
 
-V tejto kapitole sme opísali ako sme implementovali nami navrhovanú metódu a spôsob jej overenie. Opísali sme implenetáciu kľúčových prvkov (generovanie masiek a vytvorenie tepelnej mapy) navrhovanej metódy RISEI a jej hyper parametre. Rovnako sme opísali aj implementáciu neurónovej siete, architektúru, spôsob trénovania a použitú dátovú sadu. Metódu RISEI a neurónovú sieť na detekciu Alzhemiemerovej choroby sa nám podarilo implementovať a je ich možné použiť v experimentoch.
+V tejto kapitole sme opísali ako sme implementovali nami navrhovanú metódu a spôsob jej overenie. Opísali sme implenetáciu kľúčových prvkov (generovanie masiek a vytvorenie tepelnej mapy) navrhovanej metódy RISEI a jej hyper parametre. Rovnako sme opísali aj implementáciu neurónovej siete, architektúru, spôsob trénovania a použitú dátovú sadu. Metódu RISEI sa nám podarilo implementovať a je ich možné použiť v experimentoch. Model ... TODO:

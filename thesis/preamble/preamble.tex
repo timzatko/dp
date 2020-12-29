@@ -22,8 +22,15 @@
 \usepackage{tocloft}
 \usepackage{csquotes}
 \usepackage{amsmath}
+\usepackage{lscape}
 \usepackage{tabularx}
+\usepackage{multirow}
+\usepackage{tabulary}
 
+% Hack to fix the "Paragraph ended before \@cline was complete."
+% https://tex.stackexchange.com/questions/111999/slovak-and-czech-babel-gives-problems-with-cmidrule-and-cline
+\usepackage{etoolbox}
+\preto\tabular{\shorthandoff{-}}
 
 % Spacing
 % \setstretch{\mySpacing}
@@ -32,7 +39,6 @@
 \setcounter{secnumdepth}{3}
 \setcounter{tocdepth}{3}
 
-\usepackage{tabularx}
 \newsavebox\mybox
 \usepackage{fancyhdr}
 \pagestyle{fancy}
@@ -98,7 +104,6 @@
 
 % Table
 \usepackage[table,xcdraw]{xcolor}
-\usepackage{tabularx}
 
 % Incldue pdf in document
 \usepackage[final]{pdfpages}  
