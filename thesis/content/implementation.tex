@@ -198,3 +198,75 @@ auc = metrics.auc([i * step_size for i in range(len(y_pred))], y_pred) / get_vox
 \end{lstlisting}
 
 \section{Model na detekciu Alzheimerovej choroby na základe MRI snímkov}
+
+V tejto sekcii popíšem impelentáciu, z ktorého predikcií budeme vytvárať tepelné mapy. Náš model - neuónovú sieť sme sa rozdhodli implementovať v knižnici Tensorflow (v2.3.0). Naším cieľom nie je natrénovať najlepší model na dekekciu Alzheimerovej choroby, ale model ktorý je použiteľný na overenie nami narvhnutej metódy. Preto nevykonáme komplexnejšie prístupy k detekcii Alzheimerovej chorby, ktoré sme popísali v analýze (Sekcia \ref{sec:nn_ad_prediction}), ako je napríklad učenie prenosom pomocou autoenkodéra.
+
+\subsection{Dátová sada}
+
+Použili sme dátovú sadu ADNI. Ako vstup modelu je celý MRI snímok (tj. všetky tri dimenzie), nepoužívame žiadné ine údaje z dátovej sady ADNI, ako napríklad demografické údaje a pod. keďže model plánujeme používať iba na vytváranie tepelných máp pre vstupné snímky. 
+
+V dátovej sade sa nachádza celkom 502 MRI snímkov, z toho 311 pacientov s Alzheimerovou chorobou (AD) a 191 bez (CN). Dátovú sadu máme teda nevyváženú a model môže začať preferovať jednu triedu. Na predíjdenie tomuto javu existuje niekoľko techník, napríklad nadvzorkovanie (angl. oversampling) alebo podvzorkovanie (angl. undersampling) kedy sa doplní synetetickými minoritná trieda, alebo sa odstránia nejaké pozorovania z majoritnej triedy. My sme sa však rozhodli nastaviť predikovaným triedam váhy, ktoré sú zohladnené v chybovej funkcii, taktiež sme nainicializovali chybu \footnote{\url{https://www.tensorflow.org/tutorials/structured\_data/imbalanced\_data\#optional\_set\_the\_correct\_initial\_bias}} pre neuróny na poslednej vrstve aby reflektovala to, že triedy sú nevyvážené.
+
+Dátovú sadu sme náhodným výberom rozdelili na trénovaciu a testovaciu v pomere 80/20. Validačnú sadu sme nerobili, pretože máme málo dát a neplánujeme robiť veľké hľadania optimálnych hyper-parametrov. V budúcnosti možno zvážime vykonanies krížovej validácie (angl. cross validation) pri trénovaní. Aj po rozdelení sa nám podarilo zachovať pôvodný pomer medzi triedami -- 62/38 (Obr. \ref{fig:dataset_classes}).
+
+\begin{figure}[h!]
+    \centering
+    \includegraphics[width=10cm]{assets/images/dataset_classes.png}
+    \caption{Početnosť tried AD a CN na trénovacej a testovacej sade je takmer totožná.}
+    \label{fig:dataset_classes}
+\end{figure}
+
+\subsubsection{Predspracovanie}
+
+MRI snímky boli predspracované štandardnou postupnosťou nástroja freesurfer, avšak nevykonali sme odstránenie lebky z MRI snímkov.
+Okrem iného sme vykonali:
+
+\begin{itemize}
+    \item Upravenie vstupných snímkov na rovnakú veľkosť 104 x 128 x 104 voxelov. \citeauthor*{esmaeilzadeh2018end} upravili vstupné snímky na veľkosť 116 x 130 x 83, k týmto číslam sme sa pokúsili priblížiť. Pomer veľkostí dimenzií ale nemáme rovnaký, aj z dôvodu, že sme nevykonali odstránenie lebky zo vstupných snímkov.
+    \item Štandardizáciu vstupných dát (preškálovanie na rozsah $<0, 1>$) nasledovným vzorcom: $\frac{(image\_x - images\_min])}{(images\_max - images\_min)}$.
+\end{itemize}
+
+\subsubsection{Augmentácie}
+
+Keďže máme málo dát, rozhodli sme sa dáta augmentovať (Obr. \ref{fig:augmentations}). Dáta náhodne augmentujeme v každej dávke (angl. batch). Implementovali sme nasledovné augmentácie:
+
+\begin{itemize}
+    \item Vymenenie hemisfér mozgu (\citeauthor*{esmaeilzadeh2018end}) s pravdepodobnosťou 50\%
+    \item Náhodná rotácia o 0 až 5 stupňov s pravdepodobnosťou 20\%
+    \item Náhodné priblíženie do 75\% veľkosti snímku s pravdepodobnosťou 20\%
+    \item Náhodné gaussovské rozmazanie (max $sigma = 0.8$) s pravdepodobnosťou 20\%
+    \item Náhodný gaussovský šum pravdepodobnosťou 20\%
+\end{itemize}
+
+\begin{figure}[h!]
+    \centering
+    \includegraphics[width=10cm]{assets/images/augmentations.png}
+    \caption{Príklady aplikácie implementovaných augmentácií.}
+    \label{fig:augmentations}
+\end{figure}
+
+\subsection{Model}
+
+Rozhodli sme sa implementovať a porovnať niekoľko architektúr neurónových sietí.
+
+\paragraph{3D konvolučná neurónová sieť od \citeauthor*{esmaeilzadeh2018end}} Túto neurónovú sieť sme sa rozhodli implementovať, pretože jej autori pomocou nej dosiahli veľmi slušné výsledky (94.1\% presnosť). Implementovali sme jednoduchšiu verziu, ktorá dosahovala lepšie výsledky, opísali sme ju v sekcii \ref{sec:nn_ad_prediction}. Táto neurónová sieť ma celkovo \textit{2 899 778} parametrov.
+
+\paragraph{2D ResNet a 3D ResNet} Keďže reziduálne neúronové siete dosahujú pri klasifikačných úlohách nad obrazovými dátami veľmi dobre výsledky vyskúšame aj tieto architektúry. V prípade 2D ResNetu-u používame 2D konvolúcie, tie nám budú fungovať aj napriek tomu, že máme 3D dáta. Vstup do 2D ResNet-u je tiež 3D matica, ktorej tretia dimenzia býva o obvykle o dĺžky 1 alebo 3 (RGB), v našom prípade bude o veľkosti poslednej dimenzie snímku. Rozmery vstupných dát pre 2D ResNet budú $[104, 128, 104]$ a pre 3D ResNet $[104, 128, 104, 1]$. Za konvolučné vrstvy a globálnu združovaciu vrstvu sme pripojili dve plne prepojené vrstvy s 1024, 512 a 256 neurónami a aktiváciou \textit{ReLU}, následne už nasleduje iba posledná vrstva s aktiváciou \textit{softmax}. Tieto neurónové siete majú celkovo \textit{12 689 602}, resp. \textit{34 356 354} parametrov.
+
+Do neurónových sietí sme ešte pridali dropout a dávkovú normalizáciu (angl. batch normalization). Dropout sme pridali pred plne prepojené vrstvy. Dávkovú normalizáciu sme pirdali v konvolučných vrstvách pred aplikovaním nelinearity, tak ako je to odporučené od \citeauthor*{ioffe2015batch} v \textit{Batch Normalization: Accelerating Deep Network Training by Reducing Internal Covariate Shift}. Na poslednej vrstve sa nachádzajú dva neuróny s aktiváciou \textit{softmax}.
+
+\subsection{Trénovanie}
+
+Pri trénovaní sme použili:
+
+\begin{itemize}
+    \item kategorickú entropiu (angl. categorical crossentropy) ako chybovú funkciu s podporou pre nevyvážené triedy (tj. táto funkcia brala ohľad na váhy tried, ktoré sme nastavili),
+    \item optimizér Adam s prevolenými nastaveniami,
+    \item exponenciálne tlmenie rýchlosti učenia (angl. learning rate decay)
+    \item skoré zastavenie trénovania ak sa metrika AUC (plocha pod krivkou) nezlepšila za posledných 25 epoch
+    \item veľkosť dávky (angl. batch size) -- 10 (vždy tak, aby sme naplno využili pamäť grafickej karty)
+\end{itemize}
+
+\section{Záver}
+
+V tejto kapitole sme opísali ako sme implementovali nami navrhovanú metódu a spôsob jej overenie. Opísali sme implenetáciu kľúčových prvkov (generovanie masiek a vytvorenie tepelnej mapy) navrhovanej metódy RISEI a jej hyper parametre. Rovnako sme opísali aj implementáciu neurónovej siete, architektúru, spôsob trénovania a použitú dátovú sadu. Metódu RISEI a neurónovú sieť na detekciu Alzhemiemerovej choroby sa nám podarilo implementovať a je ich možné použiť v experimentoch.

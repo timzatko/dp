@@ -1,7 +1,7 @@
 import tensorflow as tf
 
 
-# https://github.com/calmisential/TensorFlow2.0_ResNets
+# https://github.com/calmisential/TensorFlow2.0_ResNet
 def res_net_2d(input_shape, class_names, l2_beta=None, dropout=None, output_bias=None):
     core = res_net_18(
         classes=1024,

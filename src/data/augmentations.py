@@ -26,7 +26,7 @@ def augment_rotate_img(x, angle=None):
 def augment_random_zoom(x, zoom=None):
     x_zoomed = tf.keras.preprocessing.image.random_zoom(
         x.reshape(x.shape[:3]),
-        (1 - zoom, 1 - zoom),
+        (1 - zoom, zoom),
         row_axis=1,
         col_axis=2,
         channel_axis=0,
@@ -46,6 +46,7 @@ def augment_random_shear(x, angle=None):
 
 
 def augment_random_gaussian_blur(x, sigma=None):
+    # TODO: fix this, sigma should be also random from an sinterval
     x = np.array(x.reshape(x.shape[:3]))
     return filters.gaussian(x, multichannel=True, sigma=sigma).reshape((*x.shape, 1))
 
