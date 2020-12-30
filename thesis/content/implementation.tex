@@ -119,7 +119,7 @@ Názov ''čierna'' maska pochádza z pôvodnej implementácie RISE, kde sa obrá
     new_image = b2 * mask * new_image + (b2 * (1 - mask) * value)
 \end{lstlisting}
 
-Kompletný zoznam parametrov metódy RISEI sa nachádza v tabuľke \ref{tab:rise_params}.
+Kompletný zoznam parametrov metódy RISEI sa nachádza v tabuľke \ref{tab:risei_params}.
 
 \begin{table}[]
     \begin{tabular}{p{0.25\linewidth} | p{0.15\linewidth} | p{0.5\linewidth}}
@@ -133,12 +133,12 @@ Kompletný zoznam parametrov metódy RISEI sa nachádza v tabuľke \ref{tab:rise
         in\_paint\_radius & float      & Polomer dokreslenia algoritmom z knižnice OpenCV.                         \\ \hline
     \end{tabular}
     \caption{Zoznam parametrov metódy RISEI.}
-    \label{tab:rise_params}
+    \label{tab:risei_params}
 \end{table}
 
 \subsection{Vytvorenie tepelných máp}
 
-Na základe návrhu (Sekcia \ref{sec:risei}) sme implementovali vytváranie tepelných máp. Keďže generovanie tepelnej mapy si vyžaduje vygenerovať veľký počet zamaskovaných snímkov, ktoré v istom momente musia byť všetky uložené v pamäti, generujeme a vyhodnocujeme zamaskované snímky v dávkach (angl. batch). Zdrojový kód nižšie, implementuje vytvorenie jednej tepelnej mapy.
+Na základe návrhu (Sekcia \ref{sec:risei}) sme implementovali vytváranie tepelných máp. Keďže generovanie tepelnej mapy si vyžaduje vygenerovať veľký počet zamaskovaných snímkov, ktoré v istom momente musia byť všetky uložené v pamäti, generujeme a vyhodnocujeme zamaskované snímky v dávkach (angl. batch). Zdrojový kód nižšie, implementuje vytvorenie jednej tepelnej mapy. Príklad vytvorenej tepelnej mapy uvádzame na obrázku \ref{fig:heatmap_example}.
 
 \begin{lstlisting}
 # image_x float[z, x, y, 1] - original image
@@ -171,11 +171,18 @@ for batch_idx in range(batch_count):
 heatmap = heatmap / weights
 \end{lstlisting}
 
+\begin{figure}[h!]
+    \centering
+    \includegraphics[width=10cm]{assets/images/heatmap_example.png}
+    \caption{Príklad vytvorenej tepelnej mapy (vpravo) k MRI snímku (vľavo). Mierka vujadruje priemernú mieru aktivácie pre daný voxel.}
+    \label{fig:heatmap_example}
+\end{figure}
+
 \subsection{Vyhodnotenie tepelných máp}
 
 Zatiaľ sme implementovali, podľa návrhu riešenia (Sekcia \ref{sec:evaluation_design_method_quality}), iba metriky \textit{insertion} a \textit{deletion}.
 
-\subsubsection{Metriky insertion \& deletion}
+\subsubsection{Metriky insertion \& deletion \label{sec:insertion_deletion}}
 
 Tieto metriky fungujú tak, že postupne odstraňujeme/pridávame pixely z obrázku a tieto obrázky vkladáme do modelu a zaznamenávame si aktiváciu na poslednej vrstve pre predikovanú triedu. V prípade obrázkov, a teda dvojrozmerných dát je to ešte výpočtovo zvládnutelné, avšak v prípade trojdimenzionálnych rádiologických simkov to už môže byť problém. Naše vstupné snímky majú po zmenšení rozmer \textit{[104, 128, 104]}, čiže ak aby sme odstraňovali zo snímku po jednom voxeli, museli by sme vykonať \textit{1 384 448} evaluácii pomocou nášho modelu (čo trvá niekoľko hodín, aj pri evaluovaní v maximálnych možných dávkach vzhľadom na pamäť grafickej karty). Preto sme sa rozhodli, že budeme pridávať po $n$ (~100) voxeloch v každom kroku. V prípade metódy insertion vkladáme do snímku plného núl (môžeme prípadne aj jednotiek). Keďže kód je rozsiahlejší, uvedieme len pseudokód.
 
@@ -212,7 +219,7 @@ Dátovú sadu sme náhodným výberom rozdelili na trénovaciu a testovaciu v po
 \begin{figure}[h!]
     \centering
     \includegraphics[width=10cm]{assets/images/dataset_classes.png}
-    \caption{Početnosť tried AD a CN na trénovacej a testovacej sade je takmer totožná.}
+    \caption{Početnosť tried medzi trénovacou a testovacou sadou - je zrejmá prevaha triedy AD.}
     \label{fig:dataset_classes}
 \end{figure}
 
