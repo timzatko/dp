@@ -83,17 +83,17 @@ class HeatmapEvaluationHistory:
                                self.arr_voxels[idx],
                                self.arr_max_voxels[idx], self.method)
 
-    def plot_heatmap_x(self, idx, i=None):
+    def plot_heatmap_x(self, idx, i=None, title_1=None, title_2=None):
         self.__ensure_idx(idx)
-        plot_heatmap_x(self.arr_x[idx], self.arr_y[idx], self.arr_y_pred[idx], self.arr_heatmap[idx], i)
+        plot_heatmap_x(self.arr_x[idx], self.arr_y[idx], self.arr_y_pred[idx], self.arr_heatmap[idx], i, title_1=title_1, title_2=title_2)
 
-    def plot_heatmap_y(self, idx, i=None):
+    def plot_heatmap_y(self, idx, i=None, title_1=None, title_2=None):
         self.__ensure_idx(idx)
-        plot_heatmap_y(self.arr_x[idx], self.arr_y[idx], self.arr_y_pred[idx], self.arr_heatmap[idx], i)
+        plot_heatmap_y(self.arr_x[idx], self.arr_y[idx], self.arr_y_pred[idx], self.arr_heatmap[idx], i, title_1=title_1, title_2=title_2)
 
-    def plot_heatmap_z(self, idx, i=None):
+    def plot_heatmap_z(self, idx, i=None, title_1=None, title_2=None):
         self.__ensure_idx(idx)
-        plot_heatmap_z(self.arr_x[idx], self.arr_y[idx], self.arr_y_pred[idx], self.arr_heatmap[idx], i)
+        plot_heatmap_z(self.arr_x[idx], self.arr_y[idx], self.arr_y_pred[idx], self.arr_heatmap[idx], i, title_1=title_1, title_2=title_2)
 
     def __ensure_idx(self, idx):
         if idx >= len(self.arr_x):

@@ -37,7 +37,8 @@ def plot_evaluation(image_y, y_pred, step_size, voxels, max_voxels, title='inser
     x, y = get_curve(image_y, y_pred, step_size)
     auc = evaluation_auc(image_y, y_pred, step_size)
 
-    plt.title(f'{title}: auc={auc}, y_true={idx}, voxel_count:{max_voxels:,} / {voxels:,})')
+#     plt.title(f'{title}: auc={auc}, y_true={idx}, voxel_count:{max_voxels:,} / {voxels:,})')
+    plt.title(f'{title.capitalize()} (AUC = {auc / max_voxels:.2})')
     plt.plot(x, y, linewidth=2)
 
     ax = plt.gca()

@@ -94,16 +94,23 @@ def show_mask(index, masks_x, masks_y, z):
     plt.imshow(mask[z].reshape(mask.shape[1:3]))
 
 
-def plot_heatmap(image_x, image_y, y_pred, heatmap):
+def plot_heatmap(image_x, image_y, y_pred, heatmap, title_1=None, title_2=None):
     idx = np.argmax(image_y, axis=0)
 
     plt.subplot(1, 2, 1)
-    plt.title(f'y_true: {idx}, y_pred: {y_pred}')
+    if title_1 is None:
+        plt.title(f'y_true: {idx}, y_pred: {y_pred}')
+    else:
+        plt.title(title_1)
     plt.imshow(image_x.reshape(image_x.shape[:2]))
     plt.colorbar(fraction=0.046, pad=0.04)
 
     plt.subplot(1, 2, 2)
-    plt.title(f'y_true: {idx}, y_pred: {y_pred}')
+    
+    if title_2 is None:
+        plt.title(f'y_true: {idx}, y_pred: {y_pred}')
+    else:
+        plt.title(title_2)
     plt.imshow(image_x.reshape(image_x.shape[:2]))
     plt.imshow(heatmap, cmap='jet', alpha=0.5)
     plt.colorbar(fraction=0.046, pad=0.04)
@@ -111,16 +118,16 @@ def plot_heatmap(image_x, image_y, y_pred, heatmap):
     plt.show()
 
 
-def plot_heatmap_z(image_x, image_y, y_pred, heatmap, z):
+def plot_heatmap_z(image_x, image_y, y_pred, heatmap, z, title_1=None, title_2=None):
     z = z if z is not None else heatmap.shape[0] // 2
-    plot_heatmap(image_x[z, :, :], image_y, y_pred, heatmap[z, :, :])
+    plot_heatmap(image_x[z, :, :], image_y, y_pred, heatmap[z, :, :], title_1=title_1, title_2=title_2)
 
 
-def plot_heatmap_y(image_x, image_y, y_pred, heatmap, y):
+def plot_heatmap_y(image_x, image_y, y_pred, heatmap, y, title_1=None, title_2=None):
     y = y if y is not None else heatmap.shape[1] // 2
-    plot_heatmap(image_x[:, y, :], image_y, y_pred, heatmap[:, y, :])
+    plot_heatmap(image_x[:, y, :], image_y, y_pred, heatmap[:, y, :], title_1=title_1, title_2=title_2)
 
 
-def plot_heatmap_x(image_x, image_y, y_pred, heatmap, x):
+def plot_heatmap_x(image_x, image_y, y_pred, heatmap, x, title_1=None, title_2=None):
     x = x if x is not None else heatmap.shape[2] // 2
-    plot_heatmap(image_x[:, :, x], image_y, y_pred, heatmap[:, :, x])
+    plot_heatmap(image_x[:, :, x], image_y, y_pred, heatmap[:, :, x], title_1=title_1, title_2=title_2)
