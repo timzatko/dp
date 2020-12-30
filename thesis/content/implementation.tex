@@ -251,7 +251,7 @@ Rozhodli sme sa implementovať a porovnať niekoľko architektúr neurónových 
 
 \paragraph{3D konvolučná neurónová sieť od \citeauthor*{esmaeilzadeh2018end}} Túto neurónovú sieť sme sa rozhodli implementovať, pretože jej autori pomocou nej dosiahli veľmi slušné výsledky (94.1\% presnosť). Implementovali sme jednoduchšiu verziu, ktorá dosahovala lepšie výsledky, opísali sme ju v sekcii \ref{sec:nn_ad_prediction}. Táto neurónová sieť ma celkovo \textit{2 899 778} parametrov.
 
-\paragraph{2D ResNet a 3D ResNet} Keďže reziduálne neúronové siete dosahujú pri klasifikačných úlohách nad obrazovými dátami veľmi dobre výsledky vyskúšame aj tieto architektúry. V prípade 2D ResNetu-u používame 2D konvolúcie, tie nám budú fungovať aj napriek tomu, že máme 3D dáta. Vstup do 2D ResNet-u je tiež 3D matica, ktorej tretia dimenzia býva o obvykle o dĺžky 1 alebo 3 (RGB), v našom prípade bude o veľkosti poslednej dimenzie snímku. Rozmery vstupných dát pre 2D ResNet budú $[104, 128, 104]$ a pre 3D ResNet $[104, 128, 104, 1]$. Za konvolučné vrstvy a globálnu združovaciu vrstvu sme pripojili dve plne prepojené vrstvy s 1024, 512 a 256 neurónami a aktiváciou \textit{ReLU}, následne už nasleduje iba posledná vrstva s aktiváciou \textit{softmax}. Tieto neurónové siete majú celkovo \textit{12 689 602}, resp. \textit{34 356 354} parametrov.
+\paragraph{2D ResNet a 3D ResNet} Keďže reziduálne neúronové siete dosahujú pri klasifikačných úlohách nad obrazovými dátami veľmi dobre výsledky vyskúšame aj tieto architektúry. V prípade 2D ResNetu-u používame 2D konvolúcie, tie nám budú fungovať aj napriek tomu, že máme 3D dáta. Vstup do 2D ResNet-u je tiež 3D matica, ktorej tretia dimenzia býva o obvykle o dĺžky 1 alebo 3 (RGB), v našom prípade bude o veľkosti poslednej dimenzie snímku. Rozmery vstupných dát pre 2D ResNet budú $[104, 128, 104]$ a pre 3D ResNet $[104, 128, 104, 1]$. Za konvolučné vrstvy a globálnu združovaciu vrstvu sme pripojili dve plne prepojené vrstvy s 512, 256 a 128 neurónami a aktiváciou \textit{ReLU}, následne už nasleduje iba posledná vrstva s aktiváciou \textit{softmax}. Tieto neurónové siete majú celkovo \textit{12 689 602}, resp. \textit{34 356 354} parametrov.
 
 Do neurónových sietí sme ešte pridali dropout a dávkovú normalizáciu (angl. batch normalization). Dropout sme pridali pred plne prepojené vrstvy. Dávkovú normalizáciu sme pirdali v konvolučných vrstvách pred aplikovaním nelinearity, tak ako je to odporučené od \citeauthor*{ioffe2015batch} v \textit{Batch Normalization: Accelerating Deep Network Training by Reducing Internal Covariate Shift}. Na poslednej vrstve sa nachádzajú dva neuróny s aktiváciou \textit{softmax}.
 
@@ -263,40 +263,67 @@ Pri trénovaní sme použili:
     \item kategorickú entropiu (angl. categorical crossentropy) ako chybovú funkciu s podporou pre nevyvážené triedy (tj. táto funkcia brala ohľad na váhy tried, ktoré sme nastavili),
     \item optimizér Adam s prevolenými nastaveniami,
     \item exponenciálne tlmenie rýchlosti učenia (angl. learning rate decay), $0,96$ každých 25 epoch
-    \item skoré zastavenie trénovania ak sa metrika AUC (plocha pod krivkou) nezlepšila za posledných 25 epoch,
+    \item skoré zastavenie trénovania ak sa metrika AUC (plocha pod krivkou) nezlepšila za posledných 50 epoch,
     \item veľkosť dávky (angl. batch size) -- 10 (vždy tak, aby sme naplno využili pamäť grafickej karty),
     \item $l2$ regularizáciu (rovnako ako \citeauthor*{esmaeilzadeh2018end}).
 \end{itemize}
 
-Trénovali sme iteratívne, pričom sme začali obyčajným modelom a postupne sme pridávali augmentácie, dávkovú normalizáciu, dropout a regularizáciu. Najlepšie výsledky sme dosiahli ... s presnosťou ...\% (Tabuľka \ref{tab:model_training_results}). Nepodarilo sa nám ... TODO:
+Trénovali sme iteratívne, začali sme obyčajným modelom a postupne sme pridávali augmentácie, dávkovú normalizáciu, dropout a regularizáciu pričim sme postupne dolaďovali parametre. Najlepšie výsledky sme dosiahli s architektúrou 3D ResNet s presnosťou 80\% (Tabuľka \ref{tab:model_training_results}). Nepodarilo sa nám nám teda priblížiť k výsledkom analyzovaných prác.
 
 \begin{landscape}
     \begin{table}[]
-    \centering
-    \begin{tabular}{l|rrr|rrr|rrr|}
-    \cline{2-10}
-    \multirow{2}{*}{}    & \multicolumn{3}{c|}{3D CNN} & \multicolumn{3}{c|}{3D ResNET} & \multicolumn{3}{c|}{2D ResNET} \\ \cline{2-10} 
-     &
-      \multicolumn{1}{c|}{Acc.} &
-      \multicolumn{1}{c|}{Sens.} &
-      \multicolumn{1}{c|}{Spec.} &
-      \multicolumn{1}{c|}{Acc.} &
-      \multicolumn{1}{c|}{Sens.} &
-      \multicolumn{1}{c|}{Spec.} &
-      \multicolumn{1}{c|}{Acc.} &
-      \multicolumn{1}{c|}{Sens.} &
-      \multicolumn{1}{c|}{Spec} \\ \hline
-    Baseline             & 0.00    & 0.00    & 0.00    & 0.00     & 0.00     & 0.00     & 0.00     & 0.00     & 0.00     \\
-    + Augmentácie        & 0.00    & 0.00    & 0.00    & 0.00     & 0.00     & 0.00     & 0.00     & 0.00     & 0.00     \\
-    + Batch Norm         & 0.00    & 0.00    & 0.00    & 0.00     & 0.00     & 0.00     & 0.00     & 0.00     & 0.00     \\
-    + Dropout            & 0.00    & 0.00    & 0.00    & 0.00     & 0.00     & 0.00     & 0.00     & 0.00     & 0.00     \\
-    + Regularizácia (l2) & 0.00    & 0.00    & 0.00    & 0.00     & 0.00     & 0.00     & 0.00     & 0.00     & 0.00    
-    \end{tabular}
-    \caption{\textbf{Výsledky trénovania.} Acc. = presnosť (angl. Accouracy), Sens. = senzitivita (angl. Sensitivity), Spec. = Špecificita (anlg. Specificity)}
-    \label{tab:model_training_results}
-\end{table}
+        \centering
+        \begin{tabular}{l|rrr|rrr|rrr|}
+            \cline{2-10}
+            \multirow{2}{*}{}    & \multicolumn{3}{c|}{3D CNN} & \multicolumn{3}{c|}{3D ResNet} & \multicolumn{3}{c|}{2D ResNet} \\ \cline{2-10} 
+            &
+            \multicolumn{1}{c|}{Acc.} &
+            \multicolumn{1}{c|}{Sens.} &
+            \multicolumn{1}{c|}{Spec.} &
+            \multicolumn{1}{c|}{Acc.} &
+            \multicolumn{1}{c|}{Sens.} &
+            \multicolumn{1}{c|}{Spec.} &
+            \multicolumn{1}{c|}{Acc.} &
+            \multicolumn{1}{c|}{Sens.} &
+            \multicolumn{1}{c|}{Spec} \\ \hline
+            \multicolumn{1}{|l|}{Baseline}             & 0.71    & 0.76    & 0.63    & 0.71     & 0.79     & 0.57     & 0.67     & 0.77     & 0.50     \\
+            \multicolumn{1}{|l|}{+ Augmentácie}        & 0.67    & 0.68    & 0.66    & 0.69     & 0.84     & 0.45     & 0.76     & 0.90     & 0.52     \\
+            \multicolumn{1}{|l|}{+ Batch Norm}         & 0.75    & 0.77    & 0.71    & 0.80     & 0.85     & 0.71     & 0.77     & 0.89     & 0.58     \\
+            \multicolumn{1}{|l|}{+ Dropout}            & 0.75    & 0.76    & 0.74    & 0.74     & 0.94     & 0.42     & 0.77     & 0.85     & 0.63     \\
+            \multicolumn{1}{|l|}{+ Regularizácia (l2)} & 0.71    & 0.70    & 0.71    & 0.79     & 0.87     & 0.66     & 0.78     & 0.89     & 0.61    
+        \end{tabular}
+        \caption{\textbf{Výsledky trénovania.} Acc. = presnosť (angl. Accouracy), Sens. = senzitivita (angl. Sensitivity), Spec. = Špecificita (angl. Specificity)}
+        \label{tab:model_training_results}
+    \end{table}
 \end{landscape}
+
+Oproti \citeauthor*{esmaeilzadeh2018end}, ktorí dosiahli presnosť až 94\%, sme dosiahli presnosť len 72\% avšak sme mali menej dát (o 339 pozorovaní menej), neodstraňovali sme zo snímkov lebku a nepoužili sme pri klasifikácii vek pacienta. Avšak robili sme viac augmentácií, a po ich pridaní sa úspešnosť modelu zhoršila (Obr. \ref{fig:3d_cnn_training}) (ale následne sa už iba zlepšovala), je teda možné, že niektoré augmentácie sú nekorektné a deštruktívne. V ďaľších experimentoch by sme mali pridávať augmentácie po jednej. Aj po pridaní veľmi slabej regularizácie, sa úspešnosť modelu zhoršila. V prípade 2D a 3D ResNet architektúr sa nám podarilo dosiahnuť lepšie výsledky, avšak v ich prípade sa sieť neskôr začala pretrénovávať (Obr. \label{ref:2d_3d_res_net_training}
+) aj napriek použitej regularizácii, čo môže naznačovať, že sú tieto architektúry na náš problém príliš komplexné.
+
+Možné vylepšenia (zoradené podľa subjektívneho pomeru úsilie/vplyv):
+\begin{itemize}
+    \item Pridávať augmentácie postupne a vyhodiť tie deštruktívne.
+    \item Menej ''agresívne'' augmentácie.
+    \item Odstránenie lebky zo snímkov.
+    \item Nájsť a použiť viac dát.
+    \item Krížová validácia v prípade väčšieho nastavovania hyperparametrov.
+    \item Učenie prenosom pomocou autoenkodéra \cite{hosseini2016alzheimer}.
+\end{itemize}
+
+\begin{figure}[h!]
+    \centering
+    \includegraphics[width=14cm]{assets/images/3d_cnn_training.png}
+    \caption{Priebeh trénovania 3D konvolučnej neurónovej siete, čím viac sme pridali regularizácie (l2 alebo dropout) tým sme dosiahli horšie výsledky. Po pridaní augmentácií sa úspešnosť modelu zhoršila, avšak následne sa už iba zlepšovala.}
+    \label{fig:3d_cnn_training}
+\end{figure}
+
+\begin{figure}[h!]
+    \centering
+    \includegraphics[width=14cm]{assets/images/2d_3d_res_net_training.png}
+    \caption{Priebeh trénovania 2D a 3D ResNet neurónovej siete. V oboch prípadoch sme použili dropout aj regularizáciu. Od približne 30-tej epochy sa neurónová sieť začala pretrénovávať, aj napriek regularizácii. Ako vylepšenie je možné skúsiť silnesjšiu regularizáciu (väčšiu hodnotu l2 a dropout), ak ani to nepomôže, je možné, že architektúra je príliš komplexná náš problém (neurónová sieť je príliš hlboká). Môžeme ďalej skúsiť odstrániť jednu plne prepojenú vrstvu alebo znížiť počet neurónov v týchto vrstvách.}
+    \label{fig:2d_3d_res_net_training}
+\end{figure}
 
 \section{Záver}
 
-V tejto kapitole sme opísali ako sme implementovali nami navrhovanú metódu a spôsob jej overenie. Opísali sme implenetáciu kľúčových prvkov (generovanie masiek a vytvorenie tepelnej mapy) navrhovanej metódy RISEI a jej hyper parametre. Rovnako sme opísali aj implementáciu neurónovej siete, architektúru, spôsob trénovania a použitú dátovú sadu. Metódu RISEI sa nám podarilo implementovať a je ich možné použiť v experimentoch. Model ... TODO:
+V tejto kapitole sme opísali ako sme implementovali nami navrhovanú metódu a spôsob jej overenie. Opísali sme implemetáciu kľúčových prvkov (generovanie masiek a vytvorenie tepelnej mapy) navrhovanej metódy RISEI a jej hyper parametre. Rovnako sme opísali aj implementáciu neurónovej siete, architektúru, spôsob trénovania a použitú dátovú sadu. Metódu RISEI sa nám podarilo implementovať a je ich možné použiť v experimentoch. Podarilo sa nám natrénovať niekoľko architektúr neurónových sietí, pričom sme indetifikovali možné príčiny (a navrhli k nim riešenia) výsledkov, ktoré dosahujú. Každopádne výsledky považujeme za postačujúce pre prvé experimenty navrhovanej metódy RISEI.

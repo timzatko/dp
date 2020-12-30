@@ -75,7 +75,7 @@ Kvalitu metódy vysvetľovania rozhodnutí modelu budeme sledovať určovaním k
 
 Keďže naša metóda generuje tepelné mapy pomocou vygenerovania veľkého množstva náhodných masiek, je preto vhodné skúmať ako sú tieto tepelné mapy konzistentné pri niekoľkých požitiach metódy na tom istom MRI snímku. Konzistentnosť máp môžeme merať pomocou podobnosti medzi jednotlivými tepelnými mapami (napr. ako súčet absolútných hodnôt rozdielov medzi voxelmi v oboch tepelných mapách). čím je táto podobnosť väčšia, tým je metóda pri generovaní máp viac konzistentná.
 
-\subsubsection{Určenie správnosti modelu}
+\subsubsection{Určenie správnosti modelu \label{sec:heat_maps_and_model_segmentation_masks}}
 
 Správnosť modelu budeme určovať na na základe tepelných máp vytvorených pomocou metódy na vysvetľovanie predikcií modelu. Budeme overovať do akej miery dávajú tepelné mapy zmysel v kontexte skutočnej anatómie mozgu. Sledujeme, že či tepelná mapa nehovorí o tom, že sa model rozhodol na základe takej oblasti mozgu, z ktorej sa Alzheimerova choroba nedá zistiť. Veľkú úlohu pri určovaní správnosti modelu zohráva aj kvalita natrénovaného modelu, tút budeme merať pomocou metrík z práce od \citeauthor*{bohle2019layer} v ktorej sa autori zaoberali vyhodnocovaním tepelných máp z metódy LRP. Tieto metriky sú nasledovné (relevancia je v našom prípade teplota na tepelnej mape):
 
