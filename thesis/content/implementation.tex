@@ -10,7 +10,7 @@ Na základe BPMN diagramu (Obr. \ref{fig:risei_diagram}) sme implementovali proc
 
 \paragraph{Vytvorenie náhodnej binárnej masky}
 
-Náhodné binárne masky generujeme pomocou knižnice \textit{numpy}. Pomocou nasledovného kódu vygenerujeme $N$ náhodných masiek 3D binárnych matice. Obr. \label{fig:risei_inpainting_example} zobrazuje takúto binárnu maticu, ale v 2D. \textit{size} (veľkosť) a \textit{probability} (pravdepodobnosť) sú hyper-parametrami RISEI metódy. \textit{size} hovorí o veľkosti generovanej masky, čím je toto číslo väčšie tým bude výsledná maska viac fragmentovaná na malé plochy. \textit{probability} hovorí o tom, s akou pravdepodobnosťou daná plocha neprekrytá maskou. RISE používa predvolenú hodnotu \textit{size = 8}.
+Náhodné binárne masky generujeme pomocou knižnice \textit{numpy}. Pomocou nasledovného kódu vygenerujeme $N$ náhodných masiek 3D binárnych matice. Obr. \label{fig:binary_mask} zobrazuje takúto binárnu maticu, ale v 2D. \textit{size} (veľkosť) a \textit{probability} (pravdepodobnosť) sú hyper-parametrami RISEI metódy. \textit{size} hovorí o veľkosti generovanej masky, čím je toto číslo väčšie tým bude výsledná maska viac fragmentovaná na malé plochy. \textit{probability} hovorí o tom, s akou pravdepodobnosťou daná plocha neprekrytá maskou. RISE používa predvolenú hodnotu \textit{size = 8}.
 
 \begin{lstlisting}
     binary_masks = np.random.rand(N, size, size, size) < probability
@@ -19,37 +19,37 @@ Náhodné binárne masky generujeme pomocou knižnice \textit{numpy}. Pomocou na
 \begin{figure}[h!]
     \centering
     \includegraphics[width=13cm]{assets/images/binary_mask.png}
-    \caption{Porovnanie dvoch binárnych masiek s rôznou veľkosťou (\textit{size}), čím väčšia veľkosť, tým je obrázok viac fragmentovaný.}
+    \caption{Porovnanie dvoch binárnych masiek s rôznou veľkosťou (\textit{size}), čím väčšia veľkosť, tým je obrázok viac fragmentovaný. Keď je fragmentácia vyššia, zakrývame menšie časti mozgu, predpokladáme, že takto sa nám nepodarí zakryť relevantné časti z čo zapríčiní nižšiu kvalitu tepelnej mapy (predpokladáme, že v takomto prípade bude ''teplo'' rovnomerne rozmiestnené po celej snínke).}
     \label{fig:binary_mask}
 \end{figure}
 
 \paragraph{Náhodné nastavenie pozície vyrezania, zväčšenie binárnej masky a orezenie na veľkosť obrázka}
 
-Binárnu masku zväčšíme na veľkosť vstupného snímku plus menší offset (o veľkosti size). Následne zo zväčšenej masky na náhodnej pozícii vyrežeme masku o veľkosti vstupného snímku (Obr. \ref{fig:binary_mask_resized}). Táto maska určuje, ktoré miesta na snímku bude treba dokresliť - biele miesta, čiže jednotky. Tento krok v pôvodnej implementácii RISE nie je.
+Binárnu masku zväčšíme na veľkosť vstupnej snímky plus menší offset (o veľkosti size). Následne zo zväčšenej masky na náhodnej pozícii vyrežeme masku o veľkosti vstupnej snímky (Obr. \ref{fig:binary_mask_resized}). Táto maska určuje, ktoré miesta na snímke bude treba dokresliť - biele miesta, čiže jednotky. Tento krok v pôvodnej implementácii RISE nie je.
 
 \begin{figure}[h!]
     \centering
     \includegraphics[width=13cm]{assets/images/binary_mask_resized.png}
-    \caption{Vygenerovaná maska je zväčšená a orezaná na veľkosť vstupného snímku (ten je o veľkosti $[104, 128, 104]$ pričim na obrázkoch je vizualizovaná druhá a tretia dimenzia). Úplne vľavo je binárna maska o veľkosti $8$. V strede je invertovaná binárna maska (kvôli ďaľšiemu pracovanou s ňou) a vpravo je orezaná binárna maska o veľkosti vstupného snímku.}
+    \caption{Vygenerovaná maska je zväčšená a orezaná na veľkosť vstupnej snímky (o veľkosti $[104, 128, 104]$ pričom na obrázkoch je vizualizovaná druhá a tretia dimenzia). Úplne vľavo je binárna maska o veľkosti $8$. V strede je invertovaná binárna maska (kvôli ďaľšiemu pracovanou s ňou) a vpravo je orezaná binárna maska o veľkosti vstupnej snímky.}
     \label{fig:binary_mask_resized}
 \end{figure}
 
 \paragraph{Zväčšenie pomocou bilineárnej interpolácie a orezanie masky na veľkosť obrázka}
 
-Tak ako v poôvodnej implementácii RISE, vytvoríme ''čiernu'' masku na zakrytie častí obrázku. Pôvodnú binárnu masku pomocou bilineárnej interpolácie (funkcia \textit{resize} z knižnice \textit{scikit-learn}) zväčšíme na veľkost vstupného snímku plus menší offset, následne vyrežeme na náhodnej pozicii masku o veľkosti vstupného snímku (táto náhodná pozícia je rovnaká ako pri orezávani binárnej masky bez interpolácie, preto je v BPMN diagrame v samostatnom kroku).
+Tak ako v poôvodnej implementácii RISE, vytvoríme ''čiernu'' masku na zakrytie častí obrázku. Pôvodnú binárnu masku pomocou bilineárnej interpolácie (funkcia \textit{resize} z knižnice \textit{scikit-learn}) zväčšíme na veľkost o niečo väčšiu ako je vstupná snímka (aby sme mohli vykonať náhodný posun), následne vyrežeme na náhodnej pozicii masku o veľkosti vstupnej snímky (táto náhodná pozícia je rovnaká ako pri orezávani binárnej masky bez interpolácie, preto je v BPMN diagrame v samostatnom kroku).
 
 \begin{figure}[h!]
     \centering
     \includegraphics[width=13cm]{assets/images/interpolated_mask.png}
-    \caption{Vygenerovaná maska je zväčšená pomocou bilineárnej interpolácie a orezaná na veľkosť vstupného snímku (ten je o veľkosti $[104, 128, 104]$ pričim na obrázkoch je vizualizovaná druhá a tretia dimenzia). Úplne vľavo je binárna maska o veľkosti $8$. V strede je invertovaná binárna maska (kvôli ďaľšiemu pracovanou s ňou) a vpravo je orezaná interpolovaná ''čierna'' maska o veľkosti vstupného snímku.}
+    \caption{Vygenerovaná maska je zväčšená pomocou bilineárnej interpolácie a orezaná na veľkosť vstupnej snímky (ten je o veľkosti $[104, 128, 104]$ pričim na obrázkoch je vizualizovaná druhá a tretia dimenzia). Úplne vľavo je binárna maska o veľkosti $8$. V strede je invertovaná binárna maska (kvôli ďaľšiemu pracovanou s ňou) a vpravo je orezaná interpolovaná ''čierna'' maska o veľkosti vstupnej snímky.}
     \label{fig:interpolated_mask}
 \end{figure}
 
 \paragraph{Prekrytie masky s obrázkom a dokreslenie zamaskovaných častí obrázka}
 
-Keďže pracujeme nad trojrozmernými dátami, pokúsili sme sa použiť dokreslovanie obrázka v 3D. Na to sme sa pokúsili použiť funkciu \textit{inpaint} s knižnice \textit{scikit-image}, avšak dokreslenie jednej masky bolo veľmi časovo náročné (trvanie bolo až v minútach kde dokreslenie v 2D je v sekundách) a my ich potrebujeme generovať tisíce, preto sme trojrozmerného dokreslovania upustili.
+Keďže pracujeme nad trojrozmernými dátami, pokúsili sme sa použiť dokreslovanie obrázka v 3D. Na to sme sa pokúsili použiť funkciu \textit{inpaint} s knižnice \textit{scikit-image}, avšak dokreslenie jednej masky bolo veľmi časovo náročné (trvanie bolo až v minútach kde dokreslenie v 2D je v sekundách) a my ich potrebujeme generovať tisíce, preto sme od trojrozmerného dokreslovania upustili.
 
-Dokreslovanie dvojrozmerných snímkov z 3D snímku má avšak svoje nevýhody. Nech máme snímky o veľkosti $[z, y, x]$, pri 2D dokreslení musíme dokreslovať $z$ snímkov o veľkosti $[y, x]$ (alebo $y$ snímkov o veľkosti $[y, x]$, alebo $x$ snímkov o veľkosti $[y, z]$). Pri takomto dokreslovaní, dokreslenie z pohľadu $[y, x]$ vyzerajá byť správne, avšak z iného pohľadu, napr. $[z, x]$ sa javí byť dokreslenie nesprávne, najmä kvôli vzniknutým ostrím hranám (Obr. \ref{fig:inpaint_3x_2d}). Toto sme sa pokúsili obýsť tak, že dokreslujeme zo všetkých troch pohľadov a robíme priemer pre každý voxel zo všetkých troch dokreslení. Takto je výsledok o niečo lepší, tj. z každej strany je dokreslenie lepšie ako nesprávne dokreslenie z 2D ale o niečo horšie ako správne dokreslenie z 2D. Na označenie miest, ktoré treba dokresliť sme použili zväčšenú binárnu masku (Obr. \ref{fig:binary_mask_resized}). Dokreslenie vykonávame funkciou \textit{inpaint} z knižnice \textit{cv2 (Open CV)}. Používame dokreslovací algoritmus \textit{cv2.INPAINT\_TELEA}, keďže pomocou neho sme dosahovali vizuálne najlepšie výsledky. Funkcia \textit{cv2.inpaint} vyžaduje ako parameter \textit{inpaint\_radius} (Obr. \ref{fig:inpaint_radius}), čo je jedným z hyper parametrov našej metódy.
+Dokreslovanie dvojrozmerných snímok z 3D snímku má avšak svoje nevýhody. Nech máme snímky o veľkosti $[z, y, x]$, pri 2D dokreslení musíme dokreslovať $z$ snímok o veľkosti $[y, x]$ (alebo $y$ snímok o veľkosti $[y, x]$, alebo $x$ snímok o veľkosti $[y, z]$). Pri takomto dokreslovaní, dokreslenie z pohľadu $[y, x]$ vyzerajú byť správne, avšak z iného pohľadu, napr. $[z, x]$ sa javí byť dokreslenie nesprávne, najmä kvôli vzniknutým ostrým hranám (Obr. \ref{fig:inpaint_3x_2d}). Tento problém sme adresovali tak, že dokreslovanie vykonávame vo všetkých troch rovinách a následne počítame priemer pre každý voxel zo všetkých troch dokreslení. Takto je výsledok o niečo lepší, tj. z každej strany je dokreslenie lepšie ako nesprávne dokreslenie z 2D ale o niečo horšie ako správne dokreslenie z 2D. Na označenie miest, ktoré treba dokresliť sme použili zväčšenú binárnu masku (Obr. \ref{fig:binary_mask_resized}). Dokreslenie vykonávame funkciou \textit{inpaint} z knižnice \textit{cv2 (Open CV)}. Používame dokreslovací algoritmus \textit{cv2.INPAINT\_TELEA}, keďže pomocou neho sme dosahovali vizuálne najlepšie výsledky. Funkcia \textit{cv2.inpaint} vyžaduje ako parameter \textit{inpaint\_radius} (Obr. \ref{fig:inpaint_radius}), čo je jedným z hyper parametrov našej metódy.
 
 \begin{figure}[h!]
     \centering
@@ -84,14 +84,14 @@ Keďže sa pôvodná implementácia RISE prekrýva miesta tak, aby nevznikali os
 
 \paragraph{Prekrytie dokreslenej masky a čiernej masky s obrázkom}
 
-Keďže prekrývam tri rôzne vrstvy - originálny snímok, čiernu masku a dokreslený snímok môžem tieto vrstvy skombinovať v rôznom pomere a tým vytvoriť nový obrázok.
+Keďže v rámci metódy sa prekrývajú tri rôzne vrstvy - originálna snímka, čierna maska a dokreslená snímka môžeme tieto vrstvy skombinovať v rôznom pomere a tým vytvoriť novú snímku.
 
-Toto som implementoval zavedením parametrov $b1$ a $b2$ (skratka od slova prechod, angl. blend), ktoré hovoria o pomere medzi originálnym snímkom a dokresleným snímkom, a originálnym snímkom spojeným s dokreslením a čiernou maskou (Obr. \ref{fig:risei_layers}). Pri týchto parametroch platí, že $0 <= b1, b2 <= 1$. Takto zadefinované parametre mi umožňujú vytvoriť zakaskovaný snímok iba s čiernou maskou ($b1 = 0$, $b2 = 1$) či iba s dokreslením ($b1 = 1$, $b2 = 0$).
+Toto sme implementovali zavedením parametrov $b1$ a $b2$ (skratka od slova prechod, angl. blend), ktoré hovoria o pomere medzi originálnym snímkom a dokresleným snímkom, a originálnym snímkom spojeným s dokreslením a čiernou maskou (Obr. \ref{fig:risei_layers}). Pri týchto parametroch platí, že $0 <= b1, b2 <= 1$. Takto zadefinované parametre mi umožňujú vytvoriť zakaskovaný snímok iba s čiernou maskou ($b1 = 0$, $b2 = 1$) či iba s dokreslením ($b1 = 1$, $b2 = 0$).
 
 \begin{figure}[h!]
     \centering
     \includegraphics[width=13cm]{assets/images/risei_layers.png}
-    \caption{Príklad, ako vyzerá spojenie originálneho snímku, dokresleného snímku a čiernej masky. V diagrame je zobrazený aj výsledok medzikroku spojenia dokresleného snímku a pôvodného snímku. Parametre boli nastavené na $b1 = 0.75$ a $b2 = 0.75$.}
+    \caption{Príklad, ako vyzerá spojenie originálnej snímky, dokreslenej snímky a čiernej masky. V diagrame je zobrazený aj výsledok medzikroku spojenia dokreslenej snímky a pôvodnej snímky. Parametre boli nastavené na $b1 = 0.75$ a $b2 = 0.75$.}
     \label{fig:risei_layers}
 \end{figure}
 
@@ -138,7 +138,7 @@ Kompletný zoznam parametrov metódy RISEI sa nachádza v tabuľke \ref{tab:rise
 
 \subsection{Vytvorenie tepelných máp}
 
-Na základe návrhu (Sekcia \ref{sec:risei}) sme implementovali vytváranie tepelných máp. Keďže generovanie tepelnej mapy si vyžaduje vygenerovať veľký počet zamaskovaných snímkov, ktoré v istom momente musia byť všetky uložené v pamäti, generujeme a vyhodnocujeme zamaskované snímky v dávkach (angl. batch). Zdrojový kód nižšie, implementuje vytvorenie jednej tepelnej mapy. Príklad vytvorenej tepelnej mapy uvádzame na obrázku \ref{fig:heatmap_example}.
+Na základe návrhu (Sekcia \ref{sec:risei}) sme implementovali vytváranie tepelných máp. Keďže generovanie tepelnej mapy si vyžaduje vygenerovať veľký počet zamaskovaných snímok, ktoré v istom momente musia byť všetky uložené v pamäti, generujeme a vyhodnocujeme zamaskované snímky v dávkach (angl. batch). Zdrojový kód nižšie, implementuje vytvorenie jednej tepelnej mapy. Príklad vytvorenej tepelnej mapy uvádzame na obrázku \ref{fig:heatmap_example}.
 
 \begin{lstlisting}
 # image_x float[z, x, y, 1] - original image
@@ -204,7 +204,7 @@ for batch_x, batch_y in sequence:
 auc = metrics.auc([i * step_size for i in range(len(y_pred))], y_pred) / get_voxels_count(image_x)
 \end{lstlisting}
 
-\section{Model na detekciu Alzheimerovej choroby na základe MRI snímkov}
+\section{Model na detekciu Alzheimerovej choroby na základe MRI snímok}
 
 V tejto sekcii popíšem impelentáciu, z ktorého predikcií budeme vytvárať tepelné mapy. Náš model - neuónovú sieť sme sa rozdhodli implementovať v knižnici Tensorflow (v2.3.0). Naším cieľom nie je natrénovať najlepší model na dekekciu Alzheimerovej choroby, ale model ktorý je použiteľný na overenie nami narvhnutej metódy. Preto nevykonáme komplexnejšie prístupy k detekcii Alzheimerovej chorby, ktoré sme popísali v analýze (Sekcia \ref{sec:nn_ad_prediction}), ako je napríklad učenie prenosom pomocou autoenkodéra.
 
@@ -212,9 +212,9 @@ V tejto sekcii popíšem impelentáciu, z ktorého predikcií budeme vytvárať 
 
 Použili sme dátovú sadu ADNI. Ako vstup modelu je celý MRI snímok (tj. všetky tri dimenzie), nepoužívame žiadné ine údaje z dátovej sady ADNI, ako napríklad demografické údaje a pod. keďže model plánujeme používať iba na vytváranie tepelných máp pre vstupné snímky. 
 
-V dátovej sade sa nachádza celkom 502 MRI snímkov, z toho 311 pacientov s Alzheimerovou chorobou (AD) a 191 bez (CN). Dátovú sadu máme teda nevyváženú a model môže začať preferovať jednu triedu. Na predíjdenie tomuto javu existuje niekoľko techník, napríklad nadvzorkovanie (angl. oversampling) alebo podvzorkovanie (angl. undersampling) kedy sa doplní synetetickými minoritná trieda, alebo sa odstránia nejaké pozorovania z majoritnej triedy. My sme sa však rozhodli nastaviť predikovaným triedam váhy, ktoré sú zohladnené v chybovej funkcii, taktiež sme nainicializovali chybu \footnote{\url{https://www.tensorflow.org/tutorials/structured\_data/imbalanced\_data\#optional\_set\_the\_correct\_initial\_bias}} pre neuróny na poslednej vrstve aby reflektovala to, že triedy sú nevyvážené.
+V dátovej sade sa nachádza celkom 502 MRI snímok, z toho 311 pacientov s Alzheimerovou chorobou (AD) a 191 bez (CN). Dátovú sadu máme teda nevyváženú a model môže začať preferovať jednu triedu. Na predíjdenie tomuto javu existuje niekoľko techník, napríklad nadvzorkovanie (angl. oversampling) alebo podvzorkovanie (angl. undersampling) kedy sa doplní synetetickými minoritná trieda, alebo sa odstránia nejaké pozorovania z majoritnej triedy. My sme sa však rozhodli nastaviť predikovaným triedam váhy, ktoré sú zohladnené v chybovej funkcii, taktiež sme nainicializovali chybu \footnote{\url{https://www.tensorflow.org/tutorials/structured\_data/imbalanced\_data\#optional\_set\_the\_correct\_initial\_bias}} pre neuróny na poslednej vrstve aby reflektovala to, že triedy sú nevyvážené.
 
-Dátovú sadu sme náhodným výberom rozdelili na trénovaciu a testovaciu v pomere 80/20. Validačnú sadu sme nerobili, pretože máme málo dát a neplánujeme robiť veľké hľadania optimálnych hyper-parametrov. V budúcnosti možno zvážime vykonanies krížovej validácie (angl. cross validation) pri trénovaní. Aj po rozdelení sa nám podarilo zachovať pôvodný pomer medzi triedami -- 62/38 (Obr. \ref{fig:dataset_classes}).
+Dátovú sadu MRI snímkov pacientov sme náhodným výberom rozdelili na trénovaciu a testovaciu v pomere 80/20. Validačnú sadu sme nevytávarali, z dôvodu malého množstva dát, ktoré máme k dispozícii a taktiež neplánujeme prehladávať priestor hyper parametrov za účelom nájsť ich najoptimálnejšiu kombináciu. V budúcnosti možno zvážime vykonanie krížovej validácie (angl. cross validation) pri trénovaní. Aj po rozdelení sa nám podarilo zachovať pôvodný pomer medzi triedami -- 62/38 (Obr. \ref{fig:dataset_classes}).
 
 \begin{figure}[h!]
     \centering
@@ -225,20 +225,20 @@ Dátovú sadu sme náhodným výberom rozdelili na trénovaciu a testovaciu v po
 
 \subsubsection{Predspracovanie}
 
-MRI snímky boli predspracované štandardnou postupnosťou nástroja freesurfer, avšak nevykonali sme odstránenie lebky z MRI snímkov.
+MRI snímky boli predspracované štandardnou postupnosťou nástroja freesurfer \footnote{\url{https://surfer.nmr.mgh.harvard.edu/}}, avšak nevykonali sme odstránenie lebky z MRI snímok.
 Okrem iného sme vykonali:
 
 \begin{itemize}
-    \item Upravenie vstupných snímkov na rovnakú veľkosť 104 x 128 x 104 voxelov. \citeauthor*{esmaeilzadeh2018end} upravili vstupné snímky na veľkosť 116 x 130 x 83, k týmto číslam sme sa pokúsili priblížiť. Pomer veľkostí dimenzií ale nemáme rovnaký, aj z dôvodu, že sme nevykonali odstránenie lebky zo vstupných snímkov.
+    \item Upravenie vstupných snímok na rovnakú veľkosť 104 x 128 x 104 voxelov. \citeauthor*{esmaeilzadeh2018end} upravili vstupné snímky na veľkosť 116 x 130 x 83, k týmto číslam sme sa pokúsili priblížiť. Pomer veľkostí dimenzií ale nemáme rovnaký, aj z dôvodu, že sme nevykonali odstránenie lebky zo vstupných snímok.
     \item Štandardizáciu vstupných dát (preškálovanie na rozsah $<0, 1>$) nasledovným vzorcom: $\frac{(image\_x - images\_min])}{(images\_max - images\_min)}$.
 \end{itemize}
 
 \subsubsection{Augmentácie}
 
-Keďže máme málo dát, rozhodli sme sa dáta augmentovať (Obr. \ref{fig:augmentations}). Dáta náhodne augmentujeme v každej dávke (angl. batch). Implementovali sme nasledovné augmentácie:
+Keďže použitá dátová sada obsahuhe malé množstvo dát, rozhodli sme sa dáta augmentovať (Obr. \ref{fig:augmentations}). Dáta náhodne augmentujeme v každej dávke (angl. batch). Implementovali sme nasledovné augmentácie:
 
 \begin{itemize}
-    \item Vymenenie hemisfér mozgu (\citeauthor*{esmaeilzadeh2018end}) s pravdepodobnosťou 50\%
+    \item Vymenenie hemisfér mozgu (\citeauthor*{esmaeilzadeh2018end} \cite{esmaeilzadeh2018end}) s pravdepodobnosťou 50\%
     \item Náhodná rotácia o 0 až 5 stupňov s pravdepodobnosťou 20\%
     \item Náhodné priblíženie do 80\% veľkosti snímku s pravdepodobnosťou 20\%
     \item Náhodné gaussovské rozmazanie (max $sigma = <0.85, 1>$) s pravdepodobnosťou 20\%
@@ -256,26 +256,28 @@ Keďže máme málo dát, rozhodli sme sa dáta augmentovať (Obr. \ref{fig:augm
 
 Rozhodli sme sa implementovať a porovnať niekoľko architektúr neurónových sietí.
 
-\paragraph{3D konvolučná neurónová sieť od \citeauthor*{esmaeilzadeh2018end}} Túto neurónovú sieť sme sa rozhodli implementovať, pretože jej autori pomocou nej dosiahli veľmi slušné výsledky (94.1\% presnosť). Implementovali sme jednoduchšiu verziu, ktorá dosahovala lepšie výsledky, opísali sme ju v sekcii \ref{sec:nn_ad_prediction}. Táto neurónová sieť ma celkovo \textit{2 899 778} parametrov.
+\paragraph{3D konvolučná neurónová sieť od \citeauthor*{esmaeilzadeh2018end}} Túto neurónovú sieť sme sa rozhodli implementovať, pretože jej autori pomocou nej dosiahli veľmi dobré výsledky (94.1\% presnosť). Implementovali sme jednoduchšiu verziu, ktorá dosahovala lepšie výsledky, opísali sme ju v sekcii \ref{sec:nn_ad_prediction}. Táto neurónová sieť ma celkovo \textit{2 899 778} parametrov.
 
-\paragraph{2D ResNet a 3D ResNet} Keďže reziduálne neúronové siete dosahujú pri klasifikačných úlohách nad obrazovými dátami veľmi dobre výsledky vyskúšame aj tieto architektúry. V prípade 2D ResNetu-u používame 2D konvolúcie, tie nám budú fungovať aj napriek tomu, že máme 3D dáta. Vstup do 2D ResNet-u je tiež 3D matica, ktorej tretia dimenzia býva o obvykle o dĺžky 1 alebo 3 (RGB), v našom prípade bude o veľkosti poslednej dimenzie snímku. Rozmery vstupných dát pre 2D ResNet budú $[104, 128, 104]$ a pre 3D ResNet $[104, 128, 104, 1]$. Za konvolučné vrstvy a globálnu združovaciu vrstvu sme pripojili dve plne prepojené vrstvy s 512, 256 a 128 neurónami a aktiváciou \textit{ReLU}, následne už nasleduje iba posledná vrstva s aktiváciou \textit{softmax}. Tieto neurónové siete majú celkovo \textit{12 689 602}, resp. \textit{34 356 354} parametrov.
+\paragraph{2D ResNet a 3D ResNet} Keďže reziduálne neúronové siete dosahujú pri klasifikačných úlohách nad obrazovými dátami veľmi dobre výsledky vyskúšame aj tieto architektúry. V prípade 2D ResNetu-u používame 2D konvolúcie, tie nám budú fungovať aj napriek tomu, že máme 3D dáta. Vstup do 2D ResNet-u je tiež 3D matica, ktorej tretia dimenzia býva o obvykle o dĺžky 1 alebo 3 (RGB), v našom prípade bude o veľkosti poslednej dimenzie snímku. Rozmery vstupných dát pre 2D ResNet budú $[104, 128, 104]$ a pre 3D ResNet $[104, 128, 104, 1]$. Za konvolučné vrstvy a globálnu združovaciu vrstvu sme pripojili dve plne prepojené vrstvy s 512, 256 a 128 neurónami a s aktivačnou funkciou \textit{ReLU}, následne už nasleduje iba posledná vrstva s aktiváciou \textit{softmax}. Tieto neurónové siete majú celkovo \textit{12 689 602}, resp. \textit{34 356 354} parametrov.
 
-Do neurónových sietí sme ešte pridali dropout a dávkovú normalizáciu (angl. batch normalization). Dropout sme pridali pred plne prepojené vrstvy. Dávkovú normalizáciu sme pirdali v konvolučných vrstvách pred aplikovaním nelinearity, tak ako je to odporučené od \citeauthor*{ioffe2015batch} v \textit{Batch Normalization: Accelerating Deep Network Training by Reducing Internal Covariate Shift}. Na poslednej vrstve sa nachádzajú dva neuróny s aktiváciou \textit{softmax}.
+% TODO: diagram pre architekturu ResNet18
+
+Do neurónových sietí sme ešte pridali dropout a dávkovú normalizáciu (angl. batch normalization). Dropout sme pridali pred plne prepojené vrstvy. Dávkovú normalizáciu sme pirdali v konvolučných vrstvách pred aplikovaním nelinearity, tak ako je to odporučené od \citeauthor*{ioffe2015batch} v \textit{Batch Normalization: Accelerating Deep Network Training by Reducing Internal Covariate Shift}. Na poslednej vrstve sa nachádzajú dva neuróny s aktivačnou funkciou \textit{softmax}.
 
 \subsection{Trénovanie}
 
 Pri trénovaní sme použili:
 
 \begin{itemize}
-    \item kategorickú entropiu (angl. categorical crossentropy) ako chybovú funkciu s podporou pre nevyvážené triedy (tj. táto funkcia brala ohľad na váhy tried, ktoré sme nastavili),
-    \item optimizér Adam s prevolenými nastaveniami,
-    \item exponenciálne tlmenie rýchlosti učenia (angl. learning rate decay), $0,96$ každých 25 epoch
+    \item kategorickú entropiu (angl. categorical crossentropy) ako chybovú funkciu s podporou pre nevyvážené triedy (tj. táto funkcia brala ohľad na váhy tried, ktoré sme nastavili nepriamo úmerne ich veľkosti),
+    \item optimalizačný algoritmus Adam s prevolenými nastaveniami,
+    \item exponenciálne tlmenie rýchlosti učenia (angl. learning rate decay), s hodnotou $0,96$ každých 25 epoch,
     \item skoré zastavenie trénovania ak sa metrika AUC (plocha pod krivkou) nezlepšila za posledných 50 epoch,
     \item veľkosť dávky (angl. batch size) -- 10 (vždy tak, aby sme naplno využili pamäť grafickej karty),
     \item $l2$ regularizáciu (rovnako ako \citeauthor*{esmaeilzadeh2018end}).
 \end{itemize}
 
-Trénovali sme iteratívne, začali sme obyčajným modelom a postupne sme pridávali augmentácie, dávkovú normalizáciu, dropout a regularizáciu pričim sme postupne dolaďovali parametre. Najlepšie výsledky sme dosiahli s architektúrou 3D ResNet s presnosťou 80\% (Tabuľka \ref{tab:model_training_results}). Nepodarilo sa nám nám teda priblížiť k výsledkom analyzovaných prác.
+Trénovali sme iteratívne, začali sme obyčajným modelom a postupne sme pridávali augmentácie, dávkovú normalizáciu, dropout a regularizáciu pričim sme postupne dolaďovali parametre. Najlepšie výsledky sme dosiahli s architektúrou 3D ResNet s presnosťou 80\% (Tabuľka \ref{tab:model_training_results}). Nepodarilo sa nám nám teda priblížiť k výsledkom analyzovaných prác, čo však v konečnom dôsledku ani nie je cieľom tejto práce.
 
 \begin{landscape}
     \begin{table}[]
@@ -304,14 +306,14 @@ Trénovali sme iteratívne, začali sme obyčajným modelom a postupne sme prid�
     \end{table}
 \end{landscape}
 
-Oproti \citeauthor*{esmaeilzadeh2018end}, ktorí dosiahli presnosť až 94\%, sme dosiahli presnosť len 72\% avšak sme mali menej dát (o 339 pozorovaní menej), neodstraňovali sme zo snímkov lebku a nepoužili sme pri klasifikácii vek pacienta. Avšak robili sme viac augmentácií, a po ich pridaní sa úspešnosť modelu zhoršila (Obr. \ref{fig:3d_cnn_training}) (ale následne sa už iba zlepšovala), je teda možné, že niektoré augmentácie sú nekorektné a deštruktívne. V ďaľších experimentoch by sme mali pridávať augmentácie po jednej. Aj po pridaní veľmi slabej regularizácie, sa úspešnosť modelu zhoršila. V prípade 2D a 3D ResNet architektúr sa nám podarilo dosiahnuť lepšie výsledky, avšak v ich prípade sa sieť neskôr začala pretrénovávať (Obr. \label{ref:2d_3d_res_net_training}
+Oproti \citeauthor*{esmaeilzadeh2018end}, ktorí dosiahli presnosť až 94\%, sme dosiahli presnosť len 72\% avšak sme mali menej dát (o 339 pozorovaní menej), neodstraňovali sme zo snímok lebku a nepoužili sme pri klasifikácii vek pacienta. Avšak robili sme viac augmentácií, a po ich pridaní sa úspešnosť modelu zhoršila (Obr. \ref{fig:3d_cnn_training}) (ale následne sa už iba zlepšovala), je teda možné, že niektoré augmentácie sú nekorektné a deštruktívne a vedú k zhoršeniu výkonnosti modelu. V ďaľších experimentoch by sme mali pridávať augmentácie po jednej. Aj po pridaní veľmi slabej regularizácie, sa úspešnosť modelu zhoršila. V prípade 2D a 3D ResNet architektúr sa nám podarilo dosiahnuť lepšie výsledky, avšak v ich prípade sa sieť neskôr začala pretrénovávať (Obr. \ref{fig:2d_3d_res_net_training}
 ) aj napriek použitej regularizácii, čo môže naznačovať, že sú tieto architektúry na náš problém príliš komplexné.
 
 Možné vylepšenia (zoradené podľa subjektívneho pomeru úsilie/vplyv):
 \begin{itemize}
     \item Pridávať augmentácie postupne a vyhodiť tie deštruktívne.
     \item Menej ''agresívne'' augmentácie.
-    \item Odstránenie lebky zo snímkov.
+    \item Odstránenie lebky zo snímok.
     \item Nájsť a použiť viac dát.
     \item Krížová validácia v prípade väčšieho nastavovania hyperparametrov.
     \item Učenie prenosom pomocou autoenkodéra \cite{hosseini2016alzheimer}.
@@ -331,6 +333,6 @@ Možné vylepšenia (zoradené podľa subjektívneho pomeru úsilie/vplyv):
     \label{fig:2d_3d_res_net_training}
 \end{figure}
 
-\section{Záver}
+\section{Zhrnutie}
 
-V tejto kapitole sme opísali ako sme implementovali nami navrhovanú metódu a spôsob jej overenie. Opísali sme implemetáciu kľúčových prvkov (generovanie masiek a vytvorenie tepelnej mapy) navrhovanej metódy RISEI a jej hyper parametre. Rovnako sme opísali aj implementáciu neurónovej siete, architektúru, spôsob trénovania a použitú dátovú sadu. Metódu RISEI sa nám podarilo implementovať a je ich možné použiť v experimentoch. Podarilo sa nám natrénovať niekoľko architektúr neurónových sietí, pričom sme indetifikovali možné príčiny (a navrhli k nim riešenia) výsledkov, ktoré dosahujú. Každopádne výsledky považujeme za postačujúce pre prvé experimenty navrhovanej metódy RISEI.
+V tejto kapitole sme opísali, ako sme implementovali nami navrhovanú metódu a spôsob jej overenie. Opísali sme implemetáciu kľúčových prvkov (generovanie masiek a vytvorenie tepelnej mapy) navrhovanej metódy RISEI a jej hyper parametre. Rovnako sme opísali aj implementáciu neurónovej siete, architektúru, spôsob trénovania a použitú dátovú sadu. Metódu RISEI sa nám podarilo implementovať a je ju možné použiť v experimentoch. Podarilo sa nám natrénovať niekoľko architektúr neurónových sietí, pričom sme indetifikovali možné príčiny (a navrhli k nim riešenia) výsledkov, ktoré dosahujú. Každopádne výsledky považujeme za postačujúce pre prvé experimenty navrhovanej metódy RISEI.

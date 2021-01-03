@@ -2,7 +2,7 @@
 
 Pre použitie neurónových sietí v bežnej praxi doktorov pri diagnostike Alzheimerovej choroby je nevyhnutné, aby sa rozhodnutia neurónových sietí dali vysvetliť. Preto navrhujeme metódu na vyvsvetľovanie rozhodnutí neurónových sietí, ktorú overíme na MRI snímkoch u pacientov (CN, MCI a AD).
 
-Vychádzajúc cieľa práce \textit{\ref{sec:goals_1} Vytvorenie novej alebo vylepšenie existujúcej metódy pre vysvetľovanie rozhodnutí neurónových sietí} navrhujeme metódu, ktorá vychádza z už existujúcej metódy \textit{RISE} (Sek. \ref{sec:rise}). Táto metóda dosiahla veľmi dobré výsledky oproti metódam GradCAM a LIME a je, teda vhodným základom na možné vylepšenia. Táto metóda funguje na pricípe zakrývania častí obrázka (tak ako iné perturbačné metódy). Po takomto prekrytí u iných perturbačných metódach vznikajú ostré hrany, čo môže neurónovú sieť mýliť, RISE tento problém ale nemá. Avšak tento prekryv býva zvyčajne v jednej hodnote. Keďže metóda RISE bola pôvodne použitá na obrázky vo farebnej schéme RGB, tento prekryv sa zvyčajne robí v čiernej farbe - tj. v (r = 0, g = 0, b = 0). MRI snímky nepoužívajú žiadnu farebnú schému, ale zachytávajú intenzitu (hodnoty sú zväčša reálne čísla). V tomto prípade môžeme zakrývať maximálnou alebo minimálnou hodnotou (minimálna hodnota je ekvivalentná RGB v prípade šedej). Toto zakrutie môže byť práve ďalším zdrojom zmätenia pre neurónovú sieť, keďže úbytky tkaniva sú vyjadrené nízkymi hodnotami na snímkoch. Preto navrhujeme zakrývané miesta dokresliť určitou metódou spracovania obrazu (Sek. \ref{cap:image_processing}) alebo na zakrytie použiť inú hodnotu.
+Vychádzajúc cieľa práce \textit{\ref{sec:goals_1} Vytvorenie novej alebo vylepšenie existujúcej metódy pre vysvetľovanie rozhodnutí neurónových sietí} navrhujeme metódu, ktorá vychádza z už existujúcej metódy \textit{RISE} (Sek. \ref{sec:rise}). Táto metóda dosiahla veľmi dobré výsledky oproti metódam GradCAM a LIME a považujem ju teda vhodný základ pre ďaľšie vylepšenia. Metóda RISE funguje na princípe zakrývania častí obrázka (tak ako iné perturbačné/oklúzne metódy) jednou hodnotou (tj. farbou). Po takomto prekrytí avšak nevznikajú žiadné ostré hrany, ktoré by mohli neurónovú sieť mýliť ako u iných metódach, ktoré fungujú na princípe zakrývania častí obrazu. Keďže metóda RISE bola pôvodne použitá na obrázky vo farebnom priestore RGB, tento prekryv sa zvyčajne robí v čiernej farbe - tj. v (r = 0, g = 0, b = 0). MRI snímky nepoužívajú žiadnu farebnú schému, ale zachytávajú intenzitu (hodnoty sú zväčša reálne čísla). V tomto prípade môžeme zakrývať maximálnou alebo minimálnou hodnotou (minimálna hodnota je ekvivalentná RGB v prípade šedej). Toto zakrytie môže byť práve ďalším zdrojom zmätenia pre neurónovú sieť, keďže úbytky tkaniva sú vyjadrené nízkymi hodnotami na snímkoch. Preto navrhujeme zakrývané miesta dokresliť určitou metódou spracovania obrazu (Sek. \ref{cap:image_processing}) alebo na zakrytie použiť inú hodnotu.
 Pôvodná metóda bola ale narvhnutá pre obrázky (tj. 2D) a nie 3D volumetrické dáta, preto budeme musieť metódu RISEI upraviť aby vedela pracovať s 3D dátami - tj. budeme generovať 3D masky a podobne.
 
 \section{RISEI - Randomized Input Sampling for Explanation with Inpainting \label{sec:risei}}
@@ -28,7 +28,7 @@ Toto sú 3 hlavné kroky z ktorých pozostáva táto metóda, ďalej bližšie p
 
 \paragraph{Vytvorenie náhodne zamaskovaných obrázkov.}
 
-Vytvorenie náhodne zamaskovaných obrázkov tiež pozostáva z niekoľkých krokov, pričom niektoré z nich môžu bežať paralelne. Tento sme znázornili diagramom (Obr. \ref{fig:risei_diagram}). Masky sa vytvárajú paralelne, pretože ''čierna'' maska ma jemné hrany a na dokreslenie potrebujeme naopak masku s ostrými hranami.
+Vytvorenie náhodne zamaskovaných obrázkov tiež pozostáva z niekoľkých krokov, pričom niektoré z nich môžu byť vykonávané paralelne. Tento krok sme znázornili diagramom (Obr. \ref{fig:risei_diagram}). Masky sa vytvárajú paralelne, pretože ''čierna'' maska ma jemné hrany a na dokreslenie potrebujeme naopak masku s ostrými hranami.
 
 \begin{figure}[h!]
     \centering
@@ -50,18 +50,18 @@ Vytvorenie ''čiernej'' masky je rovnaké, ako pri metóde \textit{RISE}. Dokres
 
 \paragraph{Vytvorenie a vizualizácia vysvetlenia pomocou tepelnej mapy.}
 
-Tento krok je identický s originálnou metódou \textit{RISE}. Nasledovný vzorec \ref{eq:risei_heatmap_1} vyjadruje výpočet dôležitosti $I$ pre každý voxel $[x, y, z]$ snímku, kde $n$ je počet všetkých zamaskovaných snímkov. Funkcia $p(k, x, y, z)$ vracia vracia predikciu (tj. aktiváciu v kontexte neurónových sietí) pre predikovanú triedu (v prípade binárnej klasifikácie) z modelu pre zamaskovaný snímok $k$. Funkcia $c(k, x, y, z)$ vracia mieru zakrytia/dokreslenia maskou, pričom $H(c) = <0, 1>$, kde $1$ znamená úplné prekrytie/dokreslenie a $0$ žiadne prekrytie/dokreslenie. Rovnako, ako metóde \textit{RISE}, počítame vážený priemer.
+Tento krok je identický s originálnou metódou \textit{RISE}. Nasledovný vzorec \ref{eq:risei_heatmap_1} vyjadruje výpočet dôležitosti $I$ pre každý voxel $[x, y, z]$ snímky, kde $n$ je počet všetkých zamaskovaných snímok. Funkcia $p(k, x, y, z)$ vracia vracia predikciu (tj. aktiváciu v kontexte neurónových sietí) pre predikovanú triedu (v prípade binárnej klasifikácie) z modelu pre zamaskovaný snímok $k$. Funkcia $c(k, x, y, z)$ vracia mieru zakrytia/dokreslenia maskou, pričom $H(c) = <0, 1>$, kde $1$ znamená úplné prekrytie/dokreslenie a $0$ žiadne prekrytie/dokreslenie. Rovnako, ako metóde \textit{RISE}, počítame vážený priemer.
 
 \begin{equation} 
     I_{x, y, z} = \frac{\sum_{k}^{n} p(k, x, y, z) * (1 - c(k, x, y, z))}{\sum_{k}^{n} p(k, x, y, z)}
     \label{eq:risei_heatmap_1}
 \end{equation}
 
-Navrhovaná metóda do orignálnej metódy pridáva niekoľko parametrov a najmä výpočtovo náročné dokreslovanie, preto bude nutné nájsť vhodné nastavenie parametrov, aby výpočet vysvetlenia nebol príliš časovo náročný. Práve výpočtová náročnosť môže jednou zo slabín tejto metódy. Takisto aj samotná dokreslená časť obrázka môže byť príčinou zmätenia neurónovej siete.
+Navrhovaná metóda do orignálnej metódy pridáva niekoľko parametrov a najmä výpočtovo náročné dokreslovanie, preto bude nutné nájsť vhodné nastavenie parametrov, aby výpočet vysvetlenia nebol príliš časovo náročný. Práve výpočtová náročnosť môže byť jednou zo slabín tejto metódy. Takisto aj samotná dokreslená časť obrázka môže byť príčinou zmätenia neurónovej siete.
 
-\section{Overenie riešenia}
+\section{Overenie riešenia \label{sec:evaluation_design}}
 
-Našu metódu budeme najskôr porovnávať s originálnou metódou RISE (tj. či sa nám podarilo vytvoriť lepšiu metódu) a následne s metódou LRP. Tieto experimenty môžeme vykonávať na CN a AD vzorkách; a aj na CN, MCI a AD vzorkách. Budeme sledovať kvalitu navrhnutej metódy (oproti ostatným metódam) a na základe týchto tepelných máp budeme vyhodnocovať mieru správnosti modelu.
+Našu metódu budeme najskôr porovnávať s originálnou metódou RISE (tj. či sa nám podarilo vytvoriť lepšiu metódu) a následne s metódou LRP, keďže táto metóda bola už úspešne použitá pri vysvetľovaní rozhodnutí neurónových sietí detekujúcich Alzheimerovu chorobu (Sekcia \ref{sec:ad_nn_explanation}). Tieto experimenty môžeme vykonávať na CN a AD vzorkách; a aj na CN, MCI a AD vzorkách. Budeme sledovať kvalitu navrhnutej metódy (oproti ostatným metódam) a na základe týchto tepelných máp budeme vyhodnocovať mieru správnosti modelu.
 
 \subsection{Dátová sada} Experimenty budeme vykonávať na dátovej sade ADNI, ktorá obsahuje MRI snímky AD pacientov. Táto dátová sada bola použitá aj na trénovanie state-of-the-art modelu na diagnsotiku Alzheimerovej choroby \cite{esmaeilzadeh2018end}, ale aj pri vysvetľovaní rozhodnutí neurónovej siete pomocou LRP \cite{bohle2019layer}. Na tejto dátovej sade budeme musieť vykonať rovnaké predspracovanie ako \citeauthor*{bohle2019layer}, aby sme sa s ich výsledkami mohli porovnať. Prípadne môžeme vykonať vlastné predspracovanie, ale budeme musieť vykonať aj experimenty s metódou LRP.
 
@@ -71,20 +71,20 @@ Najskôr budeme vyhodnocovať nami navrhnutú metódu pomocou sledovania kvality
 
 \subsubsection{Určenie kvality metódy vysvetľovania rozhodnutí modelu \label{sec:evaluation_design_method_quality}}
 
-Kvalitu metódy vysvetľovania rozhodnutí modelu budeme sledovať určovaním kvality tepelnej mapy. Tá v kontexte našej práce hovorí o tom, do akej miery táto mapa odzrkadľuje to, na základe čoho sa model rozhoduje. Toto budeme merať metrikami \textit{insertion (AUC)} a \textit{deletion (AUC)}, ktoré sme bližšie popísali v sekcii \ref{sec:rise}. Táto metrika nám povie, ako dobrá je naša metóda na vysvetľovanie.
+Kvalitu metódy vysvetľovania rozhodnutí modelu budeme sledovať určovaním kvality tepelnej mapy. Tá v kontexte našej práce hovorí o tom, do akej miery táto mapa odzrkadľuje to, na základe čoho sa model rozhoduje. Toto budeme merať metrikami \textit{insertion (AUC)} a \textit{deletion (AUC)}, ktoré sme bližšie popísali v sekcii \ref{sec:rise}. Táto metrika nám povie, aká dobrá je naša metóda na vysvetľovanie.
 
-Keďže naša metóda generuje tepelné mapy pomocou vygenerovania veľkého množstva náhodných masiek, je preto vhodné skúmať ako sú tieto tepelné mapy konzistentné pri niekoľkých požitiach metódy na tom istom MRI snímku. Konzistentnosť máp môžeme merať pomocou podobnosti medzi jednotlivými tepelnými mapami (napr. ako súčet absolútných hodnôt rozdielov medzi voxelmi v oboch tepelných mapách). čím je táto podobnosť väčšia, tým je metóda pri generovaní máp viac konzistentná.
+Keďže naša metóda generuje tepelné mapy pomocou vygenerovania veľkého množstva náhodných masiek, je vhodné skúmať, ako sú tieto tepelné mapy konzistentné pri niekoľkých požitiach metódy na tom istom MRI snímku. Konzistentnosť máp môžeme merať pomocou podobnosti medzi jednotlivými tepelnými mapami vygenerovaními pre tú istú snímku (napr. ako súčet absolútných hodnôt rozdielov medzi voxelmi v oboch tepelných mapách). čím je táto podobnosť väčšia, tým je metóda pri generovaní máp viac konzistentná.
 
 \subsubsection{Určenie správnosti modelu \label{sec:heat_maps_and_model_segmentation_masks}}
 
-Správnosť modelu budeme určovať na na základe tepelných máp vytvorených pomocou metódy na vysvetľovanie predikcií modelu. Budeme overovať do akej miery dávajú tepelné mapy zmysel v kontexte skutočnej anatómie mozgu. Sledujeme, že či tepelná mapa nehovorí o tom, že sa model rozhodol na základe takej oblasti mozgu, z ktorej sa Alzheimerova choroba nedá zistiť. Veľkú úlohu pri určovaní správnosti modelu zohráva aj kvalita natrénovaného modelu, tút budeme merať pomocou metrík z práce od \citeauthor*{bohle2019layer} v ktorej sa autori zaoberali vyhodnocovaním tepelných máp z metódy LRP. Tieto metriky sú nasledovné (relevancia je v našom prípade teplota na tepelnej mape):
+Správnosť modelu budeme určovať na na základe tepelných máp vytvorených pomocou metódy na vysvetľovanie predikcií modelu. Budeme overovať do akej miery dávajú tepelné mapy zmysel v kontexte skutočnej anatómie mozgu, tj. či tepelná mapa pre správnu predikciu ukazuje na klinicky relevantné oblasti mozgu. Sledujeme, že či tepelná mapa nehovorí o tom, že sa model rozhodol na základe takej oblasti mozgu, z ktorej sa Alzheimerova choroba nedá zistiť. Veľkú úlohu pri určovaní správnosti modelu zohráva aj kvalita natrénovaného modelu, tú budeme merať pomocou metrík z práce od \citeauthor*{bohle2019layer} v ktorej sa autori zaoberali vyhodnocovaním tepelných máp vypočítaných pomocou metódy LRP. Tieto metriky sú nasledovné (relevancia je v našom prípade teplota na tepelnej mape):
 
 \begin{itemize}
-    \item súčet relevancie v jednotlivých častiach mozgu (podľa segmentačných másk) pre AD a CN
-    \item hustota relevancie v jednotlivých častiach mozgu (podľa segmentačných másk) pre AD a CN, berie ohľad na veľkosť danej časti mozgu
-    \item prírastok relevancie v jednotlivích častiach mozgu (podľa segmentačných másk) vypočítaný ako pomer priemernej relevancie každej triedy v danej časti mozgu
+    \item súčet relevancie v jednotlivých častiach mozgu (podľa segmentačných masiek) pre AD a CN
+    \item hustota relevancie v jednotlivých častiach mozgu (podľa segmentačných masiek) pre AD a CN, berie ohľad na veľkosť danej časti mozgu
+    \item prírastok relevancie v jednotlivích častiach mozgu (podľa segmentačných masiek) vypočítaný ako pomer priemernej relevancie každej triedy v danej časti mozgu
 \end{itemize}
 
-\section{Záver}
+\section{Zhrnutie}
 
 V tejto kapitole sme navrhli metódu na vysvetľovanie rozhodnutí modelov strojového učenia a spôsob jej implementácie. Navrhnutú metódu budeme overovať na neurónových sieťach detegujúcich Alzheimerovu chorobu s cieľom odhaľovania nesprávnych rozhodnutí.

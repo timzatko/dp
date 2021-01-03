@@ -1,23 +1,33 @@
 \chapter{Zhodnotenie}
 
-\section{Zhodnotenie cieľov práce}
+Aktívne sme pracovali a pracujeme na splnení oboch zadefinovaných cieľov. Podarilo sa nám implementovať narvhnutú metódu a vykonať prvé experimenty, z ktorých výsledkov sme navrhli úpravy týkajúce sa natrénovaného modelu, ale aj nastavenia parametrov navrhnutej metódy. Ďalej sa osobitne vyjadríme k jednotlívým cieľom.
 
-\begin{enumerate}
-    \item \textbf{Lorem ipsum dolor sit amet.} --
-        Lorem ipsum dolor sit amet, consectetur adipiscing elit. Aenean rhoncus tincidunt lorem quis hendrerit. Etiam finibus, tellus at laoreet scelerisque, neque ligula posuere massa, quis iaculis metus est vel risus. Duis dignissim sagittis hendrerit. Donec placerat, sem vitae molestie volutpat, orci massa pulvinar neque, at dignissim tortor libero vel diam. Morbi suscipit dapibus quam eu mattis. Nullam sed sapien augue. Curabitur vestibulum orci dolor. Nunc euismod porta lectus rhoncus semper. Praesent erat massa, dictum a velit quis, luctus rutrum urna. Morbi porttitor sapien quis neque lacinia tristique. Duis mollis sodales egestas. Nam mollis libero ut tincidunt aliquam. Morbi sodales est sit amet turpis congue ultrices. Etiam rhoncus, ipsum eu egestas efficitur, ex quam accumsan elit, id sagittis metus odio nec ante. Phasellus nulla felis, gravida non viverra sit amet, congue eu diam. Lorem ipsum dolor sit amet, consectetur adipiscing elit.
+\paragraph{Vytvorenie novej, alebo vylepšenie existujúcej metódy pre vysvetľovanie rozhodnutí neurónových sietí (Sekcia \ref{sec:goals_1})}
 
-        Donec ullamcorper velit nec purus fringilla, nec interdum orci bibendum. Duis dignissim tellus sed rutrum sodales. Maecenas eu nisi accumsan diam ultrices efficitur vel et lacus. Phasellus in eleifend leo. Pellentesque sed ex velit. Morbi iaculis vulputate faucibus. Mauris sollicitudin interdum purus quis vehicula. Nunc est diam, tempus ut consequat id, vestibulum ac mi. Nunc quis dolor non enim rhoncus euismod in id urna. Aliquam erat volutpat. Sed sed magna ut lacus scelerisque interdum. Fusce convallis consequat vulputate. In ac purus eu urna rhoncus tempor sed hendrerit massa. Nulla facilisi.
+Navrhli a implementovali sme vylepšenie existujúceh metódy RISE, ktorá sa dá pužiť nie len na vysvetľovanie rozhodnutí neurónových sietí. Metóda dokáźe pracovať s ktorýmkoľvek modelom za predpokladu, že daný model na výstupe uvádza pravdepodobnosť pre predikovanú triedu/triedy. Z dosiahnutých výsledkov ešte nemôžeme tvrdiť, či sme navrhli lepšiu alebo horšiu metódu. Predpokladáme, že to môže byť závislé od typu dát a teda domény.
+
+\paragraph{Využitie vytvorenej metódy na určenie miery správnosti modelu neurónovej siete detegujúcej Alzheimerovu chorobu (Sekcia \ref{sec:goals_2})}
+
+Metódu sme použili na vytvorenie tepelných máp a vykonali sme prvé experiementy s rôznymi nastaveniami tejto metódy. Pre splnenie tohto cieľa je nutné vykonať ďaľšie experimenty (napr. porovnanie s inými metídami), tak ako sme uviedli v návrhu riešenia (Sekcia \ref{sec:evaluation_design}).
+
+% \section{Zhodnotenie cieľov práce}
+
+% \begin{enumerate}
+%     \item \textbf{Lorem ipsum dolor sit amet.} --
+%         Lorem ipsum dolor sit amet, consectetur adipiscing elit. Aenean rhoncus tincidunt lorem quis hendrerit. Etiam finibus, tellus at laoreet scelerisque, neque ligula posuere massa, quis iaculis metus est vel risus. Duis dignissim sagittis hendrerit. Donec placerat, sem vitae molestie volutpat, orci massa pulvinar neque, at dignissim tortor libero vel diam. Morbi suscipit dapibus quam eu mattis. Nullam sed sapien augue. Curabitur vestibulum orci dolor. Nunc euismod porta lectus rhoncus semper. Praesent erat massa, dictum a velit quis, luctus rutrum urna. Morbi porttitor sapien quis neque lacinia tristique. Duis mollis sodales egestas. Nam mollis libero ut tincidunt aliquam. Morbi sodales est sit amet turpis congue ultrices. Etiam rhoncus, ipsum eu egestas efficitur, ex quam accumsan elit, id sagittis metus odio nec ante. Phasellus nulla felis, gravida non viverra sit amet, congue eu diam. Lorem ipsum dolor sit amet, consectetur adipiscing elit.
+
+%         Donec ullamcorper velit nec purus fringilla, nec interdum orci bibendum. Duis dignissim tellus sed rutrum sodales. Maecenas eu nisi accumsan diam ultrices efficitur vel et lacus. Phasellus in eleifend leo. Pellentesque sed ex velit. Morbi iaculis vulputate faucibus. Mauris sollicitudin interdum purus quis vehicula. Nunc est diam, tempus ut consequat id, vestibulum ac mi. Nunc quis dolor non enim rhoncus euismod in id urna. Aliquam erat volutpat. Sed sed magna ut lacus scelerisque interdum. Fusce convallis consequat vulputate. In ac purus eu urna rhoncus tempor sed hendrerit massa. Nulla facilisi.
     
-    \item \textbf{Lorem ipsum dolor sit amet.} -- Phasellus consectetur eget lacus at facilisis. Integer auctor quam non posuere fringilla. Praesent fermentum leo at lobortis egestas. Maecenas ut semper turpis, non rhoncus lacus. Donec tristique, lorem id mollis molestie, neque lacus consequat elit, ut facilisis sem urna ac velit. Nullam est leo, viverra nec lorem at, venenatis consequat mi. Vivamus auctor laoreet tempor. Vivamus efficitur neque elementum elementum egestas. Nam non est placerat, ultrices nulla et, scelerisque quam. Sed placerat sem eget nunc tristique efficitur ut sed erat. Donec laoreet, urna vel pharetra fermentum, eros ipsum maximus neque, nec consectetur arcu nulla at lectus. Donec feugiat tellus vestibulum nisl accumsan, eget commodo nunc tincidunt. Donec sapien ligula, posuere eu bibendum at, blandit vel felis. Nullam eleifend nisl neque, sagittis consequat lectus viverra eget. Etiam a diam eget quam imperdiet lobortis ac in mi.
-\end{enumerate}
+%     \item \textbf{Lorem ipsum dolor sit amet.} -- Phasellus consectetur eget lacus at facilisis. Integer auctor quam non posuere fringilla. Praesent fermentum leo at lobortis egestas. Maecenas ut semper turpis, non rhoncus lacus. Donec tristique, lorem id mollis molestie, neque lacus consequat elit, ut facilisis sem urna ac velit. Nullam est leo, viverra nec lorem at, venenatis consequat mi. Vivamus auctor laoreet tempor. Vivamus efficitur neque elementum elementum egestas. Nam non est placerat, ultrices nulla et, scelerisque quam. Sed placerat sem eget nunc tristique efficitur ut sed erat. Donec laoreet, urna vel pharetra fermentum, eros ipsum maximus neque, nec consectetur arcu nulla at lectus. Donec feugiat tellus vestibulum nisl accumsan, eget commodo nunc tincidunt. Donec sapien ligula, posuere eu bibendum at, blandit vel felis. Nullam eleifend nisl neque, sagittis consequat lectus viverra eget. Etiam a diam eget quam imperdiet lobortis ac in mi.
+% \end{enumerate}
 
-\section{Limitácie}
+% \section{Limitácie}
 
-\begin{itemize}
-    \item Lorem ipsum dolor sit amet.
-    \item Lorem ipsum dolor sit amet.
-\end{itemize}
+% \begin{itemize}
+%     \item Lorem ipsum dolor sit amet.
+%     \item Lorem ipsum dolor sit amet.
+% \end{itemize}
 
-\section{Budúca práca a možné vylepšenia}
+% \section{Budúca práca a možné vylepšenia}
 
-Phasellus consectetur eget lacus at facilisis. Integer auctor quam non posuere fringilla. Praesent fermentum leo at lobortis egestas. Maecenas ut semper turpis, non rhoncus lacus. Donec tristique, lorem id mollis molestie, neque lacus consequat elit, ut facilisis sem urna ac velit. Nullam est leo, viverra nec lorem at, venenatis consequat mi. Vivamus auctor laoreet tempor. Vivamus efficitur neque elementum elementum egestas. Nam non est placerat, ultrices nulla et, scelerisque quam. Sed placerat sem eget nunc tristique efficitur ut sed erat. Donec laoreet, urna vel pharetra fermentum, eros ipsum maximus neque, nec consectetur arcu nulla at lectus. Donec feugiat tellus vestibulum nisl accumsan, eget commodo nunc tincidunt. Donec sapien ligula, posuere eu bibendum at, blandit vel felis. Nullam eleifend nisl neque, sagittis consequat lectus viverra eget. Etiam a diam eget quam imperdiet lobortis ac in mi.
+% Phasellus consectetur eget lacus at facilisis. Integer auctor quam non posuere fringilla. Praesent fermentum leo at lobortis egestas. Maecenas ut semper turpis, non rhoncus lacus. Donec tristique, lorem id mollis molestie, neque lacus consequat elit, ut facilisis sem urna ac velit. Nullam est leo, viverra nec lorem at, venenatis consequat mi. Vivamus auctor laoreet tempor. Vivamus efficitur neque elementum elementum egestas. Nam non est placerat, ultrices nulla et, scelerisque quam. Sed placerat sem eget nunc tristique efficitur ut sed erat. Donec laoreet, urna vel pharetra fermentum, eros ipsum maximus neque, nec consectetur arcu nulla at lectus. Donec feugiat tellus vestibulum nisl accumsan, eget commodo nunc tincidunt. Donec sapien ligula, posuere eu bibendum at, blandit vel felis. Nullam eleifend nisl neque, sagittis consequat lectus viverra eget. Etiam a diam eget quam imperdiet lobortis ac in mi.
