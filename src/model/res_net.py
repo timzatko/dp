@@ -64,20 +64,16 @@ class BasicBlock(tf.keras.layers.Layer):
         
         self.batch_norm = batch_norm
         
-        l2 = None
-        if l2_beta is not None:
-            l2 = tf.keras.regularizers.l2(l2_beta)
-        
         if not is_3D:
             self.conv1 = tf.keras.layers.Conv2D(filters=filter_num,
                                                 kernel_size=(3, 3),
-                                                kernel_regularizer=l2,
+                                                kernel_regularizer=tf.keras.regularizers.l2(l2_beta) if l2_beta is not None else None,
                                                 strides=stride,
                                                 padding="same")
         else:
             self.conv1 = tf.keras.layers.Conv3D(filters=filter_num,
                                                 kernel_size=(3, 3, 3),
-                                                kernel_regularizer=l2,
+                                                kernel_regularizer=tf.keras.regularizers.l2(l2_beta) if l2_beta is not None else None,
                                                 strides=stride,
                                                 padding="same")
         if self.batch_norm:
@@ -86,13 +82,13 @@ class BasicBlock(tf.keras.layers.Layer):
         if not is_3D:
             self.conv2 = tf.keras.layers.Conv2D(filters=filter_num,
                                                 kernel_size=(3, 3),
-                                                kernel_regularizer=l2,
+                                                kernel_regularizer=tf.keras.regularizers.l2(l2_beta) if l2_beta is not None else None,
                                                 strides=1,
                                                 padding="same")
         else:
             self.conv2 = tf.keras.layers.Conv3D(filters=filter_num,
                                                 kernel_size=(3, 3, 3),
-                                                kernel_regularizer=l2,
+                                                kernel_regularizer=tf.keras.regularizers.l2(l2_beta) if l2_beta is not None else None,
                                                 strides=1,
                                                 padding="same")
         if self.batch_norm:
@@ -104,12 +100,12 @@ class BasicBlock(tf.keras.layers.Layer):
             if not is_3D:
                 self.down_sample.add(tf.keras.layers.Conv2D(filters=filter_num,
                                                             kernel_size=(1, 1),
-                                                            kernel_regularizer=l2,
+                                                            kernel_regularizer=tf.keras.regularizers.l2(l2_beta) if l2_beta is not None else None,
                                                             strides=stride))
             else:
                 self.down_sample.add(tf.keras.layers.Conv3D(filters=filter_num,
                                                             kernel_size=(1, 1, 1),
-                                                            kernel_regularizer=l2,
+                                                            kernel_regularizer=tf.keras.regularizers.l2(l2_beta) if l2_beta is not None else None,
                                                             strides=stride))
                 
             self.down_sample.add(tf.keras.layers.BatchNormalization())
