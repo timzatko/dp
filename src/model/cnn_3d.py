@@ -1,6 +1,15 @@
 import tensorflow as tf
 
 
+class LogLayer(tf.keras.layers.Layer):
+    def __init__(self):
+        super(LogLayer, self).__init__()
+
+    def call(self, inputs):
+        print("call")
+        tf.print(inputs)
+        return inputs
+
 # https://machinelearningmastery.com/batch-normalization-for-training-of-deep-neural-networks/
 def cnn_3d(
         input_shape=None,
@@ -9,6 +18,7 @@ def cnn_3d(
         batch_norm=False,
         is_complex=False,
         dropout=None,
+        categorical=True,
         l2_beta=None):
     """
     input_shape is (z, x, y, 1)
@@ -34,9 +44,13 @@ def cnn_3d(
     l2 = None
     if l2_beta is not None:
         l2 = tf.keras.regularizers.l2(l=l2_beta)
+#     model.add(LogLayer())
     model.add(tf.keras.layers.Conv3D(32, kernel_size=3, padding='same', kernel_regularizer=l2, input_shape=input_shape))
+#     model.add(LogLayer())
     if batch_norm:
         model.add(tf.keras.layers.BatchNormalization())
+#         model.add(LogLayer())
+        
     model.add(tf.keras.layers.Activation('relu'))
 
     if is_complex:
@@ -105,7 +119,7 @@ def cnn_3d(
         l2 = None
         if l2_beta is not None:
             l2 = tf.keras.regularizers.l2(l=l2_beta)
-        model.add(tf.keras.layers.Dense(512, activation='relu', kernel_regularizer=l2))
+        model.add(tf.keras.layers.Dense(512, name='dense_1', activation='relu', kernel_regularizer=l2))
         # Dropout
         if dropout is not None:
             model.add(tf.keras.layers.Dropout(dropout))
@@ -114,7 +128,7 @@ def cnn_3d(
     l2 = None
     if l2_beta is not None:
         l2 = tf.keras.regularizers.l2(l=l2_beta)
-    model.add(tf.keras.layers.Dense(256, activation='relu', kernel_regularizer=l2))
+    model.add(tf.keras.layers.Dense(256, name='dense_2', activation='relu', kernel_regularizer=l2))
 
     # https://www.cs.toronto.edu/~hinton/absps/JMLRdropout.pdf
     # Dropout
@@ -124,7 +138,10 @@ def cnn_3d(
     if output_bias is not None:
         output_bias = tf.keras.initializers.Constant(output_bias)
 
-    # Output
-    model.add(tf.keras.layers.Dense(len(class_names), activation='softmax', bias_initializer=output_bias))
+    if categorical == True:
+        # Output
+        model.add(tf.keras.layers.Dense(len(class_names), activation='softmax', bias_initializer=output_bias))
+    else:
+        model.add(tf.keras.layers.Dense(1, name='prediction', activation='sigmoid'))
 
     return model

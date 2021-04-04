@@ -20,7 +20,7 @@ def sequence_to_numpy(seq, path, name, input_shape=None):
         with open(path_y, 'rb') as f:
             train_y = np.load(f, allow_pickle=True)
 
-        return train_x.reshape((-1, *input_shape)), train_y.reshape(-1, len(seq.class_names))
+        return train_x.reshape((-1, *input_shape)), __train_y_reshape(seq, train_y)
 
     print(f'generating {path_x}, {path_y}...')
 
@@ -38,4 +38,10 @@ def sequence_to_numpy(seq, path, name, input_shape=None):
     with open(path_y, 'wb') as f:
         np.save(f, np.array(train_y))
 
-    return np.array(train_x).reshape((-1, *input_shape)), np.array(train_y).reshape(-1, len(seq.class_names))
+    return np.array(train_x).reshape((-1, *input_shape)), __train_y_reshape(seq, train_y)
+
+
+def __train_y_reshape(seq, train_y):
+    if not seq.one_hot:
+        return np.array(train_y).reshape(-1)
+    return np.array(train_y).reshape(-1, len(seq.class_names))
