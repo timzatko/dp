@@ -104,6 +104,9 @@ class MRISequence(Sequence):
         self.batch_size = batch_size
         self.images_dirs = [os.path.join(path, key) for key in os.listdir(path)]
 
+    def size(self):
+        return len(self.images_dirs)
+        
     def __len__(self):
         return math.ceil(len(self.images_dirs) / self.batch_size)
         # Uncomment for debugging (when you need a smaller subset of data and faster training time)

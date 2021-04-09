@@ -49,9 +49,9 @@ def plot_evaluation(image_y, y_pred, step_size, voxels, max_voxels, title='inser
 
 def predict_sequence_as_numpy(model, eval_seq, batch_size, log=False):
     """
-    predict_seq_as_np
-    eval_seq = sequence to evaluate
-    batch_size = model.predict() batch size
+    predict_sequence_as_numpy_v2
+    eval_seq is sequence to evaluate
+    batch_size is model.predict() batch size
     """
     y_pred = None
     count = len(eval_seq)
@@ -60,6 +60,26 @@ def predict_sequence_as_numpy(model, eval_seq, batch_size, log=False):
         if log:
             print(f'evaluating batch {i}/{count} of length {len(batch_x)}...')
         batch_y_pred = model.predict(batch_x, batch_size=batch_size)
+        if y_pred is None:
+            y_pred = batch_y_pred
+        else:
+            y_pred = np.concatenate([y_pred, batch_y_pred], axis=0)
+
+    return y_pred
+
+
+def predict_sequence_as_numpy_v2(predict_fn, eval_seq, log=False):
+    """
+    predict_sequence_as_numpy_v2
+    eval_seq is sequence to evaluate
+    """
+    y_pred = None
+    count = len(eval_seq)
+
+    for i, batch_x in enumerate(eval_seq):
+        if log:
+            print(f'evaluating batch {i}/{count} of length {len(batch_x)}...')
+        batch_y_pred = predict_fn(batch_x)
         if y_pred is None:
             y_pred = batch_y_pred
         else:

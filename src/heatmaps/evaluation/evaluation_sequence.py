@@ -15,6 +15,7 @@ def value_to_index(heatmap, image_x, sort='ASC'):
     :return:
     """
     values = []
+    assert heatmap.shape == image_x.shape
 
     for z in range(len(heatmap)):
         for y in range(len(heatmap[z])):
@@ -25,8 +26,8 @@ def value_to_index(heatmap, image_x, sort='ASC'):
       
     reverse = sort == 'DESC'
     values.sort(reverse=reverse, key=lambda v: v[0])
-
-    return np.array(values)
+    
+    return values
 
 
 class EvaluationSequence(Sequence):
@@ -58,7 +59,9 @@ class EvaluationSequence(Sequence):
         self.voxels = value_to_index(heatmap, image, sort='DESC')
 
         if self.t == 'insertion':
-            self.new_image = np.zeros(shape=image.shape)
+            # ones vs zeros, what is better?
+            # self.new_image = np.zeros(shape=image.shape)
+            self.new_image = np.ones(shape=image.shape)
         else:
             self.new_image = np.copy(image)
 
