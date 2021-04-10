@@ -31,7 +31,7 @@ def value_to_index(heatmap, image_x, sort='ASC'):
 
 
 class EvaluationSequence(Sequence):
-    def __init__(self, t, image, heatmap, step_size=1, max_steps=1000, batch_size=8, debug=False, log=True):
+    def __init__(self, t, image, heatmap, step_size=1, max_steps=1000, batch_size=8, default=0, debug=False, log=True):
         """
         Create a sequence of images from original image and heatmap, by removing/inserting most
         important pixels from it.
@@ -50,6 +50,7 @@ class EvaluationSequence(Sequence):
         self.batch_size = batch_size
         self.image = image
         self.heatmap = heatmap
+        self.default = default
 
         # cache the images if debug is enabled
         self.cache = []
@@ -60,8 +61,10 @@ class EvaluationSequence(Sequence):
 
         if self.t == 'insertion':
             # ones vs zeros, what is better?
-            # self.new_image = np.zeros(shape=image.shape)
-            self.new_image = np.ones(shape=image.shape)
+            if default:
+                self.new_image = np.ones(shape=image.shape)
+            else:
+                self.new_image = np.zeros(shape=image.shape)
         else:
             self.new_image = np.copy(image)
 
@@ -107,7 +110,7 @@ class EvaluationSequence(Sequence):
                     self.new_image[z][y][x] = voxel
                 else:
                     # deletion, remove the voxel
-                    self.new_image[z][y][x] = 0
+                    self.new_image[z][y][x] = self.default
 
             # append a copy, because we will mutate the image in next step
             batch_x.append(np.copy(self.new_image))

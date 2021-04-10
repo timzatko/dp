@@ -24,6 +24,7 @@ def train(model,
           augmentations=True,
           dataset_key=None,
           input_shape=None,
+          fix_memory_leak=False,
           batch_size=8):
     """
     Start training the model.
@@ -112,9 +113,18 @@ def train(model,
     # train the model
     # https://www.tensorflow.org/api_docs/python/tf/keras/Model#fit
     print('training...')
+    
+    # https://stackoverflow.com/questions/56910950/keras-predict-loop-memory-leak-using-tf-data-dataset-but-not-with-a-numpy-array
+    if fix_memory_leak:
+        it_train = tf.data.make_one_shot_iterator(batched_train)
+        tensor_train = it.get_next()
+
+        it_val = tf.data.make_one_shot_iterator(batched_val)
+        tensor_val = it.get_next()
+    
     history = model.fit(
-        batched_train,
-        validation_data=batched_val,
+        it_train,
+        validation_data=tensor_val,
         epochs=epochs,
         # class_weight=class_weight,
         callbacks=callbacks)
