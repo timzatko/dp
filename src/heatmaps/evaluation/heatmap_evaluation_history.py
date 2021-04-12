@@ -50,17 +50,31 @@ class HeatmapEvaluationHistory:
         with open(p, 'wb') as file:
             pickle.dump(self, file, protocol=pickle.HIGHEST_PROTOCOL)
             print(f'saved to: {p}')
-
-    def description(self, percentage=True):
+            
+    def _description(self, percentage=True):
         arr_auc = self.__get_arr_auc(percentage)
         
-        print(f'evaluated heatmaps: {len(self.arr_heatmap)}')
+        return {
+            "heatmaps": len(self.arr_heatmap),
+            "auc_mean": np.mean(arr_auc),
+            "auc_p25": np.percentile(arr_auc, 25),
+            "auc_median": np.median(arr_auc),
+            "auc_p75": np.percentile(arr_auc, 75),
+            "auc_max": np.max(arr_auc),
+            "auc_min": np.min(arr_auc),
+            "auc_std": np.std(arr_auc),
+        }
+
+    def description(self, percentage=True):
+        data = self._description(percentage)
+        
+        print(f'evaluated heatmaps: {data["heatmaps"]}')
         print(f'auc')
-        print(f'\tmean:   {np.mean(arr_auc):20,}')
-        print(f'\tmedian: {np.median(arr_auc):20,}')
-        print(f'\tmax:    {np.max(arr_auc):20,}')
-        print(f'\tmin:    {np.min(arr_auc):20,}')
-        print(f'\tstd:    {np.std(arr_auc):20,}')
+        print(f'\tmean:   {data["mean"]:20,}')
+        print(f'\tmedian: {data["median"]:20,}')
+        print(f'\tmax:    {data["max"]:20,}')
+        print(f'\tmin:    {data["min"]:20,}')
+        print(f'\tstd:    {data["std"]:20,}')
 
     def plot_auc(self, percentage=True):
         arr_auc = self.__get_arr_auc(percentage)
