@@ -70,11 +70,11 @@ class HeatmapEvaluationHistory:
         
         print(f'evaluated heatmaps: {data["heatmaps"]}')
         print(f'auc')
-        print(f'\tmean:   {data["mean"]:20,}')
-        print(f'\tmedian: {data["median"]:20,}')
-        print(f'\tmax:    {data["max"]:20,}')
-        print(f'\tmin:    {data["min"]:20,}')
-        print(f'\tstd:    {data["std"]:20,}')
+        print(f'\tmean:   {data["auc_mean"]:20,}')
+        print(f'\tmedian: {data["auc_median"]:20,}')
+        print(f'\tmax:    {data["auc_max"]:20,}')
+        print(f'\tmin:    {data["auc_min"]:20,}')
+        print(f'\tstd:    {data["auc_std"]:20,}')
 
     def plot_auc(self, percentage=True):
         arr_auc = self.__get_arr_auc(percentage)
