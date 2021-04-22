@@ -29,6 +29,7 @@ def generate_mask(params):
     if options['b1'] > 0:
         in_paint_mask = __get_in_paint_mask(options, image_data, mask, binary_mask)
 
+    # print(mask.shape)
     new_image = __merge(options, image_data, mask, in_paint_mask)
 
     cache = None
@@ -161,8 +162,8 @@ def __get_mask(options, grid, shift_x, shift_y, shift_z):
         order=1,
         mode='reflect',
         anti_aliasing=False)[
-        shift_y:shift_y + options['input_size'][0],
-        shift_x:shift_x + options['input_size'][1],
+        shift_x:shift_x + options['input_size'][0],
+        shift_y:shift_y + options['input_size'][1],
         shift_z:shift_z + options['input_size'][2]
     ]
 
@@ -238,6 +239,8 @@ class RISEI:
         images_mask = self.__get_empty_images_data(n)
         random_shift = self.__get_random_shifts(n)
 
+        # print(image.shape)
+        
         params = [
             {
                 'i': i,

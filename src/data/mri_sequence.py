@@ -21,6 +21,19 @@ def process_image(path, input_shape, resize_img, normalization, crop_img):
         x = normalize(x, normalization)
     return np.array(x).reshape(input_shape)
 
+def process_segmentation_labels(path):
+    f = open(path, "rt")
+    data = f.read()
+    f.close()
+    lines = data.split('\n')
+    segments = {}
+    for line in lines:
+        if len(line) > 0:
+            key, value = line.split(':')
+            key = int(key.strip())
+            value = value.strip()
+            segments[key] = value
+    return segments
 
 def invert_img(x):
     # [x, y, z, 1]
@@ -67,7 +80,7 @@ def readfile(file_path):
 class MRISequence(Sequence):
     def __init__(self, path, batch_size, input_shape, class_names=('AD', 'CN'),
                  augmentations=None, augmentations_inplace=True, images=True, one_hot=True, class_weights=None,
-                 normalization=None, resize_img=True, crop_img=False):
+                 normalization=None, resize_img=True, crop_img=False, segmentation=None):
         """
         MRISequence reads mri images.
         :param path: path to images
@@ -100,6 +113,7 @@ class MRISequence(Sequence):
         self.augmentations = augmentations
         self.augmentations_inplace = augmentations_inplace
         self.normalization = normalization
+        self.segmentation = segmentation
 
         self.batch_size = batch_size
         self.images_dirs = [os.path.join(path, key) for key in os.listdir(path)]
@@ -148,9 +162,15 @@ class MRISequence(Sequence):
 
                     batch_x = np.concatenate((batch_x, new_batch_x), axis=0)
                     batch_y = np.concatenate((batch_y, new_batch_y), axis=0)
-
-        if self.class_weights is None:
+                    
+        if self.class_weights is None and self.segmentation is None:
             return batch_x, batch_y
+        
+        if self.segmentation:
+            segmentation_masks = np.array([process_image(os.path.join(image_dir, 'segmentation.nii'), self.input_shape, self.resize_img,
+                                              None, self.crop_img) for image_dir in images_dirs])
+            segmentation_labels = np.array([process_segmentation_labels(os.path.join(image_dir, 'segmentation.nii.txt')) for image_dir in images_dirs])
+            return batch_x, batch_y, segmentation_masks, segmentation_labels 
 
         batch_w = np.array([self.class_weights[y] for y in self.__decode(batch_y)])
         return batch_x, batch_y, batch_w
