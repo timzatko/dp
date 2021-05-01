@@ -230,7 +230,7 @@ Výsledok analýzy senzitivity znázornený v tepelnej mape (angl. heatmap) je z
 
 Metóda vrstvami propagovanej relevancie, ďalej len LRP (angl. layer-wise relevance propagation), sa od analýzy senzitivity odlišuje tým, že vo výslednej tepelnej mape dokáže odlíšiť vlastnosti, ktoré prispeli pozitívne alebo negatívne k výslednej predikcii (v zázislosti od použitých parametrov $\alpha$ a $\beta$).
 
-Táto technika funguje tak, že vstupný obrázok dopredným šírením ''prejde'' neurónovou sieťou, pričom sú zozbierané aktivácie neurónov v jednotlivých vrstvách. Následne je neurónovou sieťou spätným šírením propagované skóre z výstupu neurónovej siete v podobe relevancie až k vstupnému obrázku. 
+Táto technika funguje tak, že vstupný obrázok (metóda sa dá použiť aj na iné ako obrazové dáta, keďže pracujeme práva s obrazovými dátami metódy budeme vysvetľovať práve na nich) dopredným šírením ''prejde'' neurónovou sieťou, pričom sú zozbierané aktivácie neurónov v jednotlivých vrstvách. Následne je neurónovou sieťou spätným šírením propagované skóre z výstupu neurónovej siete v podobe relevancie až k vstupnému obrázku. 
 
 Nasledovné vzorce \ref{eq:lrp_1}, \ref{eq:lrp_2}, \ref{eq:lrp_3} \cite{montavon2018methods} vyjadrujú spôsob výpočtu propagovanej relevancie medzi vrstvami. $j$ a $k$ sú jednotlivé vrstvy, pričom $k$ je vrstva, z ktorej je relevancia $R$ propagovaná. Parametre $\alpha$ a $\beta$ upravujú, koľko pozitívnej ($\alpha$) alebo negatívnej ($\beta$) relevancie je vytvorenej počas fázy spätného šírenia relevancie. Pri ich nastavovaní musí platiť, že $\alpha - \beta = 1$ a zároveň $\beta \geq 0$. Súčet pozitívnej a negatívnej relevancie je však medzi vrstvami vždy rovnaký \cite{montavon2018methods}, výsledok použitia rôznych hodnôt $\alpha$ a $\beta$ je znázornený na obrázku \ref{fig:lrp}. $R_{j\leftarrow k}^{+}$ (Obr. \ref{eq:lrp_1}) a $R_{j\leftarrow k}^{-}$ (Obr. \ref{eq:lrp_3}) vyjadrujú množstvo pozitívnej ($+$), resp. negatívnej ($-$) relevancie propagovanej z vrstvy $k$ do vrstvy $j$. $a_j$ je aktivácia neurónu, na ktorý je propagovaná relevancia.
 
@@ -263,7 +263,34 @@ Nasledovné vzorce \ref{eq:lrp_1}, \ref{eq:lrp_2}, \ref{eq:lrp_3} \cite{montavon
 
 Výhodou LRP oproti iným metódam, ako napríklad dekonvolúcii je, že vysvetlenie (výsledná tepelná mapa) vytvorené technikou LRP je pre rôzne obrázky vždy rôzne \cite{Muller_Samek_Montavon_Lapuschkin_Arras}. Naopak, pri dekonvolúcii je vysvetlenie vždy rovnaké pokiaľ v architektúre neurónovej siete neboli použité združovacie vrstvy (angl. pooling layers) \cite{Muller_Samek_Montavon_Lapuschkin_Arras}. Ďaľším rozdielom je (aj oproti analýze senzitivity), že vo výslednom vysvetlení LRP rozlišuje, ktoré vlastnosti pozitívne alebo negatívne prispeli k negatívnej predikcii.
 
-% TODO: vysvetlit dekonvoluciu???
+\subsubsection{Riadená spätná propagácia (angl. Guided Backprop) \label{sec:guided_backprop}}
+
+Metóda Guided Backprop je rozšírením metódy dekonvolúcie (angl. deconvolution) \cite{montavon2018methods}. Metóda využíva aktivácie \textit{ReLU} pre smerovanie signálu (tj. výsledného "tepla") na príslušné miesta vstupného obrazu \cite{montavon2018methods}. Pri spätnom širení sú negatívne gradienty nahradené hodnotou nula. Rovnako aj gradienty z neurónov, ktoré mali pri doprednom šírení po aplikácii aktivačnej funkcie (\textit{ReLU}) hodnotu 0. Obrázok \ref{fig:guided_grad_cam} zobrazuje výslednú tepelnú mapu po použití riadenej spätnej propagácie, a porovnáva ju s inými metódami. Na rozdiel od metódy LRP, táto metóda nezobrazí na tepelnej mape oblasti, ktoré k výslednej predikcii prispievajú negatívne.
+
+\subsubsection{GradCAM \label{sec:grad_cam}}
+
+GradCAM \cite{selvaraju2017grad}, alebo Gradientom-vážené mapovanie aktivácií triedam (angl. Gradient-weighted Class Activation Mapping) je spôsob vysvetľovania rozhodnutí aplikovateľný na neurónové siete, ktoré používajú konvolučné vrstvy. Cieľom tejto metódy je vysvetliť, ktoré časti vstupu sú dôležité pre vybranú triedu (jednu z tried, ktoré neurónová sieť predikuje). Metóda funguje nasledovne:
+
+\begin{itemize}
+    \item Vstupný obraz ''prejde'' neurónovou sieťou (tj. inferencia).
+    \item Vypočítame gradient poslednej konvolučnej vrstvy voči výstupu na poslednej vrstve neurónovej siete pre vybranú triedu.
+    \item Výsledok predchádzajúceho kroku má rovnaký rozmer ako veľkosť poslednej konvolučnej vrstvy, hodnoty v tejto matici sčítame cez dimenziu kanálov. Z konvolučnej vrstvy o rozmere $(x, y, c)$, kde $c$ je dimenzia kanálov (angl. channels) vznikne matica o rozmere $(x, y)$.
+    \item Na tento výsledok použijeme funkciu \textit{ReLU} čím odstránime z tepelenej mapy časti obrázku, ktoré prispevajú proti predikovanej triede negatívne.
+    \item Túto maticu pomocou bilineárnej interpolácie zväčšíme na veľkosť vstupu.
+\end{itemize}
+
+Výsledkom je tepelná mapa pre vstupný obrázok voči vybranej predikovanej triede. Vyššie hodnoty v tepelnej mape vyjadrujú doležitejšie časti obrazu pre vybranú triedu, nižšie hodnoty vyjadrujú tie menej doležité.
+
+\subsubsection{Riadený GradCAM (angl. Guided GradCAM) \label{sec:guided_grad_cam}}
+
+Guided GradCAM kombinuje metódu riadenej spätnej propagácie s metódou GradCAM. Výsledné tepelné mapy z oboch metód, pre vstupný obraz a vybranú triedu sú navzájom vynásobené (nejedná sa o maticové násobenie ale násobenie po prvkoch) čím vznikne nová tepelná mapa \cite{selvaraju2017grad} (Obr. \ref{fig:guided_grad_cam}). 
+
+\begin{figure}[h!]
+    \centering
+    \includegraphics[scale=0.40]{assets/images/grad_cam_and_guided_grad_cam.png}
+    \caption{Porovnanie metód Guided Backprop (b), GradCAM (c) a Guided GradCAM (d) \cite{selvaraju2017grad}. Tepelná mapa (d) je výsledkom násobenia medzi tepelnými mapami (b) a (c), o tom svedčí väčšina "tepla" v spodnej časti obrázku. Teplo má polohu z (c) a tvar z (b).}
+    \label{fig:guided_grad_cam}
+\end{figure}
 
 \subsubsection{RISE - Randomized Input Sampling for Explanation \label{sec:rise}}
 
