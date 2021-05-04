@@ -10,20 +10,24 @@ class Net3DCNN(nn.Module):
         super(Net3DCNN, self).__init__()
         self.conv1 = nn.Conv3d(1, 32, 3, padding=1)
         self.bn1 = nn.BatchNorm3d(32, affine=True, eps=0.001, momentum=0.99)
+        self.rel1 = nn.ReLU()
         self.mpool1 = nn.MaxPool3d(2, stride=2, padding=0)
         
         self.conv2 = nn.Conv3d(32, 64, 3, padding=1)
         self.bn2 = nn.BatchNorm3d(64, affine=True, eps=0.001, momentum=0.99)
+        self.rel2 = nn.ReLU()
         self.mpool2 = nn.MaxPool3d(3, stride=3)
         
         self.conv3 = nn.Conv3d(64, 128, 3, padding=1)
         self.bn3 = nn.BatchNorm3d(128, affine=True, eps=0.001, momentum=0.99)
+        self.rel3 = nn.ReLU()
         self.mpool3 = nn.MaxPool3d(4, stride=4)
         
         self.flt = nn.Flatten()
         self.dp1 = nn.Dropout(p=0.1)
         
         self.fc1 = nn.Linear(10240, 256)
+        self.rel4 = nn.ReLU()
         self.dp2 = nn.Dropout(p=0.1)
         
         self.fc2 = nn.Linear(256, 2)
@@ -31,19 +35,19 @@ class Net3DCNN(nn.Module):
     def forward(self, x):
         x = self.conv1(x)
         x = self.bn1(x)
-        x = F.relu(x)
+        x = self.rel1(x)
         x = self.mpool1(x)
         torch.cuda.empty_cache()
         
         x = self.conv2(x)
         x = self.bn2(x)
-        x = F.relu(x)
+        x = self.rel2(x)
         x = self.mpool2(x)
         torch.cuda.empty_cache()
         
         x = self.conv3(x)
         x = self.bn3(x)
-        x = F.relu(x)
+        x = self.rel3(x)
         x = self.mpool3(x)      
         
         x = torch.transpose(x, 1, 4) # n, 4, 4, 5, 128 
@@ -53,7 +57,7 @@ class Net3DCNN(nn.Module):
         x = self.flt(x)
         x = self.dp1(x)
         
-        x = F.relu(self.fc1(x))
+        x = self.rel4(self.fc1(x))
         torch.cuda.empty_cache()
         x = self.dp2(x)
         
