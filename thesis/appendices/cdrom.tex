@@ -1,53 +1,37 @@
-% TODO CD/USB
-
-\chapter{Opis digitálnej časti práce \label{cha:cdrom} }
+\chapter{Opis digitálnej časti práce \label{cha:cdrom}}
 
 \setcounter{page}{1}
 
-Evidenčné čislo práce v informačnom systéme FIIT-5212-86077.
+Evidenčné čislo práce v informačnom systéme FIIT-182905-86077.
 
 Obsah digitálnej časti práce (archív ZIP):
 
 \begin{itemize}
-    \item \texttt{/app}
-        \begin{itemize}
-            \item \texttt{/be} --- Adresár obsahujúci súbory serverovej (angl. backend) časti vytvorenej aplikácie
-            \item \texttt{/fe} --- Adresár obsahujúci súbory klientskej (angl. frontend) časti vytvorenej aplikácie
-        \end{itemize}
-    \item \texttt{/data-analysis} --- Adresár obsahujúci všetky zozbierané dáta z experiemntov
-        \begin{itemize}
-            \item \texttt{/pilot} --- Adresár obsahujúci csv súbory s dátami z pilotného experimentu
-                \begin{itemize}
-                    \item \texttt{/pilot\_experiemnt.ipyb} --- Jupyter Notebook s jednoduchou analýzou a vyhodnotením pilotného experimentu
-                    \item \texttt{/data} --- Adresár obsahujúci csv súbory s nespracovanými dátami z pilotného experimentu
-                    \item \texttt{/results/pilot\_result.csv} --- Súbor vo formáte .csv obsahujúci vyhodnotenie experimentu
-                \end{itemize}
-            \item \texttt{/main} -- Adresár obsahujúci vyhodnotenie hlavného experimentu
-                \begin{itemize}
-                    \item \texttt{/data} --- Adresár obsahujúci csv súbory s nespracovanými dátami z experimentu
-                    \item \texttt{/data-processed} --- Adresár obsahujúci csv súbory so spracovanými dátami z experimentu
-                    \item \texttt{/preprocessing} --- Adresár obsahujúci súbory formátu "Jupyter Notebook" slúžiace na spracovanie dát z experimentu
-                    \item \texttt{/results/main\_result.csv} --- Súbor vo formáte .csv obsahujúci vyhodnotenie experimentu
-                    \item \texttt{/basic\_analysis.ipyb} --- Súbor vo formáte Jupyter Notebook s jednoduchou analýzou a vyhodnotením experimentu
-                    \item \texttt{/run-analysis.bash} -- Skript na pregenerovanie analýz v súboroch formátu Jupyter Notebook
-                \end{itemize}
-            \item \texttt{/main-2} -- Adresár obsahujúci vyhodnotenie druhého hlavného experimentu
-                \begin{itemize}
-                    \item \texttt{/data} --- Adresár obsahujúci csv súbory s nespracovanými dátami z experimentu
-                    \item \texttt{/data-processed} --- Adresár obsahujúci csv súbory so spracovanými dátami z experimentu
-                    \item \texttt{/preprocessing} --- Adresár obsahujúci súbory formátu "Jupyter Notebook" slúžiace na spracovanie dát z experimentu
-                    \item \texttt{/results/main\_result.csv} --- Súbor vo formáte .csv obsahujúci vyhodnotenie experimentu
-                    \item \texttt{/basic\_analysis.ipyb} --- Súbor vo formáte Jupyter Notebook s jednoduchou analýzou a vyhodnotením experimentu
-                    \item \texttt{/run-analysis.bash} --- Skript na pregenerovanie analýz v súboroch formátu Jupyter Notebook
-                \end{itemize}
-            \item \texttt{/main\_experiments\_analysis.ipyb} --- Porovnanie výsledkov medzi prvým a druhým experimentom
-            \item \texttt{/utils.py} --- Súbor obsahujúci pomocné funkcie v jazyku python
-            \item \texttt{/run-preprocessing.js} ---- Skript na spustenie spracovania dát z experiementu
-            \item \texttt{/run-notebook.bash} --- Skript na spustenie súboru vo formáte Jupyter Notebook
-        \end{itemize}
-    \item \texttt{/thesis}
-        \begin{itemize}
-            \item \texttt{/BP\_TimotejZatko.pdf} --- Práca vo formáte PDF
-            \item \texttt{/BP\_prilohy\_TimotejZatko.pdf} --- Prílohy vo formáte PDF
-        \end{itemize}
+    \item \texttt{/DP\_TimotejZatko.pdf} --- Práca vo formáte PDF.
+    \item \texttt{/DP\_prilohy\_TimotejZatko.pdf} --- Prílohy vo formáte PDF.
+    \item \texttt{/repo/thesis/} --- Zdrojové súbory práce vo formáte \LaTeX.
+    \item \texttt{/repo/tmp/} --- Dátová sada, zoserializované natrénované modely, záznamy z trénovania modelov, zoserializované výsledky experimentov. 
+    \item \texttt{/repo/src/} --- Všetky zdrojové súbory, vrátane metódy RISEI, modelov, generovania tepelných máp. Obsahuje Python balíky.
+    \item \texttt{/repo/scripts/} --- Pomocný skript na stiahnutie dát z Google Drive.
+    \item \texttt{/repo/assets/} --- Zdrojové súbory diagramov použitých v práci. 
+    \item \texttt{/repo/colab\_notebooks/} --- \textbf{[Obsahuje prvé, už neaktuálne modely.]} Obsahuje Jupyter notebooky z trénovania modelov na platforme Google Colab s vyuŽitím GPU aj TPU. 
+    \item \texttt{/repo/conda\_notebooks/} --- Obsahuje Jupyter notebooky.
+    \item \texttt{/repo/conda\_notebooks/dataset.ipynb} --- Rozdelenie dátovej sady.
+    \item \texttt{/repo/conda\_notebooks/tensorboad.ipynb} --- Tensorboad.
+    \item \texttt{/repo/conda\_notebooks/augmentations.ipynb} --- Vizualizácia implementovaných augmentácií.
+    \item \texttt{/repo/conda\_notebooks/training/training\_history.ipynb} --- Vizualizácia priebehu trénovania pre vybrané záznamy z trénovania.
+    \item \texttt{/repo/conda\_notebooks/training/augmentations/} --- Porovnanie vplyvu augmentácií na výsledný model. 
+    \item \texttt{/repo/conda\_notebooks/training/2d\_ResNet18/} --- Trénovanie modelu.
+    \item \texttt{/repo/conda\_notebooks/training/3d\_ResNet18/} --- Trénovanie modelu.
+    \item \texttt{/repo/conda\_notebooks/training/3d\_cnn/} --- Trénovanie modelu.
+    \item \texttt{/repo/conda\_notebooks/risei/model\_comparison\_v1/} --- Porovnanie metódy RISEI a jej parametrov na natrénovaných modeloch (prvá iterácia, staré modely).
+    \item \texttt{/repo/conda\_notebooks/risei/model\_comparison\_v2/} --- Porovnanie metódy RISEI a jej parametrov na natrénovaných modeloch (druhá iterácia, nové modely).
+    \item \texttt{/repo/conda\_notebooks/risei/evaluation\_history\_ins\_del.ipynb} --- Vypísanie štatistík pre vybranú evaluáciu metódy.
+    \item \texttt{/repo/conda\_notebooks/risei/evaluation\_history\_ins\_del\_comparison.ipynb} --- Porovnanie vybraných dvoch evaluácii metód.
+    \item \texttt{/repo/conda\_notebooks/risei/evaluation\_history\_segmentation\_masks.ipynb} --- Vyhodnotenie metódy voči segmentačným maskám.
+    \item \texttt{/repo/conda\_notebooks/risei.evalution\_all.ipynb} --- Porovnanie všetkých experimentov.
+    \item \texttt{/repo/conda\_notebooks/risei/risei.ipynb} --- RISEI - zobrazenie generovaných masiek podľa nastavených parametrov.
+    \item \texttt{/repo/conda\_notebooks/risei/experiments/methods/} --- Vyhodnotenie tepelných máp z iných, existujúcich metód.
+    \item \texttt{/repo/conda\_notebooks/risei/experiments/parameters/} --- Hľadanie optimálneho počtu parametrov.
+    \item \texttt{/repo/conda\_notebooks/risei/experiments/stability/} --- Vyhodnotenie kvality stability tepelných máp podľa počtu vygenerovaných masiek.
 \end{itemize}

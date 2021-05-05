@@ -95,7 +95,7 @@ Toto sme implementovali zavedením parametrov $b1$ a $b2$ (skratka od slova prec
     \label{fig:risei_layers}
 \end{figure}
 
-Názov ''čierna'' maska pochádza z pôvodnej implementácie RISE, kde sa obrázok prekrýval čiernou maskou. V našej implementácii neprekrývame farbou, ale hodnotou, tj. ''čierna'' je hodnota $0$ (minimum). Okrem použitia hodnoty $0$, môžeme použiť aj $1$, \textit{priemer} či \textit{medián} (toto je ďaľším hyper-parametrom našej metódy). Zjednodušená (a menej efektívna, v produkčej implementácii sa niektoré inštrukcie nevykonávajú keď \textit{b1} je 0 alebo \textit{b2} je 0) implementácia spojenia jednitlivých vrstiev vyzerá nasledovne.
+Názov ''čierna'' maska pochádza z pôvodnej implementácie RISE, kde sa obrázok prekrýval čiernou maskou. V našej implementácii neprekrývame farbou, ale hodnotou, tj. ''čierna'' je hodnota $0$ (minimum). Okrem použitia hodnoty $0$, môžeme použiť aj $1$, \textit{priemer} či \textit{medián} (toto je ďaľším hyper-parametrom našej metódy). Zjednodušená (a menej efektívna, v produkčej implementácii sa niektoré inštrukcie nevykonávajú keď \textit{b1} je 0 alebo \textit{b2} je 0) implementácia spojenia jednotlivých vrstiev vyzerá nasledovne.
 
 \begin{lstlisting}
     # image float[z, x, y] - original image

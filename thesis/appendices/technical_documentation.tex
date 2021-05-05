@@ -2,9 +2,149 @@
 
 \setcounter{page}{1}
 
-\section{Section A}
+Metóda RISEI je implementovaná v jazyku Python, rovnako ako aj jej vyhodnotenie
+a porovnanie s ostatnými metódami.
 
-\section{Section B}
+\section{Príprava vývojového prostredia}
+
+Na správu python-ovských balíkov a vývojového prostredia je použitá \href{https://docs.conda.io/projects/conda/en/latest/index.html}{conda}, ktorú je nutné nainštalovať. Condu je možné nainštalovať cez distribúciu \href{https://www.anaconda.com/anaconda/}{Anaconda} (Anaconda obsahuje grafické rozhranie a množstvo nástrojov/programov) alebo menšiu distribúciu \href{https://docs.conda.io/en/latest/miniconda.html}{Miniconda}. V prípade, že potrebujete šetriť miesto na disku, odporúčam menšiu distribúciu Miniconda.
+
+Po inštalácii condy zadajte nasledovný príkaz v koreňovom adresári repozitára. Tento príkaz vytvorí nové conda prostredie v ktorom nainštaluje potrebné python balíky.
+
+\begin{lstlisting}[style=BashInputStyle]
+    $ conda env create -f environment.yml
+\end{lstlisting}
+
+Následne pre aktiváciu conda prostredia zadajte nasledovný príkaz.
+
+\begin{lstlisting}[style=BashInputStyle]
+    $ conda activate dp-timzatko
+\end{lstlisting}
+
+Teraz je možné používať shell, v ktorom bolo aktivované conda prostredie \textit{dp-timzatko}, na spúšťanie Python skriptov a Jupyter notebookov.
+
+Následne spustite Jupyter notebook klienta.
+
+\begin{lstlisting}[style=BashInputStyle]
+    $ jupyter-notebook
+\end{lstlisting}
+
+Teraz je možné, prezerať, spúšťať a upravovať jupyter notebooky v repozitári.
+
+\section{Závislosti (použité knižnice)}
+
+Na implementáciu riešenia sme použili nasledovné Python knižnice (uvádzame len tie najvýznamnejšie). Kompletný zoznam sa nachádza v súbore \textit{[REPOZITÁR]/environment.yml}.
+
+\begin{itemize}
+    \item numpy - na prácu s vektormi, maticami a matematickými operáciami nad nimi.
+    \item pandas - na vytváranie, a ukladanie tabuľkami.
+    \item seaborn - vykresľovanie grafov.
+    \item matplotlib - vykresľovanie rádiologických snímkov, tepelných mám a segmentačných masiek.
+    \item opencv - na dokreslenie v RISEI.
+    \item tensorflow (v2.3.1), tensorboad - implementácia, trénovanie, evaluácia modelu na predikciu alzheimerovej choroby.
+    \item torch, torchvision - evaluácia modelu na predikciu alzheimerovej choroby. Pytorch je potrebný, pretože je závislosťou knižnice \textit{captum}, ktorú používame na vytváranie tepelných masiek existujúcimi metódami (GradCAM a pod.).
+    \item SimpleITK - načítanie volumetrických dát z disku.
+    \item scikit-image - práca s vizuálnymi dátami (augmentácie, zmena veľkosti).
+\end{itemize}
+
+\section{Technické riešenie}
+
+Implementácia riešenia (RISEI, model, evaluácia atď.) sa nachádza v adresári \textit{[REPOZITÁR]/src}. Funkcionalita z tohto adresára je následne importovaná jupyter notebookmi v adresári \textit{[REPOZITÁR]/conda\_notebooks}. Každý z notebookov má iný účel - trénovanie modelu, vyhodnotenie metódy RISEI, porovnanie metód a pod (detailný opis k týmto notebookom sa nachádza v prílohe \ref{cha:cdrom} Opis digitálnej časti práce).
+
+\section{Moduly}
+
+Adresár \textit{[REPOZITÁR]/src} obashuje nasledovné Python moduly, ktoré majú uvedené zodpovednosti.
+
+\begin{itemize}
+    \item \textbf{src.risei} - implementácia metódy RISEI (exportuje triedu RISEI) - generovanie masiek.
+    \item \textbf{src.model} - obsahuje pomocné funkcie na prácu s tensorflow modelom (načítanie checkpointu atď.). 
+    \item \textbf{src.model.cnn\_3D} - implementácia 3D konvolučnej neurónovej siete v tensorflow-e.
+    \item \textbf{src.model.res\_net} - implementácia 3D a 2D siete ResNet v tensorflow-e.
+    \item \textbf{src.model.compile\_model} - kompilácia tensorflow modelu a nastavenie metrík, optimizéru, chybovej funkcie a predvolených nastavení.
+    \item \textbf{src.model.create\_model} - vytvorenie modelu.
+    \item \textbf{src.model.training} - spustenie trénovania modelu, vrátane vytvorenie tensorflow datasetu, nastavenia augmentácií, pripojenia k tensorboardu a pod. na základe vstupných parametrov.
+    \item \textbf{src.model.mri\_tensorboad\_callback} - výpis rádiologických snímkov po epochách/iteráciách do tensorboard-u pri trénovaní.
+    \item \textbf{src.model.evaluation} - vyhodnotenie modelu (matica zmätenia, klasifikačné metriky) a priebehu jeho trénovania.
+    \item \textbf{src.model.torch.cnn\_3D} - implementácia 3D konvolučnej neurónovej siete v pytorch-y.
+    \item \textbf{src.data} - práca s volumetrickými dátami, konverzia tensorflow sequence do numpy a opačne.
+    \item \textbf{src.data.description} - popisné štatistiky o dátovej sade.
+    \item \textbf{src.data.augmentations} - augmentácie.
+    \item \textbf{src.data.mri\_sequence} - načítanie MRI snímkov, štítkov a segementačných masiek z disku. Zmena veľkosti snímkov, orezanie snímkov, štandardizácia dát, rozdelenie dát do dávok.
+    \item \textbf{src.data.train\_test\_split} - rozdelenie dátovej sady na trénovaciua, testovaciu a validačnú.
+    \item \textbf{src.data.selector} - výber záznamov z dátovej sadny na základe triedy AD/CN a správnosti klasifikácie modelom.
+    \item \textbf{src.data.evaluation.segmentation\_masks} - evaluácia tepelných máp podľa segmentačných masiek.
+    \item \textbf{src.data.heatmaps} - generovanie tepelných máp.
+    \item \textbf{src.data.heatmaps.evaluation} - evaluácia kvality tepelnej mapy podľa metrík \textit{insertion} a \textit{deletion}, perzistencia histórie - tepelných máp a ich evaluácie, načítanie histórie evaluácie, vizualizácie v diagramoch. 
+\end{itemize}
+
+Funkcie a triedy v moduloch sú v primeranom rozashu dokumentované pomocou komentárov. Ďalej bližšie opíšeme najviac dôležitý modul implementujúci navrhnutnú metódu \textit{RISEI}.
+
+\subsection{Modul: src.risei}
+
+Tento modul poskytuje triedu RISEI ktorá slúži na generovanie masiek, z ktorých sa vytvárajú tepelné mapy.
+
+\subsubsection{Trieda: RISEI}
+
+Trieda RISEI slúži na generovanie masiek.
+
+\begin{lstlisting}
+    class src.risei.RISEI(input_size, s=8, p1=0.5, b1=0.8, b2=0.5,
+        b2_value=0,
+        in_paint='2d',
+        in_paint_radius=20,
+        in_paint_algorithm=cv2.INPAINT_NS,
+        in_paint_blending=True,
+        in_paint_2d_to_3d=False,
+        processes=4,
+        debug=False,
+    )
+\end{lstlisting}
+
+\paragraph{Parametre}
+
+\begin{itemize}
+    \item \textbf{s} - veľkosť mriežky, z ktorej sa vytvára binárna maska.
+    \item \textbf{p1} - pravdepodobnosť, že pixel v mriežke bude biely.
+    \item \textbf{b1} - miera prekryvu medzi pôvodným obrázkom a dokreslením. Ak je \textit{0} tak sa dokreslenie vôbec nevykoná.
+    \item \textbf{b2} - miera prekryvu medzi pôvodným obrázkom s dokreslením a ''čiernou'' maskou. 
+    \item \textbf{b2\_value} - hodnoty v ''čiernej'' maske.
+    \item \textbf{in\_paint} - typ dokreslenia. Môže byť \textit{2d} alebo \textit{3d}. V prípade \textit{2d} je dokreslenie realizované iba v prvej dimenzii.
+    \item \textbf{in\_paint\_radius} - rádius dokreslenia (posúva sa ďalej do knižnice \textit{opencv}).
+    \item \textbf{in\_paint\_algorithm} - algoritmus dokreslenia, môže byť \textit{cv2.INPAINT\_NS} alebo \textit{cv2.INPAINT\_TELEA}.
+    \item \textbf{in\_paint\_blending} - ak \textit{True} dokreslenie bude prekryté s pôvodným snímkom podľa interpolovanej čiernej masky (tak nevzniknú žiadne ostré hrany).
+    \item \textbf{processes} - počet procesov v ktorých sa budú generovať masky.
+    \item \textbf{debug} - ak \textit{True} budú do pamäte ukladané medzivýsledky z generovania masiek (binárna maska, interpolovaná maska atď.).
+\end{itemize}
+
+\paragraph{Metódy}
+
+Metódy triedy RISEI.
+
+\vspace{8pt}
+\begin{lstlisting}
+    generate_masks(n, image, log=True, seed=None)
+\end{lstlisting}
+
+Parametre:
+\begin{itemize}
+    \item \textbf{n} - počet masiek na vygenerovanie,
+    \item \textbf{image} - 3D snímka \textit{(x, y, z)},
+    \item \textbf{log} - ak \textit{True} na štandardnom výstupe bude zobrazený aktuálny stav generovania masiek,
+    \item \textbf{seed} - seed pre náhodu.
+\end{itemize}
+
+\vspace{32pt}
+\begin{lstlisting}
+    show_from_last_run(i, z, figsize=(12, 8), dim=0):
+\end{lstlisting}
+
+Parametre:
+\begin{itemize}
+    \item \textbf{i} - i-ta maska na zobrazenie,
+    \item \textbf{z},
+    \item \textbf{figsize} - veľkosť vykresleného diagarmu,
+    \item \textbf{dim} - reprezentuje rozmer - 0, 1, 2.
+\end{itemize}
 
 \thispagestyle{empty}
 \mbox{}
