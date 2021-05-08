@@ -23,6 +23,8 @@ def get_heatmap(x, y, model, risei,
     :param seed:
     :return:
     """
+    # [1, 0] => 0
+    # [0, 1] => 1
     cls_idx = np.argmax(y)
 
     batch_count = math.ceil(masks_count / risei_batch_size)

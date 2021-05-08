@@ -277,7 +277,7 @@ Pri trénovaní sme použili:
     \item $l2$ regularizáciu (rovnako ako \citeauthor*{esmaeilzadeh2018end}).
 \end{itemize}
 
-Trénovali sme iteratívne, začali sme obyčajným modelom a postupne sme pridávali augmentácie, dávkovú normalizáciu, dropout a regularizáciu pričim sme postupne dolaďovali parametre. Najlepšie výsledky sme dosiahli s architektúrou 3D ResNet s presnosťou 80\% (Tabuľka \ref{tab:model_training_results}). Nepodarilo sa nám nám teda priblížiť k výsledkom analyzovaných prác, čo však v konečnom dôsledku ani nie je cieľom tejto práce.
+Trénovali sme tak, že sme, začali s obyčajným modelom a postupne sme pridávali augmentácie, dávkovú normalizáciu, dropout a regularizáciu pričim sme postupne dolaďovali parametre. Najlepšie výsledky sme dosiahli s architektúrou 3D ResNet s presnosťou 80\% (Tabuľka \ref{tab:model_training_results}). Nepodarilo sa nám nám teda priblížiť k výsledkom analyzovaných prác, čo však v konečnom dôsledku ani nie je cieľom tejto práce.
 
 \begin{landscape}
     \begin{table}[]
@@ -306,18 +306,19 @@ Trénovali sme iteratívne, začali sme obyčajným modelom a postupne sme prid�
     \end{table}
 \end{landscape}
 
-Oproti \citeauthor*{esmaeilzadeh2018end}, ktorí dosiahli presnosť až 94\%, sme dosiahli presnosť len 72\% avšak sme mali menej dát (o 339 pozorovaní menej), neodstraňovali sme zo snímok lebku a nepoužili sme pri klasifikácii vek pacienta. Avšak robili sme viac augmentácií, a po ich pridaní sa úspešnosť modelu zhoršila (Obr. \ref{fig:3d_cnn_training}) (ale následne sa už iba zlepšovala), je teda možné, že niektoré augmentácie sú nekorektné a deštruktívne a vedú k zhoršeniu výkonnosti modelu. V ďaľších experimentoch by sme mali pridávať augmentácie po jednej. Aj po pridaní veľmi slabej regularizácie, sa úspešnosť modelu zhoršila. V prípade 2D a 3D ResNet architektúr sa nám podarilo dosiahnuť lepšie výsledky, avšak v ich prípade sa sieť neskôr začala pretrénovávať (Obr. \ref{fig:2d_3d_res_net_training}
+Oproti \citeauthor*{esmaeilzadeh2018end}, ktorí dosiahli presnosť až 94\%, sme dosiahli presnosť len 72\% avšak sme mali menej dát (o 339 pozorovaní menej), neodstraňovali sme zo snímok lebku a nepoužili sme pri klasifikácii vek pacienta. Avšak robili sme viac augmentácií, no po ich pridaní sa úspešnosť modelu zhoršila (Obr. \ref{fig:3d_cnn_training}) (ale následne sa už iba zlepšovala), je teda možné, že niektoré augmentácie nie sú nekorektné a deštruktívne voči vstupným snímkam a vedú k zhoršeniu výkonnosti modelu. Aj po pridaní veľmi slabej regularizácie, sa úspešnosť modelu zhoršila. V prípade 2D a 3D ResNet architektúr sa nám podarilo dosiahnuť lepšie výsledky, avšak v ich prípade sa sieť neskôr začala pretrénovávať (Obr. \ref{fig:2d_3d_res_net_training}
 ) aj napriek použitej regularizácii, čo môže naznačovať, že sú tieto architektúry na náš problém príliš komplexné.
 
-Možné vylepšenia (zoradené podľa subjektívneho pomeru úsilie/vplyv):
+Identifikovali sme nasledovné možné vylepšenia (zoradené podľa subjektívneho pomeru úsilie/vplyv):
 \begin{itemize}
-    \item Pridávať augmentácie postupne a vyhodiť tie deštruktívne.
-    \item Menej ''agresívne'' augmentácie.
+    \item Porovnať jednotlivé augmentácie a vyhodiť tie deštruktívne.
     \item Odstránenie lebky zo snímok.
     \item Nájsť a použiť viac dát.
     \item Krížová validácia v prípade väčšieho nastavovania hyperparametrov.
     \item Učenie prenosom pomocou autoenkodéra \cite{hosseini2016alzheimer}.
 \end{itemize}
+
+Vzhľadom na to, že naším cieľom nie je natrénovať najlepšiu neurónovú sieť, nevykonali sme všetky identifikované možné vylepšenia. Vykonali sme porovnanie jednotlivých augmenácií na architektúre 3D CNN a to tak, že sme pre každú augemtáciu natrénovali samostatný model (bez dropout-u a regularizácie) a augmentovali sme vstupné snímky s pravdepodobnosťou 50\%. Sledovali sme, či sa aj s augemntovanými snímkami netrénované modely bez akejkoľvek regularizácie dokážu preučiť. Model sa nepreučil iba pri augmentácii \textit{náhodné priblíženie}. Následne sme natrénovali modely pre jednotlivé architektúry znovu, lepší model sa nám podarilo natrénovať iba pre architektúru 3D CNN, presnosť - \textbf{0.78}, senzitivita - \textbf{0.81}, špecificita - \textbf{0.73}.
 
 \begin{figure}[h!]
     \centering
@@ -335,4 +336,4 @@ Možné vylepšenia (zoradené podľa subjektívneho pomeru úsilie/vplyv):
 
 \section{Zhrnutie}
 
-V tejto kapitole sme opísali, ako sme implementovali nami navrhovanú metódu a spôsob jej overenie. Opísali sme implemetáciu kľúčových prvkov (generovanie masiek a vytvorenie tepelnej mapy) navrhovanej metódy RISEI a jej hyper parametre. Rovnako sme opísali aj implementáciu neurónovej siete, architektúru, spôsob trénovania a použitú dátovú sadu. Metódu RISEI sa nám podarilo implementovať a je ju možné použiť v experimentoch. Podarilo sa nám natrénovať niekoľko architektúr neurónových sietí, pričom sme indetifikovali možné príčiny (a navrhli k nim riešenia) výsledkov, ktoré dosahujú. Každopádne výsledky považujeme za postačujúce pre prvé experimenty navrhovanej metódy RISEI.
+V tejto kapitole sme opísali, ako sme implementovali nami navrhovanú metódu a spôsob jej overenie. Opísali sme implemetáciu kľúčových prvkov (generovanie masiek a vytvorenie tepelnej mapy) navrhovanej metódy RISEI a jej hyper parametre. Rovnako sme opísali aj implementáciu neurónovej siete, architektúru, spôsob trénovania a použitú dátovú sadu. Metódu RISEI sa nám podarilo implementovať a je ju možné použiť v experimentoch. Podarilo sa nám natrénovať niekoľko architektúr neurónových sietí, pričom sme indetifikovali možné príčiny výsledkov, ktoré dosahujú (a navrhli spôsob ako ich riešiť). Nie všetky identifikované príčiny sa nám podarilo vyriešiť, keďže cieľom tejto práce nie je natrénovať najlepší model, ale natrénovať taký model, ktorý je postačujúci na overenie navrhnutej metódy.
