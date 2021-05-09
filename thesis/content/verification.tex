@@ -1,7 +1,17 @@
 \chapter{Overenie riešenia}
 
-Keďže sme natrénovali viacero modelov, ako prvé sme vykonali ich porovnanie pomocou implementáciou metódy RISE pre 3D snímky.
-Následne sme vybrali z nich najlepší model, ktorý sme používali v ďaľších experimentoch.
+Keďže sme natrénovali viacero modelov, a metóda RISEI má veľké množstvo parametrov zvolili sme nasledovnú stratégiu pri overovaní riešenia, tak aby sme nemuseli overovať všetky možné kombinácie parametrov/architektúr a dokázali vykonať všetky navrhnuté experimenty (Sekcia \ref{sec:design_experiments}) v stanovenom čase.
+
+\begin{enumerate}
+    \item Výber architektúry neurónovej siete na ktorej budeme overovať metódu RISEI a porovnávať ju z ostatnými. \textit{Ktorý model je najvhodnejší pre navrhnutú metódu?}
+    \item Overenie metódy RISEI. \textit{Dávajú výsledky z navrhnutej metódy zmysel a nie sú náhodné?}: 
+         \begin{itemize}
+             \item Overenie stability tepelných máp.
+             \item Overenie kvality tepelných máp (metriky \textit{insertion} a \textit{deletion}).
+         \end{itemize}
+    \item Porovnanie kvality tepelných máp s metódou RISE (s doimplementovanou podporou pre 3D snímky) - \textit{je to metóda, ktorá je metóde RISEI najbližšie, je navrhnutá metóda lepšia?}
+    \item Overenie správnosti tepelných máp a porovnanie s inými metódami - GradCAM, Guided Backprop, Guided GradCAM. \textit{Sú tepelné mapy nie len kvalitné, ale dávajú zmysel v kontexte anatómie mozgu? Ako sú na tom iné metódy?}
+\end{enumerate}
 
 \paragraph{Adresovanie náhodnosti metódy RISE pri porovnávaní dvoch roznych modelov}
 
@@ -9,10 +19,13 @@ Keďže vygenerované masky sú náhodné, pri porovnávaní dvoch metód (kombi
 
 \section{Experimenty}
 
-\subsection{Porovnanie metódy RISE na natrénovaných modeloch \label{sec:experiment_rise_various_architectures}}
+\subsection{Výber architektúry neurónovej siete pre ďaľšie experimenty \label{sec:experiment_rise_various_architectures}}
 
-V tomto experiemnte sme porovnali metódu RISE na nami natrénovaných modeloch. Vybrali sme najlepšie natrénované modely pre každú architektúru (Tabuľka \ref{tab:model_training_results}). Použili sme nami implementovaný metódu RISEI pričom sme nastavili jej parametre tak, aby fungovala ako metóda RISE.
-Parametre sme nastavili nasledovne: $s = 8$, $p = 1/3$, $b1 = 0$, $b2 = 1$ (opis parametrov sa nachádza v tabuľke \ref{tab:risei_params}). Na vytvorenie tepelnej mapy sme vygenerovali 1024 masiek. Pri vyhodnocovaní metrík insertion a deletion sme nastavili veľkosť kroku na 2500 voxelov (takto trvalo vyhodnotenie tepelnej mapy ~3 minúty). Vybrali sme 25 náhodných snímkov z testovacej sady, generovanie a vyhodnotenie tepelných máp k nim trvalo približne ~1 hodinu. Najlepšie výsledky sme dosiahli na architektúre 3D CNN (Tabuľka \ref{tab:experiment_rise_various_architectures}).
+V tomto experiemnte sme porovnali metódu RISE na nami natrénovaných modeloch s cieľom vybrať jeden z nich pre ďaľšie experimenty (keďže experimenty sú časovo náročné, nechceme ich robiť na všetkých modeloch). Vybrali sme najlepšie natrénované modely pre každú architektúru (Tabuľka \ref{tab:model_training_results}). Použili sme nami implementovanú metódu RISEI pričom sme nastavili jej parametre tak, aby fungovala ako metóda RISE.
+Parametre sme nastavili nasledovne: $s = 8$, $p = 1/3$, $b1 = 0$, $b2 = 1$ (opis parametrov sa nachádza v tabuľke \ref{tab:risei_params}). Na vytvorenie tepelnej mapy sme vygenerovali 1024 masiek. Pri vyhodnocovaní metrík insertion a deletion sme nastavili veľkosť kroku na 2500 voxelov (takto trvalo vyhodnotenie tepelnej mapy ~3 minúty). Vybrali sme 25 náhodných snímkov z testovacej sady (13 AD, 12 CN), generovanie a vyhodnotenie tepelných máp k nim trvalo približne ~1 hodinu. 
+
+Najlepšie výsledky sme dosiahli na architektúre 3D CNN (Tabuľka \ref{tab:experiment_rise_various_architectures}). Je dôležité si ale uvedomiť, že na vyhodnotenie metrík \textit{insertion} a \textit{deletion} z vytvorenej tepelnej masky sa používa model samotný - zo snímky sú pridávané/odoberané voxely pričom sa sleduje sa zmena predikcie modelu. Môže nastať teda situácia, že dva rôzne modely vytvoria dve identické tepelné mapy, pričom výsledná hodnota metriky bude rozdielna. Na základe týchto metrík teda nemôžeme tvrdiť, že jeden model vytvára lepšie tepelné mapy ako druhý. Metrika \textit{insertion} a \textit{deletion} nie je teda vhodná na takéto porovnanie dvoch rôznych modelov medzi sebou.
+Dobrým signálom by bolo ak by hodnota metriky \textit{insertion} bola väčšia ako metriky \textit{deletion}, takto to nie je ani u jedného z modelov (najbližšie má k tomu 3D CNN). Aj kvôli tomuto sme vybrali do ďaľších experimentov model 3D CNN, zároveň na základe jeho špecificity a senzitivity môžeme tvrdiť, že nepreferuje ani jednu z tried - čo u iných modeloch tak nie je (tie preferujú AD pozorovania). Taktiež je tento model jednoduchší.
 
 \begin{table}[]
     \centering
@@ -28,19 +41,23 @@ Parametre sme nastavili nasledovne: $s = 8$, $p = 1/3$, $b1 = 0$, $b2 = 1$ (opis
     \label{tab:experiment_rise_various_architectures}
 \end{table}
 
-\subsection{Stabilita tepelných máp}
+\subsection{Overenie metódy RISEI}
+
+\subsubsection{Stabilita tepelných máp}
 
 Keďže metóda RISEI (aj metóda RISE z ktorej vychádzame) používa na generovanie tepelným máp náhodné masky, výsledná tepelná mapa je touto náhodnosťou ovplyvnená a je teda do určitej miery náhodná. Očakávame, že čím viac masiek vygenerujeme, tým bude vplyv náhodny na výslednú tepelnú mapu nižší. Keď teda pre tú istú snímku vygenerujeme niekoľko tepelných máp, tieto tepelné mapy sa budú líšiť ćo najmenej = budú stabilné.
 
 Metóde RISEI sme nastavili nasledovné parametre $s = 8$, $p = 1/3$, $b1 = 0$, $b2 = 1$ a $b2\_value = 1$ - nepoužívame dokreslenie, keďže je časovo náročné a vykonávame veľké množštvo experimentov. Uvažujeme tak, že nezáleží na tom, čo je hodnota zakrytia vo vygenerovaných maskách, pokiaľ tá hodnota nie je náhodná.
 
+Použili sme model 3D CNN so senzitivitou - 0.81 a špecificitou - 0.73.
+
 \paragraph{Porovnanie vytvorených tepelných máp}
 
 $N$ vytvorených tepelných máp porovnávame tak, že počítame štanardnú odchílku pre každý voxel medzi vytvorenými tepelnými mapami. Tak z tepelných máp o rozmere $[N, z, y, x]$ vznikne 3D matica štandardných odchílok $[z, y, x]$. Ak má voxel rovnakú/blízku hodnotu tepla medzi tepelnými mapammi, štandardná odchýlka nula/blízka nule. Z 3D matice štandradných odchílok vypočítame priemernú/strednú hodnotu - táto hodnota reprezentuje vzniknutú chybu medzi tepelnými mapami plynúcu z náhodnosti tepelných masiek.
 
-\subsubsection{Experiment 1 (jeden snímok) \label{sec:risei_stability_1}}
+\subsubsection{Experiment 1 (jedna snímka) \label{sec:risei_stability_1}}
 
-Pre náhodný snímok vytvoríme $K$ tepelných máp, pričom tepelné mapy vytvárame z 16, 128, 256, 512, 1024, 2048, 3072, 4096, 6144, 8192, 16384 alebo 32768 masiek. Kvôli vysokej pamäťovej náročnosti, v experiementoch, v ktorých vytvárame te1pelné mapy z vysokého počtu masiek vytvoríme menej tepelných máp (Tabuľka \ref{tab:risei_stability_1}). Zistili sme, že s vyšším počtom vygenerovaných masiek chyba klesá logaritmicky (Obr. \ref{fig:risei_stability_1}). 
+Pre náhodný snímok vytvoríme $K$ tepelných máp, pričom tepelné mapy vytvárame z 16, 128, 256, 512, 1024, 2048, 3072, 4096, 6144, 8192, 16384 alebo 32768 masiek. Kvôli vysokej pamäťovej náročnosti, v experiementoch, v ktorých vytvárame tepelné mapy z vysokého počtu masiek vytvoríme menej tepelných máp (Tabuľka \ref{tab:risei_stability_1}). Zistili sme, že s vyšším počtom vygenerovaných masiek chyba klesá logaritmicky (Obr. \ref{fig:risei_stability_1}). Zároveň, chyba sa javí byť náhodná a nie systematická (Obrázok \ref{fig:risei_stability_error_visialisation}).
 
 \begin{table}[]
     \centering
@@ -73,9 +90,16 @@ Pre náhodný snímok vytvoríme $K$ tepelných máp, pričom tepelné mapy vytv
     \label{fig:risei_stability_1}
 \end{figure}
 
-\subsubsection{Experiment 2 (viacero snímkov)}
+\begin{figure}[h!]
+    \centering
+    \includegraphics[width=14cm]{assets/images/risei_stability_error_visialisation.png}
+    \caption{Vizualizácia chyby z generovania 1024, 2048 a 4096. Z vizualizácie je zdrejmé, že chyba je skôr náhodná ako systematická, keďže sa nachádza na rôznych častiach medzi snímkami. Škála tepla má výrazne znížené maximum oproti maximálnej možnej chybe (1) aby boli rozdiely viditeľné.}
+    \label{fig:risei_stability_error_visialisation}
+\end{figure}
 
-Keďže sme v predchádzajúcom experimente overovali stabilitu iba na jednom snímku, v tomto experimente overíme stabilitu na viacero snímkoch. Z testovacej sady sme vybrali 5 TP (viď. \nameref{sec:dictionary}), 5 TN, 5 FP a 5 FN pozorovaní (tj. celkovo 20 pozorovaní), podľa toho ako ich neurónová sieť označila. Takto zabezpečíme vyváženosť tried pozorovaní v experimente. Kvôli časovej aj pamäťovej náročnosti tohto experimentu sme vytvárali 10 tepelných máp pre každé jedno pozorovanie. Výsledky boli takmer identické s predchádzajúcim experimentom (Sekcia \ref{sec:risei_stability_1}) a trend poklesu chyby pri zvyšujúcom počte masiek bol zachovaný (\ref{tab:risei_stability_2}). Z oboch experimentov vyplýva, že je vhodné použiť vyšší počet masiek pri vytváraní tepelných máp, aby sa odstránil vyplyv náhody. Ako vhodným počet považujem 2048 masiek, pri tomto počte je chyba vzhľadom na hodnoty v tejeplnej mape minimálna (Tavuľka \ref{tab:risei_stability_1}, \ref{tab:risei_stability_2}).
+\subsubsection{Experiment 2 (viacero snímiek)}
+
+Keďže sme v predchádzajúcom experimente overovali stabilitu iba na jednej snímke, v tomto experimente overíme stabilitu na viacero snímkach. Z testovacej sady sme vybrali 5 TP (viď. \nameref{sec:dictionary}), 5 TN, 5 FP a 5 FN pozorovaní (tj. celkovo 20 pozorovaní), podľa toho ako ich neurónová sieť označila. Takto zabezpečíme vyváženosť tried pozorovaní v experimente. Kvôli časovej aj pamäťovej náročnosti tohto experimentu sme vytvárali 10 tepelných máp pre každé jedno pozorovanie. Výsledky boli takmer identické s predchádzajúcim experimentom (Sekcia \ref{sec:risei_stability_1}) a trend poklesu chyby pri zvyšujúcom počte masiek bol zachovaný (\ref{tab:risei_stability_2}). Z oboch experimentov vyplýva, že je vhodné použiť vyšší počet masiek pri vytváraní tepelných máp, aby sa odstránil vyplyv náhody. Ako vhodným počet považujem 2048 masiek, pri tomto počte je chyba vzhľadom na hodnoty v tejeplnej mape minimálna (Tabuľka \ref{tab:risei_stability_1}, \ref{tab:risei_stability_2}).
 
 \begin{table}[]
     \centering
@@ -92,15 +116,29 @@ Keďže sme v predchádzajúcom experimente overovali stabilitu iba na jednom sn
     3072 & 0.0043 \\ \hline
     4096 & 0.0037 \\ \hline
     \end{tabular}
-    \caption{Stabilita vytvorených tepelných máp podľa počtu vygenerovaných masiek pre 20 snímkov. Trend poklesu chyby oproti prvému experimentu (Tabuľka \ref{tab:risei_stability_1}) ostal zachovaný.}
+    \caption{Stabilita vytvorených tepelných máp podľa počtu vygenerovaných masiek pre 20 snímiek. Trend poklesu chyby, rovnako ako v prvom experimente, (Tabuľka \ref{tab:risei_stability_1}) ostal zachovaný.}
     \label{tab:risei_stability_2}
 \end{table}
 
-\subsection{RISE vs RISEI}
+\subsection{RISE vs RISEI (s rôznymi parametrami)}
 
-V tomto experimente sme porovnali RISE a rôzne nastavenia metódy RISEI. Použili sme 3D CNN model s úspešnosťou 72\%, senzitivitou 73\% a špecificitou 71\%, toto nie je rovnaký model ako ten, ktorý sme použili v predchádzajúcom experimente, ale jeden z prvých modelov, ktorý sme natrénovali. pretože sme sa snažili overiť metódu RISEI čo najskôr. Najnovší 3D CNN model sme ešte nestihli použiť v tomto experimente. 
+V tomto experimente sme porovnali RISE a rôzne nastavenia metódy RISEI. Použili sme model 3D CNN so senzitivitou 73\% a špecificitou 71\%.
 
-Použili sme rovnaké nastavenie parametrov ako v predchádzajúcom experimente (Sekcia \ref{sec:experiment_rise_various_architectures}) a menili sme len parametre \textit{b1}, \textit{b2} a \textit{b2\_value}. Parametre \textit{in\_paint\_radius} sme nastavili na hodnotu $5$. Vyhodnocovali sme zatiaľ len metriku \textit{insertion}, najlepšie výsledky sme dosiahlli bez použitia dokreslenia ale s prekrytím hodnotou jedna (Tabuľka \ref{tab:experiment_risei_various_configuration}). Metóda s dokreslením si počínala horšie, ale stále lepšie ako prekrytie s hodnotou nula pôvodná metóda RISE). Obrázok \ref{fig:heatmap_and_auc_example} zobrazuje príklad vygenerovanej tepelnej mapy pre MRI snímok a výsledný graf zmeny aktivácie pre metriky \textit{insertion}.
+Použili sme rovnaké nastavenie parametrov, a rovnaký počet pozorovaní ako pri výbere architektúry neurónovej siete (Sekcia \ref{sec:experiment_rise_various_architectures}) a menili sme len parametre \textit{b1}, \textit{b2} a \textit{b2\_value}. Parametre \textit{in\_paint\_radius} sme nastavili na hodnotu $5$. 
+
+Vyhodnocovali sme len metriku \textit{insertion} (aby sme čo najrýchlejšie získali prvotné výsledky), najlepšie výsledky sme dosiahlli bez použitia dokreslenia ale s prekrytím hodnotou jedna (Tabuľka \ref{tab:experiment_risei_various_configuration}). To si vysvetľujeme tým, že hodnota voxelov blízka jednej je v trénovacej sade veľmi ojedinelá (Obr. \ref{fig:test_dataset_voxel_distribution}) a neurónová sieť na základe nich nerozhoduje, takéto voxely neurónovú sieť nepomýlia. Naopak, voxely s hodnotou/blízke hodnote nula sú pomerne časté, ak na základe nich neurónová sieť rozhoduje, može to byť dôvod prečo prekrytie zaznamenalo horšie výsledky.
+
+Metóda s dokreslením si počínala horšie ako prekrytie hodnotou jedna, ale stále lepšie ako prekrytie s hodnotou nula pôvodná metóda RISE). Zároveň dosiahla takmer identický výsledok ako prykritie mediánom hodnôt voxelov snímky.
+
+Obrázok \ref{fig:heatmap_and_auc_example} zobrazuje príklad vygenerovanej tepelnej mapy pre MRI snímok a výsledný graf zmeny aktivácie pre metriku \textit{insertion}. Na diagrame je vidieť, že s postupným pridávaním voxelov stúpa aktivácia pre skutočnú triedu pozorovania, takto to však nie je u všetkých pozorovaní. 
+
+% TODO: replace with train + test boxplots
+\begin{figure}[h!]
+    \centering
+    \includegraphics[width=11cm]{assets/images/test_dataset_voxel_distribution.png}
+    \caption{Distribúcia hodnôt voxelov v testovacej sade. Testovacie dáta boli štandardizované do intervalu $<0, 1>$ podľa maximálnych hodnôt v trénovacej sade.}
+    \label{fig:test_dataset_voxel_distribution}
+\end{figure}
 
 \begin{table}[]
     \centering
@@ -108,13 +146,13 @@ Použili sme rovnaké nastavenie parametrov ako v predchádzajúcom experimente 
         \cline{2-3}
                                                                     & \multicolumn{2}{c|}{Insertion} \\ \cline{2-3} 
                                                                     & Priemer        & Medián        \\ \hline
-        \multicolumn{1}{|l|}{b1 =  0, b2 = 1, b2\_value = min (RISE)} & 0.43           & 0.37          \\ \hline
-        \multicolumn{1}{|l|}{b1 =  0, b2 = 1, b2\_value = max}        & \textbf{0.65}  & \textbf{0.67} \\ \hline
-        \multicolumn{1}{|l|}{b1 =  0, b2 = 1, b2\_value = median}     & 0.52           & 0.48          \\ \hline
+        \multicolumn{1}{|l|}{b1 =  0, b2 = 1, b2\_value = 0 (RISE)} & 0.43           & 0.37          \\ \hline
+        \multicolumn{1}{|l|}{b1 =  0, b2 = 1, b2\_value = 1}        & \textbf{0.65}  & \textbf{0.67} \\ \hline
+        \multicolumn{1}{|l|}{b1 =  0, b2 = 1, b2\_value = medián}     & 0.52           & 0.48          \\ \hline
         \multicolumn{1}{|l|}{b1 =  1, b2 = 0}                        & 0.53           & 0.47          \\ \hline
-        \multicolumn{1}{|l|}{b1 =  1, b2 = 0.25, b2\_value = min}     & 0.49           & 0.42          \\ \hline
-        \multicolumn{1}{|l|}{b1 =  1, b2 = 0.5, b2\_value = min}      & 0.44           & 0.37          \\ \hline
-        \multicolumn{1}{|l|}{b1 =  1, b2 = 0.75, b2\_value = min}     & 0.39           & 0.30          \\ \hline
+        \multicolumn{1}{|l|}{b1 =  1, b2 = 0.25, b2\_value = 0}     & 0.49           & 0.42          \\ \hline
+        \multicolumn{1}{|l|}{b1 =  1, b2 = 0.50, b2\_value = 0}      & 0.44           & 0.37          \\ \hline
+        \multicolumn{1}{|l|}{b1 =  1, b2 = 0.75, b2\_value = 0}     & 0.39           & 0.30          \\ \hline
     \end{tabular}
     \caption{\textbf{Porovnanie rôznych nastavení metódy RISEI.} Najlepšie výsledky dosiahla metóda bez použitia dokreslenia ale s prekrytím hodnotou jedna.}
     \label{tab:experiment_risei_various_configuration}
@@ -123,15 +161,31 @@ Použili sme rovnaké nastavenie parametrov ako v predchádzajúcom experimente 
 \begin{figure}[h!]
     \centering
     \includegraphics[width=14cm]{assets/images/heatmap_and_auc_example.png}
-    \caption{Vygenerovaná tepelná mapa a graf zmeny aktivácie po pridávaní voxelov pre vybraný MRI snímok. Metrika AUC je pomerne vysoká, avšak je potrebné tepelnú mapu ešte vyhodnotiť z pohľadu segmentačných masiek. Tepelná mapa bola vygenerovaná s parametrami \textit{b1 = 1, b2 = 0}.}
+    \caption{Vygenerovaná tepelná mapa a graf zmeny aktivácie po pridávaní voxelov pre vybraný MRI snímok. Metrika AUC je pomerne vysoká, avšak je potrebné tepelnú mapu ešte vyhodnotiť z pohľadu segmentačných masiek. Tepelná mapa bola vygenerovaná s parametrami \textit{b1 = 1, b2 = 0} (RISEI s dokreslením).}
     \label{fig:heatmap_and_auc_example}
 \end{figure}
 
-Ako možná zmena do ďaľších experimentov je používať hodnotu \textit{max} ako hodnotu pre parameter \textit{b2\_value} v kombinácii s \textit{b1 = 1} (tj. metóda s dokreslením) a \textit{b2 < 1}, keďže dosiahla zatiaľ najlepšie výsledky.
+Keďže sme neskôr natrénovali lepší model pre 3D CNN architektúru so senzitivitou 81\% a špecificitou 73\%, overlili sme ho v tomto experimente tiež, ale len na najlepšej zistenej kombinácii parametrov. Výsledok bola nižšia hodnota v metrike \textit{insertion} (priemer - 0.60, medián - 0.63). Vytvorené tepelné mapy medzi obomi modelmi boli veľmi podobné, no každý model ich vyhodnotil inak, tento problém sme načrtli v sekcii \ref{sec:experiment_rise_various_architectures}. Obrázok \ref{fig:3d_cnn_heatmap_cmp} zobrazuje takmer identicky vygenerované tepelné mapy, avšak lepší model, ktorý označil dané pozorovanie s vyššou istotou 
+dosiahol nižšie skóre v metrike insertion. Tu sa črtá ďaľší problém metrík \textit{insertion} a \textit{deletion}, ak model vykazuje nižšiu mieru istoty pre pozorovanie - hodnota aktivácie, plocha pod krivkou (metrika AUC), ktorá k nej smeruje nemôže byť jedna. V našom prípade sú tieto aktivácie pomerne nízke (autori RISE uvádzali také príklady, kde aktivácie pre predikované triedy boli viac ako 0.9). Toto avšak nemusí byť nutne problém, keďže sa v snímke môžu nachádzať voxely, ktoré sú proti predikovanej triede, a teda mali nastavené teplo správne, a boli správne vložené až na konci vyhodnotenia. 
 
-\subsection{Hľadanie optimálnych parametrov}
+Ďaľším problémom týchto metrík môžu byť hodnoty voxelov, ktoré sú na miestach kde sme už zmazali/doposiaľ nepridali voxely, tie by mali byť neutrálne a nemali by hovoriť o žiadnej triede. My používame hodnotu nula (tá môže skôr hovoriť o AD pacientoch - chýbajúce tkanovo), avšak je tiež možné použiť opačný extrém, hodnotu jedna.
+
+Aj kvôli zisteným problémom vyššie budeme tepelné mapy overovať voči segmentačným maskám aby sme získali lepšiu predstavu o správnosti tepelnej mapy. Aj napriek horšej metrike \textit{insertion} budeme ďalej používať lepšie natrénovaný model.
+
+\begin{figure}[h!]
+    \centering
+    \includegraphics[width=14cm]{assets/images/3d_cnn_heatmap_cmp.png}
+    \caption{Porovnanie tepelných máp vygenerovanými dvoma rôznymi modelmi. Model A) je model 3D CNN so senzitivitou 81\% a špecificitou 73\%. Model B) je model 3D CNN so senzitivitou 73\% a špecificitou 71\%. Oba modely vytvorili takmer identické tepelné mapy, avšak ich každý vyhodnotil inak. Kvalitatívne vyhodnotenie tepelnej mapy lepšie natrénovaného modelu dosiahlo horší výsledok.}
+    \label{fig:3d_cnn_heatmap_cmp}
+\end{figure}
+
+\subsubsection{Optimálny počet masiek}
+
+TODO:
 
 \subsection{Porovnanie s existujúcimi metódami}
+
+TODO:
 
 \section{Zhrnutie}
 
