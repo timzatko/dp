@@ -318,7 +318,7 @@ Identifikovali sme nasledovné možné vylepšenia (zoradené podľa subjektívn
     \item Učenie prenosom pomocou autoenkodéra \cite{hosseini2016alzheimer}.
 \end{itemize}
 
-Vzhľadom na to, že naším cieľom nie je natrénovať najlepšiu neurónovú sieť, nevykonali sme všetky identifikované možné vylepšenia. Vykonali sme porovnanie jednotlivých augmenácií na architektúre 3D CNN a to tak, že sme pre každú augemtáciu natrénovali samostatný model (bez dropout-u a regularizácie) a augmentovali sme vstupné snímky s pravdepodobnosťou 50\%. Sledovali sme, či sa aj s augemntovanými snímkami netrénované modely bez akejkoľvek regularizácie dokážu preučiť. Model sa nepreučil iba pri augmentácii \textit{náhodné priblíženie}. Následne sme natrénovali modely pre jednotlivé architektúry znovu, lepší model sa nám podarilo natrénovať iba pre architektúru 3D CNN, presnosť - \textbf{0.78}, senzitivita - \textbf{0.81}, špecificita - \textbf{0.73}.
+Vzhľadom na to, že naším cieľom nie je natrénovať najlepšiu neurónovú sieť, nevykonali sme všetky identifikované možné vylepšenia. Vykonali sme porovnanie jednotlivých augmenácií na architektúre 3D CNN a to tak, že sme pre každú augemtáciu natrénovali samostatný model (bez dropout-u a regularizácie) a augmentovali sme vstupné snímky s pravdepodobnosťou 50\%. Sledovali sme, či sa aj s augemntovanými snímkami netrénované modely bez akejkoľvek regularizácie dokážu preučiť. Model sa nepreučil iba pri augmentácii \textit{náhodné priblíženie}. Následne sme natrénovali modely pre jednotlivé architektúry znovu, lepší model sa nám podarilo natrénovať iba pre architektúru 3D CNN, presnosť - \textbf{0.78}, senzitivita - \textbf{0.81}, špecificita - \textbf{0.74}.
 
 \begin{figure}[h!]
     \centering
