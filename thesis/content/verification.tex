@@ -3,19 +3,19 @@
 Keďže sme natrénovali viacero modelov, a metóda RISEI má veľké množstvo parametrov zvolili sme nasledovnú stratégiu pri overovaní riešenia, tak aby sme nemuseli overovať všetky možné kombinácie parametrov/architektúr a dokázali vykonať všetky navrhnuté experimenty (Sekcia \ref{sec:design_experiments}) v stanovenom čase.
 
 \begin{enumerate}
-    \item Výber architektúry neurónovej siete na ktorej budeme overovať metódu RISEI a porovnávať ju z ostatnými. \textit{Ktorý model je najvhodnejší pre navrhnutú metódu?}
+    \item Výber architektúry neurónovej siete na ktorej budeme overovať metódu RISEI a porovnávať ju z ostatnými. \textit{Ktorý z natrénovaných modelov je najvhodnejší pre navrhnutú metódu?}
     \item Overenie metódy RISEI. \textit{Dávajú výsledky z navrhnutej metódy zmysel a nie sú náhodné?}: 
          \begin{itemize}
              \item Overenie stability tepelných máp.
              \item Overenie kvality tepelných máp (metriky \textit{insertion} a \textit{deletion}).
          \end{itemize}
-    \item Porovnanie kvality tepelných máp s metódou RISE (s doimplementovanou podporou pre 3D snímky) - \textit{je to metóda, ktorá je metóde RISEI najbližšie, je navrhnutá metóda lepšia?}
+    \item Porovnanie kvality tepelných máp s metódou RISE (s doimplementovanou podporou pre 3D snímky) - \textit{je navrhnutá metóda lepšia ako metóda, z ktorej vychádza?}
     \item Overenie správnosti tepelných máp a porovnanie s inými metódami - GradCAM, Guided Backprop, Guided GradCAM. \textit{Sú tepelné mapy nie len kvalitné, ale dávajú zmysel v kontexte anatómie mozgu? Ako sú na tom iné metódy?}
 \end{enumerate}
 
 \paragraph{Adresovanie náhodnosti metódy RISE pri porovnávaní dvoch roznych modelov}
 
-Keďže vygenerované masky sú náhodné, pri porovnávaní dvoch metód (kombinácii rôznych parametrov metódy RISEI) generujeme rovnaké binárne masky pre každý i-ty snímok, tj. zakryté pozície sú rovnaké, rôzna je len hodnota zakrytia. Vygenerované binárne masky pre jednotlivé snímky v testovacej sade sú stále náhodné (a teda aj medzi sebou rôzne). Rovnaké sú len binárne masky pre dve rôzne generovania masiek pre ten istý snímok v testovacej sade. Takto dosiahneme kvalitnejšie výsledky, pretože žiadna metóda nebude mať výhodu, že náhodou zakryla rôzne časti snímky lepšie a teda bude dôležité ako ich zakryla.
+Keďže vygenerované masky sú náhodné, pri porovnávaní dvoch metód (kombinácii rôznych parametrov metódy RISEI) generujeme rovnaké binárne masky pre každý i-ty snímok, tj. zakryté pozície sú rovnaké, rôzna je len hodnota zakrytia. Vygenerované binárne masky pre jednotlivé snímky v testovacej sade sú stále náhodné (a teda aj medzi sebou rôzne). Rovnaké sú len binárne masky pre dve rôzne generovania masiek pre ten istý snímok v testovacej sade. Takto dosiahneme presnejšie výsledky, pretože nebudeme porovnávať miesto prekrytia ale spôsob - hodnotu prekrytia.
 
 \section{Experimenty}
 
@@ -24,7 +24,7 @@ Keďže vygenerované masky sú náhodné, pri porovnávaní dvoch metód (kombi
 V tomto experiemnte sme porovnali metódu RISE na nami natrénovaných modeloch s cieľom vybrať jeden z nich pre ďaľšie experimenty (keďže experimenty sú časovo náročné, nechceme ich robiť na všetkých modeloch). Vybrali sme najlepšie natrénované modely pre každú architektúru (Tabuľka \ref{tab:model_training_results}). Použili sme nami implementovanú metódu RISEI pričom sme nastavili jej parametre tak, aby fungovala ako metóda RISE.
 Parametre sme nastavili nasledovne: $s = 8$, $p = 1/3$, $b1 = 0$, $b2 = 1$ (opis parametrov sa nachádza v tabuľke \ref{tab:risei_params}). Na vytvorenie tepelnej mapy sme vygenerovali 1024 masiek. Pri vyhodnocovaní metrík insertion a deletion sme nastavili veľkosť kroku na 2500 voxelov (takto trvalo vyhodnotenie tepelnej mapy ~3 minúty). Vybrali sme 25 náhodných snímiek z testovacej sady (13 AD, 12 CN), generovanie a vyhodnotenie tepelných máp k nim trvalo približne ~1 hodinu. 
 
-Najlepšie výsledky sme dosiahli na architektúre 3D CNN (Tabuľka \ref{tab:experiment_rise_various_architectures}). Je dôležité si ale uvedomiť, že na vyhodnotenie metrík \textit{insertion} a \textit{deletion} z vytvorenej tepelnej masky sa používa model samotný - zo snímky sú pridávané/odoberané voxely pričom sa sleduje sa zmena predikcie modelu. Môže nastať teda situácia, že dva rôzne modely vytvoria dve identické tepelné mapy, pričom výsledná hodnota metriky bude rozdielna. Na základe týchto metrík teda nemôžeme tvrdiť, že jeden model vytvára lepšie tepelné mapy ako druhý. Metrika \textit{insertion} a \textit{deletion} nie je teda vhodná na takéto porovnanie dvoch rôznych modelov medzi sebou.
+Najlepšie výsledky sme dosiahli na architektúre 3D CNN (Tabuľka \ref{tab:experiment_rise_various_architectures}). Je dôležité si ale uvedomiť, že na vyhodnotenie metrík \textit{insertion} a \textit{deletion} z vytvorenej tepelnej masky sa používa model samotný - zo snímky sú pridávané/odoberané voxely pričom sa sleduje sa zmena predikcie modelu. Môže nastať teda situácia, že dva rôzne modely vytvoria dve identické tepelné mapy, pričom výsledná hodnota metriky bude rozdielna. Na základe týchto metrík teda nemôžeme tvrdiť, že jeden model vytvára lepšie tepelné mapy ako druhý. Metrika \textit{insertion} a \textit{deletion} nie je vhodná na takéto porovnanie dvoch rôznych modelov medzi sebou.
 Dobrým signálom by bolo ak by hodnota metriky \textit{insertion} bola väčšia ako metriky \textit{deletion}, takto to nie je ani u jedného z modelov (najbližšie má k tomu 3D CNN). Aj kvôli tomuto sme vybrali do ďaľších experimentov model 3D CNN, zároveň na základe jeho špecificity a senzitivity môžeme tvrdiť, že nepreferuje ani jednu z tried - čo u iných modeloch tak nie je (tie preferujú AD pozorovania). Taktiež je tento model jednoduchší.
 
 \begin{table}[]
@@ -47,7 +47,7 @@ Dobrým signálom by bolo ak by hodnota metriky \textit{insertion} bola väčši
 
 Keďže metóda RISEI (aj metóda RISE z ktorej vychádzame) používa na generovanie tepelným máp náhodné masky, výsledná tepelná mapa je touto náhodnosťou ovplyvnená a je teda do určitej miery náhodná. Očakávame, že čím viac masiek vygenerujeme, tým bude vplyv náhodny na výslednú tepelnú mapu nižší. Keď teda pre tú istú snímku vygenerujeme niekoľko tepelných máp, tieto tepelné mapy sa budú líšiť ćo najmenej = budú stabilné.
 
-Metóde RISEI sme nastavili nasledovné parametre $s = 8$, $p = 1/3$, $b1 = 0$, $b2 = 1$ a $b2\_value = 1$ - nepoužívame dokreslenie, keďže je časovo náročné a vykonávame veľké množštvo experimentov. Uvažujeme tak, že nezáleží na tom, čo je hodnota zakrytia vo vygenerovaných maskách, pokiaľ tá hodnota nie je náhodná.
+Metóde RISEI sme nastavili nasledovné parametre $s = 8$, $p = 1/3$, $b1 = 0$, $b2 = 1$ a $b2\_value = 1$ - nepoužívame dokreslenie, keďže je časovo náročné a vykonávame veľké množštvo experimentov. Uvažujeme, že nezáleží na tom, čo je hodnota zakrytia vo vygenerovaných maskách, pokiaľ tá hodnota nie je náhodná.
 
 Použili sme model 3D CNN so senzitivitou - 0.81 a špecificitou - 0.74.
 
@@ -162,7 +162,7 @@ Obrázok \ref{fig:heatmap_and_auc_example} zobrazuje príklad vygenerovanej tepe
 \begin{figure}[h!]
     \centering
     \includegraphics[width=14cm]{assets/images/heatmap_and_auc_example.png}
-    \caption{Vytvorená tepelná mapa a graf zmeny aktivácie po pridávaní voxelov pre vybraný MRI snímok. Metrika AUC je pomerne vysoká, avšak je potrebné tepelnú mapu ešte vyhodnotiť z pohľadu segmentačných masiek. Tepelná mapa bola vytvorená s parametrami \textit{b1 = 1, b2 = 0} (RISEI s dokreslením).}
+    \caption{Vytvorená tepelná mapa a graf zmeny aktivácie po pridávaní voxelov pre vybranú MRI snímku. Metrika AUC je pomerne vysoká, avšak je potrebné tepelnú mapu ešte vyhodnotiť z pohľadu segmentačných masiek. Tepelná mapa bola vytvorená s parametrami \textit{b1 = 1, b2 = 0} (RISEI s dokreslením).}
     \label{fig:heatmap_and_auc_example}
 \end{figure}
 
@@ -176,7 +176,7 @@ Aj kvôli zisteným problémom vyššie budeme tepelné mapy overovať voči seg
 \begin{figure}[h!]
     \centering
     \includegraphics[width=14cm]{assets/images/3d_cnn_heatmap_cmp.png}
-    \caption{Porovnanie tepelných máp vygenerovanými dvoma rôznymi modelmi. Model A) je model 3D CNN so senzitivitou 81\% a špecificitou 74\%. Model B) je model 3D CNN so senzitivitou 73\% a špecificitou 71\%. Oba modely vytvorili takmer identické tepelné mapy, avšak ich každý vyhodnotil inak. Kvalitatívne vyhodnotenie tepelnej mapy lepšie natrénovaného modelu dosiahlo horší výsledok.}
+    \caption{Porovnanie tepelných máp vygenerovanými dvoma rôznymi modelmi. Model A) je model 3D CNN so senzitivitou 81\% a špecificitou 74\%. Model B) je model 3D CNN so senzitivitou 73\% a špecificitou 71\%. Oba modely vytvorili takmer identické tepelné mapy, avšak každý ich vyhodnotil inak. Kvalitatívne vyhodnotenie tepelnej mapy lepšie natrénovaného modelu dosiahlo horší výsledok.}
     \label{fig:3d_cnn_heatmap_cmp}
 \end{figure}
 
@@ -190,7 +190,7 @@ Doposiaľ sme menili parametre \textit{b1}, \textit{b2} a \textit{b2\_value}, kt
     \item \textit{b1} = 1, \textit{b2} = 0 (RISEI s dokreslením)
 \end{enumerate}
 
-čím sme zahrnuli pôvodnú metódu RISE, metódu RISEI s dokreslením a najlepšiu kombináciu parametrov. Tak ako sme uviedli v predchádzajúcom experimente, že budeme v ďaľších experiemntoch používať model 3D CNN so senzitivitou 81\% a špecificitou 74\%, tak sme sme ho aj použili. Kvoli časovej náročnsoti týchto experimentov sme použili menšiu dátovu vzorku o veľkosti 10 pozorovaní (5 AD + 5 CN).
+čím sme zahrnuli pôvodnú metódu RISE, metódu RISEI s dokreslením a najlepšiu kombináciu parametrov. Tak ako sme uviedli v predchádzajúcom experimente, používame v tomto aj v ďaľších experiemntoch model 3D CNN so senzitivitou 81\% a špecificitou 74\%. Kvoli časovej náročnsoti týchto experimentov sme použili menšiu dátovu vzorku o veľkosti 10 pozorovaní (5 AD + 5 CN).
 
 Aj tieto experimenty potvrdili, že metóda s prekryvom hodntou jedna dosahuje najlepšie výsledky. Ďalej sme zistili, že nastavením menšieho prekryvu (parameter \textit{p} má vyššiu hodnotu) sme v kombinácii s vyšším počtom masiek dosiahli lepšie výsledky, pričom od 256 masiek boli tieto hodnoty takmer rovnaké (Obr. \ref{fig:risei_parameters}). Od 2048 masiek boli dosiahnuté výsledky takmer rovnaké, toto môže súvisieť aj so stabilitou tepelných máp pri vyšších hodnotách (Sekcia \ref{sec:risei_stability}). Metódy RISEI a RISE s prekryvom nula dosiahli najlepšie výsledky s nízkym počtom masiek. Toto je prekvapivé, vzhľadom na to, že tepelné masky z nízkym počtom masiek niesú stabilné. Je preto možné, že sa jedná o chybu a náhodu, je to preto vhodné ďaľšie skúmanie.
 
@@ -201,7 +201,7 @@ Aj tieto experimenty potvrdili, že metóda s prekryvom hodntou jedna dosahuje n
     \label{fig:risei_parameters}
 \end{sidewaysfigure}
 
-Parameter \textit{inpaint\_radius} sme za rozhodli netestovať, keďže z testov vyplynulo, že najvhodnejšie je prekrývať extrémnymi hodnotami, ktoré sú ojedinelé v dátach. Zmena tohto parametra by znamenala, že by algoritmus použil iné okolité hodnoty, tj. z nich by nevytvoril ojedinelé hodnotny.
+Parameter \textit{inpaint\_radius} sme za rozhodli netestovať, keďže z testov vyplynulo, že najvhodnejšie je prekrývať extrémnymi hodnotami, ktoré sú ojedinelé v dátach ($b2\_value = 1$). Zmena tohto parametra by znamenala, že by algoritmus použil iné okolité hodnoty - z nich by nevytvoril ojedinelé hodnotny.
 
 \subsection{Porovnanie s existujúcimi metódami}
 
@@ -290,14 +290,14 @@ Zo sady pozorovaní sme vybrali sme dva snímky, jeden s najlepšou tepelnou map
 \begin{figure}[h!]
     \centering
     \includegraphics[width=13cm]{assets/images/method_evaluation_2.png}
-    \caption{Porovnanie tepelných máp vygenerovaných porovnávaními metódami. Vybrali sme snímok ktorý vytvoril najlepšiu tepelnú mapu pre metódu Guided Backprop podľa metriky \textit{C = 0.781}. Tak ako aj na obrázku \ref{fig:method_evaluation_1}, aj tu si môžeme všimnúť výrazné rozdiely medzi jednotlivými metódami. Metóda GradCAM pridelila veľmi málo tepla do mozgu a veľmi málo tepla na krajoch snímky.}
+    \caption{Porovnanie tepelných máp vytvorených porovnávaními metódami. Vybrali sme snímku s najlepšiou tepelnú mapu pre metódu Guided Backprop podľa metriky \textit{C = 0.781}. Tak ako aj na obrázku \ref{fig:method_evaluation_1}, aj tu si môžeme všimnúť výrazné rozdiely medzi jednotlivými metódami. Metóda GradCAM pridelila veľmi málo tepla do mozgu a veľmi málo tepla na krajoch snímky.}
     \label{fig:method_evaluation_2}   
 \end{figure}
 
 \begin{figure}[h!]
     \centering
     \includegraphics[width=14.5cm]{assets/images/method_evaluation_1.png}
-    \caption{\small{Porovnanie tepelných máp vygenerovaných porovnávaními metódami. Vybrali sme snímok ktorý vytvoril najhoršiu tepelnú mapu pre metódu Guided Backprop podľa metriky \textit{C = 0.839}. Môžeme si všimnúť výrazné rozdiely medzi jednotlivými metódami. Teplo z metódy Guided Backprop, ktoré sa nachádza mimo mozgu, lemuje časť lebky, v ľavej a aj v pravej časti snímky. Metóda GradCAM oproti metódam RISE rozdelila pomerne veľa tepla v rámci mozgu.}}
+    \caption{\small{Porovnanie tepelných máp vytvorených porovnávaními metódami. Vybrali sme snímku s najlepšiou tepelnú mapu pre metódu Guided Backprop podľa metriky \textit{C = 0.839}. Môžeme si všimnúť výrazné rozdiely medzi jednotlivými metódami. Teplo z metódy Guided Backprop, ktoré sa nachádza mimo mozgu, lemuje časť lebky, v ľavej a aj v pravej časti snímky. Metóda GradCAM oproti metódam RISE rozdelila pomerne veľa tepla v rámci mozgu.}}
     \label{fig:method_evaluation_1}
 \end{figure}
 
@@ -313,7 +313,7 @@ Vyhodnotili sme rôzne hodnoty prekrytia pre metódu RISEI. Následne sme hľada
 
 Metódu RISEI (a jej rôzne nastavenia na základe doterajších experimentov) sa nám podarilo porovnať s niekoľkými existujúcimi metódami. Pričom v sledovaných metrikách sme dosiahli horšie výsledky ako metóda Guided Backprop, ktorá vo väčšine metrík dominovala.
 
-Dosiahnuté výsledky naznačujú, že máme model, ktorý sa nerozhoduje na základe relevantných častí mozgu - rozhoduje napr. aj na základe lebky. Toto má vo veľkej miere vyplyv na kvalitu tepelných máp metódy RISE, keďže vytvára tepelné mapy z veľkého počtu predikcií k zamaskovaným snímkam.
+Dosiahnuté výsledky naznačujú, že máme model, ktorý sa nerozhoduje na základe relevantných častí mozgu - rozhoduje napr. aj na základe lebky. Toto má vo veľkej miere vyplyv na kvalitu tepelných máp metódy RISE, keďže vytvára tepelné mapy z veľkého počtu predikcií k zamaskovaným snímkam. Ďaľšie experimenty by bolo vhodné realizovať na modeli s lepšou úspešnosťou a na pozorovaniach s odstránenou lebkou zo snímiek v predspracovaní.
 
 
 % Zistili sme, že metóda RISE s dokresľovaním dosahuje lepšie výsledky ako pôvodná metóda ktorá zakrývala minimálnou hodnotou. Pokial ale minimálnu hodnotu nahradíme maximálnou, dosiahneme lepšie výsledky ako s dokreslovaním, ktoré dosahuje podobné vśyeldky ako zakrývaním mediánom. Avšak, vyhodnocovali sme zatiaľ len pomerne malej vzorke a nebrali sme do úvahy početnosť tried (AD a CN) v tejto vzorke čo je nedostatkom našich experimentov (v ďaľších experimentoch by mali byť tieto triedy vyvážené). Zároveň na dátach z tejto vzorky nemali testované modely 100\%-nú úspešnosť.

@@ -147,7 +147,7 @@ Základnými stavebnými blokmi konvolučných neurónových sietí sú konvolu�
 
 \paragraph{Konvolučné vrstvy}
 
-Pomocou konvolučných vrstiev sa neurónová sieť učí extrahovať črty z obrázka \cite{haykin2009neural}. Konvolúcia prebieha tak, že tzv. jadro (angl. kernel) sa posúva po tzv. mape vlastností (angl. feature map) a matematickými operáciami z pôvodnej mapy vlastností a svojich parametrov vytvára novú mapu vlastností. Tieto parametre sú trénovateľné, čo umožňuje sa každému jadru naučiť urćitú črtu - napr. hranu. Konvolučná vrstva tiež dokáže znižovať kompexitu modelu (a teda aj počet jeho parametrov) jej hyper parametrami (angl: stride, padding, depth).
+Pomocou konvolučných vrstiev sa neurónová sieť učí extrahovať črty z obrázka \cite{haykin2009neural}. Konvolúcia prebieha tak, že tzv. jadro (angl. kernel) sa posúva po tzv. mape vlastností (angl. feature map) a matematickými operáciami z pôvodnej mapy vlastností a svojich parametrov vytvára novú mapu vlastností. Tieto parametre sú trénovateľné, čo umožňuje sa každému jadru naučiť určitú črtu - napr. hranu. Konvolučná vrstva tiež dokáže znižovať kompexitu modelu (a teda aj celkový počet jeho parametrov) jej hyper parametrami (angl: stride, padding, depth).
 
 \paragraph{Združovacie vrstvy}
 
@@ -185,7 +185,7 @@ Taktiež existuje niekoľko ďaľších vylepšení Inception architektúry (Inc
 Na rozdiel od vstupných dát do neurónovej siete, ktoré sú zvyčajne interpretovatelné, neuróny na výstupnej vrstve a v skrytých vrstvách sú abstraktné a vyžadujú dodatočné úsilie na ich interpretovanie. Jedným zo spôsobov interpretovania týchto neurónov je maximalizácia aktivácie (angl. activation maximization).
 
 \paragraph{Maximalizácia aktivácie (angl. Activation maximization)}
-Maximalizácia aktivácie je metóda na nájdenie takého vstupného prototypu, ktorý vyprodukuje najväčšiu mieru aktivácie pre zvolený neurón (zvyčajne je to neurón hľadanej triedy na najvyššej vrstvy). 
+Maximalizácia aktivácie je metóda na nájdenie takého vstupného prototypu, ktorý vyprodukuje najväčšiu mieru aktivácie pre zvolený neurón (zvyčajne je to neurón hľadanej triedy na najvyššej vrstve). 
 % Takýto vstupný prototyp je nájdený optimalizovaním nasledovnej funkcie pomocou poklesu gradientu (angl. gradient descent).
 Takýto vstupný prototyp je nájdený tak, že neurónovej sieti je daný na vstup neutrálny obrázok, ktorý v danej doméne nereprezentuje žiadnu triedu (zvyčajne sa jedná o šedý obrázok) a je optimalizovaná funkcia maximalizácie aktivácie pomocou poklesu gradientu \cite{montavon2018methods} (angl. gradient descent). Pri aplikovaní tejto metódy na obrazové dáta výsledné prototypy vyzerajú tak ako na obrázku \ref{fig:activation_maximization}.
 
@@ -269,14 +269,14 @@ Metóda Guided Backprop je rozšírením metódy dekonvolúcie (angl. deconvolut
 
 \subsubsection{GradCAM \label{sec:grad_cam}}
 
-GradCAM \cite{selvaraju2017grad}, alebo Gradientom-vážené mapovanie aktivácií triedam (angl. Gradient-weighted Class Activation Mapping) je spôsob vysvetľovania rozhodnutí aplikovateľný na neurónové siete, ktoré používajú konvolučné vrstvy. Cieľom tejto metódy je vysvetliť, ktoré časti vstupu sú dôležité pre vybranú triedu (jednu z tried, ktoré neurónová sieť predikuje). Metóda funguje nasledovne:
+GradCAM \cite{selvaraju2017grad}, alebo Gradientom-vážené mapovanie aktivácií triedam (angl. Gradient-weighted Class Activation Mapping) je spôsob vysvetľovania rozhodnutí aplikovateľný na neurónové siete, ktoré používajú konvolučné vrstvy. Cieľom tejto metódy je vysvetliť, ktoré časti vstupu sú dôležité pre vybranú triedu (tj. jednu z tried, ktoré neurónová sieť predikuje). Metóda funguje nasledovne:
 
 \begin{itemize}
-    \item Vstupný obraz ''prejde'' neurónovou sieťou (tj. inferencia).
-    \item Vypočítame gradient poslednej konvolučnej vrstvy voči výstupu na poslednej vrstve neurónovej siete pre vybranú triedu.
+    \item Vstupný obraz ''prejde'' neurónovou sieťou (inferencia).
+    \item Vypočítame gradient poslednej konvolučnej vrstvy voči výstupu na poslednej vrstve neurónovej siete pre vybranú triedu. Môžeme použiť aj inú ako poslednú konvolučnú vrstvu, tá sa však používa najčastejšie.
     \item Výsledok predchádzajúceho kroku má rovnaký rozmer ako veľkosť poslednej konvolučnej vrstvy, hodnoty v tejto matici sčítame cez dimenziu kanálov. Z konvolučnej vrstvy o rozmere $(x, y, c)$, kde $c$ je dimenzia kanálov (angl. channels) vznikne matica o rozmere $(x, y)$.
-    \item Na tento výsledok použijeme funkciu \textit{ReLU} čím odstránime z tepelenej mapy časti obrázku, ktoré prispevajú proti predikovanej triede negatívne.
-    \item Túto maticu pomocou bilineárnej interpolácie zväčšíme na veľkosť vstupu.
+    \item Na tento výsledok použijeme funkciu \textit{ReLU} čím odstránime z tepelenej mapy časti obrázku, ktoré prispievajú proti predikovanej triede negatívne.
+    \item Túto maticu pomocou bilineárnej interpolácie zväčšíme na veľkosť vstupu. V prípade trojrozmerných dát sa používa trilineárna interpolácia. Taktiež sa môže použiť lineárna interpolácia.
 \end{itemize}
 
 Výsledkom je tepelná mapa pre vstupný obrázok voči vybranej predikovanej triede. Vyššie hodnoty v tepelnej mape vyjadrujú doležitejšie časti obrazu pre vybranú triedu, nižšie hodnoty vyjadrujú tie menej doležité.
@@ -288,7 +288,7 @@ Guided GradCAM kombinuje metódu riadenej spätnej propagácie s metódou GradCA
 \begin{figure}[h!]
     \centering
     \includegraphics[scale=0.40]{assets/images/grad_cam_and_guided_grad_cam.png}
-    \caption{Porovnanie metód Guided Backprop (b), GradCAM (c) a Guided GradCAM (d) \cite{selvaraju2017grad}. Tepelná mapa (d) je výsledkom násobenia medzi tepelnými mapami (b) a (c), o tom svedčí väčšina "tepla" v spodnej časti obrázku. Teplo má polohu z (c) a tvar z (b).}
+    \caption{Porovnanie metód Guided Backprop (b), GradCAM (c) a Guided GradCAM (d) \cite{selvaraju2017grad}. Tepelná mapa (d) je výsledkom násobenia medzi tepelnými mapami (b) a (c), o tom svedčí väčšina "tepla" v spodnej časti obrázku. Teplo v nej má polohu z obrázku (c) a tvar z obrázku (b).}
     \label{fig:guided_grad_cam}
 \end{figure}
 
@@ -360,7 +360,7 @@ Neurónové siete sa v niektorých prácach používajú v kombinácii s inými 
 
 \subsection{Vysvetľovanie rozhodnutí neurónových sietí detegujúcich Alzheimerovu chorobu \label{sec:ad_nn_explanation}}
 
-Existujúce práce sa už zaoberali metódami vysvetľovania rozhodnutí neurónových sietí detekujúcich Alzheimerovu chorobu. \citeauthor{bohle2019layer} \citeyear{bohle2019layer} uviedli možnosti analýzy rozhodnutí za účelom ich vysvetľovania. Konkrétne sa zaoberali metódami vrstvami propagovanej relevancie (LRP) a vedenou spätnou propagáciou (angl. guided backpropagation). Uvádzajú LRP ako metódu na vysvetľovanie invididuálnych rozhodnutí neurónovej siete kde naopak vedenú spätnú propagáciu ako metódu na zistenie oblastí, na ktoré je neurónová sieť senzitívna. Tieto metódy skúmali porovnávaním priemerov tepelných máp (angl. heatmaps) všetkých pozorovaní v predikovaných triedach (2 - AD, HC). Taktiež porovnávali priemerné tepelné mapy pozorovaní podľa spôsobu zaradenia výslednej predikcie (4 - true positive, true negative, false positive, false negative) (Obr. \ref{fig:lrp_alzheimer}). Okrem iného porovnávali mieru relevancie pri metóde LRP v jednotlivých častiach mozgu u pozorovaní s Alzheimerovou chorobou a u pozorovaní bez nej. Možným vylepšením tejto práce je vyskúšanie metódy LRP aj na pacientoch s miernym kognitývnym poškodením (angl. mild-cognitive impairment), nie len na pacientoch s Alzheimerovoch chorobou a zdravých jedincoch.
+Existujúce práce sa už zaoberali metódami vysvetľovania rozhodnutí neurónových sietí detekujúcich Alzheimerovu chorobu. \citeauthor{bohle2019layer} \citeyear{bohle2019layer} uviedli možnosti analýzy rozhodnutí za účelom ich vysvetľovania. Konkrétne sa zaoberali metódami vrstvami propagovanej relevancie (LRP) a vedenou spätnou propagáciou (angl. Guided Backprop). Tieto metódy skúmali porovnávaním priemerov tepelných máp (angl. heatmaps) všetkých pozorovaní v predikovaných triedach (2 - AD, HC). Taktiež porovnávali priemerné tepelné mapy pozorovaní podľa spôsobu zaradenia výslednej predikcie (4 - true positive, true negative, false positive, false negative) (Obr. \ref{fig:lrp_alzheimer}). Okrem iného porovnávali mieru relevancie pri metóde LRP v jednotlivých častiach mozgu u pozorovaní s Alzheimerovou chorobou a u pozorovaní bez nej. Autori práce zistili, že metóda LRP môže byť v klinickom prostredí veľmi užitočná na hodnotenie invididuálnych prípadov. Zároveň v sledovaných matrikách dosiahla oproti Guided Backprop lepšie výsledky. Možným vylepšením tejto práce je vyskúšanie metódy LRP aj na pacientoch s miernym kognitývnym poškodením (angl. mild-cognitive impairment), nie len na pacientoch s Alzheimerovoch chorobou a zdravých jedincoch.
 
 % TODO: Este nejake prace...
 
@@ -437,7 +437,7 @@ V doméne obrazových dát sa používajú najmä konvolučné neurónové siete
 
 Neurónovým sieťam sa doteraz podarilo dosiahnuť veľmi dobré výsledky pri detekcii Alzhemerovej choroby, niektoré state-of-the-art riešenia dosahujú presnosť až \textbf{95.09\%} (\citeauthor*{suk2016deep} \citeyear{suk2016deep}). S takto vysokou úspešnosťou môžu byť veľmi dobrým pomocníkom doktorov. Do úvahy však musíme zobrať, že tieto výsledky boli dosiahnuté bez klasifikácie MCI pacientov. V reálnom svete doktora navštívia všetky typy pacientov - CN, MCI a AD. V tomto prípade neurónové siete dosahujú rádovo nižšiu presnosť (\textbf{61.1\%}, \citeauthor*{bohle2019layer} \citeyear{bohle2019layer}). Niektoré práce dosiahli tieto výsledky použitím informácií o veku a pohlaví pacienta. Keďže pravdepodobnosťou výskytu Alzheimerovej choroby po dovŕšení 85 rokov života je až 50\% (Sek. \ref{sec:ad}), je možné, že sa pri vyššom veku pacienta model začne rozhodovať najmä na základe tejto informácie a nie na základe obrazových dát. Zároveň to však môže neurónovej sieti pomôcť, ak nebude brať tento atribút ako hlavný indikátor Alzheimerovej choroby, ale skôr ako pomocný atribút, ktorý bude meniť jej správanie u rôznych typov pacientov. Tu je však dôležité, takúto neurónovú sieť podrobiť dôkladnou analýzou jej rozhodnutí. Osobne si ale myslím, že v produkčnom modeli by sa tento atribút mal vynechať. 
 
-Ďaľším problémom neurónových sietí je, že sa správajú ako čierne skrinky. Preto je potrebné ich rozhodnutia interpretovať, aby bolo pre doktora zrejmé na základe čoho neurónová sieť urobila svoju predikciu. V tomto práve môžu pomôcť metódy na vysvetľovanie rozhodnutí neurónovej siete (tzv. white-box metódy), alebo iné black-box metódy vysvetľovania rozhodnutí modelov (napr. RISE, LIME...).
+Ďaľším problémom neurónových sietí je, že sa správajú ako čierne skrinky. Preto je potrebné ich rozhodnutia interpretovať, aby bolo pre doktora zrejmé na základe čoho neurónová sieť urobila svoju predikciu. V tomto práve môžu pomôcť metódy na vysvetľovanie rozhodnutí neurónovej siete, alebo iné metódy, ktoré sú nezávislé od použitého modelu (napr. RISE, LIME).
 
 Bežnému používaniu neurónových sietí ako pomocníka pre doktorov, nebráni len ich vysvetliteľnosť, ale aj ich schopnosť detekcie ochorenia, keďže aj tu je priestor na zlepšenie - napr. úspešnosti klasifikácie do tried CN, MCI a AD.
 
