@@ -270,7 +270,7 @@ Trénovanie sme začali s modelom bez augmentácii, dávkovej normalizácie, dro
     \hline
     \multicolumn{2}{|l|}{\cellcolor[HTML]{C0C0C0}} &
         \multicolumn{1}{l|}{\footnotesize{Baseline}} &
-        \multicolumn{1}{l|}{\begin{tabular}[c]{@{}c@{}}\footnotesize{+ Augmen-}\\ \footnotesize{tácie (l2)}\end{tabular}} &
+        \multicolumn{1}{l|}{\begin{tabular}[c]{@{}c@{}}\footnotesize{+ Augmen-}\\ \footnotesize{tácie}\end{tabular}} &
         \multicolumn{1}{l|}{\begin{tabular}[c]{@{}c@{}}\footnotesize{+ Dávko-}\\ \footnotesize{vá norma-}\\ \footnotesize{lizácia}\end{tabular}} &
         \multicolumn{1}{l|}{\footnotesize{+ Dropout}} &
         \multicolumn{1}{l|}{\begin{tabular}[c]{@{}c@{}}\footnotesize{+ Regula-}\\ \footnotesize{rizácia (l2)}\end{tabular}} \\ \hline
@@ -289,7 +289,7 @@ Trénovanie sme začali s modelom bez augmentácii, dávkovej normalizácie, dro
 \end{table}
 % \end{landscape}
 
-Oproti \citeauthor*{esmaeilzadeh2018end}, ktorí dosiahli presnosť až 94\%, sme dosiahli presnosť len 72\% avšak sme mali menej dát (o 339 pozorovaní menej), neodstraňovali sme zo snímok lebku a nepoužili sme pri klasifikácii vek pacienta. Avšak robili sme viac augmentácií, no po ich pridaní sa úspešnosť modelu zhoršila (Obr. \ref{fig:3d_cnn_training}) (ale následne sa už iba zlepšovala), je teda možné, že niektoré augmentácie nie sú nekorektné a deštruktívne voči vstupným snímkam a vedú k zhoršeniu výkonnosti modelu. Aj po pridaní veľmi slabej regularizácie, sa úspešnosť modelu zhoršila. V prípade 2D a 3D ResNet architektúr sa nám podarilo dosiahnuť lepšie výsledky, avšak v ich prípade sa sieť neskôr začala pretrénovávať (Obr. \ref{fig:2d_3d_res_net_training}
+Oproti \citeauthor*{esmaeilzadeh2018end}, ktorí dosiahli presnosť až 94\%, sme dosiahli presnosť len 72\% avšak sme mali menej dát (o 339 pozorovaní menej), neodstraňovali sme zo snímok lebku a nepoužili sme pri klasifikácii vek pacienta. Avšak robili sme viac augmentácií, no po ich pridaní sa úspešnosť modelu zhoršila (Obr. \ref{fig:3d_cnn_training}) (ale následne sa už iba zlepšovala), je teda možné, že niektoré augmentácie sú nekorektné a deštruktívne voči vstupným snímkam a vedú k zhoršeniu výkonnosti modelu. Aj po pridaní veľmi slabej regularizácie, sa úspešnosť modelu zhoršila. V prípade 2D a 3D ResNet architektúr sa nám podarilo dosiahnuť lepšie výsledky, avšak v ich prípade sa sieť neskôr začala pretrénovávať (Obr. \ref{fig:2d_3d_res_net_training}
 ) aj napriek použitej regularizácii, čo môže naznačovať, že sú tieto architektúry na náš problém príliš komplexné.
 
 Identifikovali sme nasledovné možné vylepšenia (zoradené podľa subjektívneho pomeru úsilie/vplyv):

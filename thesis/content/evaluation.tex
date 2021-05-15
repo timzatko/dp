@@ -4,21 +4,22 @@ V našej práci sme sa venovali uplatneniu interpretovateľnosti a vysvetliteľn
 
 Skúmanú doménu a problém sme si naštudovali, a zistené informácie uviedli v analýze práce. Na základe toho sme navrhli modifikáciu existujúcej metódy na vyhodnocovanie rozhodnutí neurónových sietí. Výhodou navrhnutej metódy je, že nemusí poznať použitý model, a tak je ju možné použiť aj pri komplikovanejších modeloch (napr. kombinácia neurónovej siete a inej metódy strojového učenia, model so špecifickým predspracovaním do vektoru čŕt a pod.). Zároveň sme narvhli spôsob jej overenia - vyhodnotenie a porovnanie výsledkov.
 
-Na základe návrhu sme naimplementovali modifikáciu existujúcej metódy RISE s dokreslením pre 3D volumetrické dáta. Vytvorenú metódy sme overlili v niekoľkých experimentoch na nami natrénovanom modeli. Vytvorená metóda disponuje viacerími parametrami ovplyvňujúcimi jej správanie (napr. hodnota prekrytia, miera prekrytia), preto sme v experimentoch overovali zvolené kombinácie parametrom, pričom u jednej dvojice parametrov sme prehľadávali mriežku parametrov. Keďže metóda používa na vytváranie tepelných máp masky s náhodným prekrytím, overili sme vplyv počtu vygenerovaných masiek na stabilitu tepelných máp. Metóda sa u vyššieho počtu vygenerovaných masiek ukázala ako stabilná.
+Na základe návrhu sme naimplementovali modifikáciu existujúcej metódy RISE s dokreslením pre 3D volumetrické dáta. Vytvorenú metódy sme overili v niekoľkých experimentoch na nami natrénovanom modeli. Vytvorená metóda disponuje viacerími parametrami ovplyvňujúcimi jej správanie (napr. hodnota prekrytia, miera prekrytia), preto sme v experimentoch overovali zvolené kombinácie parametrom, pričom u jednej dvojice parametrov sme prehľadávali mriežku parametrov. Keďže metóda používa na vytváranie tepelných máp masky s náhodným prekrytím, overili sme vplyv počtu vygenerovaných masiek na stabilitu tepelných máp. Metóda sa u vyššieho počtu vygenerovaných masiek ukázala ako stabilná.
 
 Metódu sme porovnali s inými existujúcimi metódami - GradCAM, Guided Backprop a Guided GradCAM. Metóda v sledovaných metrikách dosiahla horšie výsledky ako metóda Guided Backprop, pričom dosiahla porovnateľné výsledky s metódou GradCAM. Kombináciou s Guided Backprop sme vytvorili metódu Guided RISE, ktorá dosiahla výsledky blízke Guided GradCAM a v niektorých ohľadoch takmer rovnaké s Guided Backprop. Použitie dokreslenia ako prekrytia sa neukázalo ako vhodný prístup v doméne rádiologických obrazových dát. 
 
-Výsledné tepelné mapy sme vizualizovali. Tepelné mapy z metódy Guided Backprop naznačujú, že sa model nerozhoduje na základe relevantných častí mozgu. V ďaľších experiemntoch by bolo vhodné použiť lepší model.
+Výsledné tepelné mapy sme vizualizovali. Tepelné mapy z metódy Guided Backprop naznačujú, že sa model nerozhoduje na základe relevantných častí mozgu. V ďaľších experimentoch by bolo vhodné použiť lepší model.
 
 \subsection{Zhodnotenie cieľov práce}
 
 \paragraph{Vytvorenie novej, alebo vylepšenie existujúcej metódy pre vysvetľovanie rozhodnutí neurónových sietí (Sekcia \ref{sec:goals_1})}
 
-Vytvorili sme modifikáciu už existujúcej metódy RISE, do ktorej sme priniesli niekoľko funkcionálnych vylepšení - podporu pre 3D volumetrické dáta a možnosť nastavenia rôznych hodnôt prepryvu (vrátane dokreslením). Ukázalo sa, že rôzne hodnoty prekryvu majú vplyv na kvalitu tepelných máp. V doméne rádiologických dát je vhodný prekryv inou hodnotou ako navrhli autori metódy RISE (Sekcia \ref{sec:verification_experiments_results}).
+Vytvorili sme modifikáciu už existujúcej metódy RISE, do ktorej sme priniesli niekoľko funkcionálnych vylepšení - podporu pre 3D volumetrické dáta a možnosť nastavenia rôznych hodnôt prepryvu (vrátane dokreslením). Ukázalo sa, že rôzne hodnoty prekryvu majú vplyv na kvalitu tepelných máp. Navrhnutý prekryv dokreslením bol lepší oproti hodnote nula (pôvodná metóda RISE), avšak prekryv hodnotou jedna prekonal dokreslenie pričom je výpočtovo jednoduchší (Sekcia \ref{sec:verification_experiments_results}.
+V doméne rádiologických dát sa dokreslenie neukázalo ako navhodnejší spôsob prekrytia.
 
 \paragraph{Využitie vytvorenej metódy na určenie miery správnosti modelu neurónovej siete detegujúcej Alzheimerovu chorobu (Sekcia \ref{sec:goals_2})}
 
-Vytvorenú metódu sme využili na určenie správnosti modelu tak, že vytvorené tepelné mapy sme vyhodnocovali na základe nami zadefinovaných metrík (Sekcia \ref{sec:verification_experiments_metrics}). Tieto metriky využívali segmentačné masky, ktoré overovali, či vytvorená tepelná mapa dáva zmysel z pohľadu anatómie mozgu.
+Vytvorenú metódu sme využili na určenie správnosti modelu tak, že vytvorené tepelné mapy sme vyhodnocovali na základe nami zadefinovaných metrík (Sekcia \ref{sec:verification_experiments_metrics}). Tieto metriky využívali segmentačné masky, ktoré overovali, či vytvorená tepelná mapa dáva zmysel z pohľadu anatómie mozgu. Výsledky ukázali, že natrénovaný model sa nerozhodoval na základe relevantných častí mozgu, čo sa odzrkadlilo v sledovaných metrikách, napr. pomer tepla mimo mozgu voči teple v mozgu.
 
 \subsection{Limitácie}
 
@@ -26,11 +27,10 @@ Oproti metódam ako je GradCAM alebo Guided Backprop vytvorená metóda vyžaduj
 
 \subsection{Možné rozšírenia}
 
-Vytvorená metóda bola (detailnejšie) overená iba na jednom modely. Pre jej dôkladnejšie overenie by bolo vhodné ju otestovať na modeloch a architektúrach s rôznymi úspešnosťami (najmä takými, ktoré sa blížia k 100\%). Zároveň sme identifikovali, že natrénovaný model sa pravdepodobne rozhodoval na základe lebky, z ktorej sa Alzheimerova choroba určiť nedá. Preto by lebka mohla byť v predspracovaní odstránená.
-
-Ďalej navrhujeme:
+Ako možné rozšírenia tejto práce sme identifikovali:
 
 \begin{itemize}
+    \item Preskúmať metódu na lepšie natrénovaných modeloch (s úspešnosťami blížiacim sa k state-of-the-art), keďže vytvorená metóda bola (detailnejšie) overená iba na jednom modeli, u ktorého sme identifikovali, že sa rozhoduje na základe nie relevantných častí snímky. Takou časťou je napr. lebka, ktorý by bolo preto vhodné v predspracovaní odstrániť.
     \item Preskúmať vplyv počtu masiek na stabilitu tepelných máp, pretože to môže zredukovať ich potrebný počet a celkový čas generovania tepelných máp.
     \item Porovnať metódu s inými perturbačnými metódami, keďže sa navrhnutá metóda medzi ne zaraďuje. Navrhujeme porovnanie tepelných máp z hľadiska rýchlosti ich vytvárania a ich správnosti.
 \end{itemize}

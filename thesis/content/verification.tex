@@ -22,7 +22,7 @@ Keďže vygenerované masky sú náhodné, pri porovnávaní dvoch metód (kombi
 \subsection{Výber architektúry neurónovej siete pre ďaľšie experimenty \label{sec:experiment_rise_various_architectures}}
 
 V tomto experiemnte sme porovnali metódu RISE na nami natrénovaných modeloch s cieľom vybrať jeden z nich pre ďaľšie experimenty (keďže experimenty sú časovo náročné, nechceme ich robiť na všetkých modeloch). Vybrali sme najlepšie natrénované modely pre každú architektúru (Tabuľka \ref{tab:model_training_results}). Použili sme nami implementovanú metódu RISEI pričom sme nastavili jej parametre tak, aby fungovala ako metóda RISE.
-Parametre sme nastavili nasledovne: $s = 8$, $p = 1/3$, $b1 = 0$, $b2 = 1$ (opis parametrov sa nachádza v tabuľke \ref{tab:risei_params}). Na vytvorenie tepelnej mapy sme vygenerovali 1024 masiek. Pri vyhodnocovaní metrík insertion a deletion sme nastavili veľkosť kroku na 2500 voxelov (takto trvalo vyhodnotenie tepelnej mapy ~3 minúty). Vybrali sme 25 náhodných snímiek z testovacej sady (13 AD, 12 CN), generovanie a vyhodnotenie tepelných máp k nim trvalo približne ~1 hodinu. 
+Parametre sme nastavili nasledovne: $s = 8$, $p = 1/3$, $b1 = 0$, $b2 = 1$ (opis parametrov sa nachádza v tabuľke \ref{tab:risei_params}). Na vytvorenie tepelnej mapy sme vygenerovali 1024 masiek. Pri vyhodnocovaní metrík insertion a deletion sme nastavili veľkosť kroku na 2500 voxelov (takto trvalo vyhodnotenie tepelnej mapy ~3 minúty). Vybrali sme 25 náhodných snímok z testovacej sady (13 AD, 12 CN), generovanie a vyhodnotenie tepelných máp k nim trvalo približne ~1 hodinu. 
 
 Najlepšie výsledky sme dosiahli na architektúre 3D CNN (Tabuľka \ref{tab:experiment_rise_various_architectures}). Je dôležité si ale uvedomiť, že na vyhodnotenie metrík \textit{insertion} a \textit{deletion} z vytvorenej tepelnej masky sa používa model samotný - zo snímky sú pridávané/odoberané voxely pričom sa sleduje sa zmena predikcie modelu. Môže nastať teda situácia, že dva rôzne modely vytvoria dve identické tepelné mapy, pričom výsledná hodnota metriky bude rozdielna. Na základe týchto metrík teda nemôžeme tvrdiť, že jeden model vytvára lepšie tepelné mapy ako druhý. Metrika \textit{insertion} a \textit{deletion} nie je vhodná na takéto porovnanie dvoch rôznych modelov medzi sebou.
 Dobrým signálom by bolo ak by hodnota metriky \textit{insertion} bola väčšia ako metriky \textit{deletion}, takto to nie je ani u jedného z modelov (najbližšie má k tomu 3D CNN). Aj kvôli tomuto sme vybrali do ďaľších experimentov model 3D CNN, zároveň na základe jeho špecificity a senzitivity môžeme tvrdiť, že nepreferuje ani jednu z tried - čo u iných modeloch tak nie je (tie preferujú AD pozorovania). Taktiež je tento model jednoduchší.
@@ -53,13 +53,13 @@ Použili sme model 3D CNN so senzitivitou - 0.81 a špecificitou - 0.74.
 
 \paragraph{Porovnanie vytvorených tepelných máp}
 
-$N$ vytvorených tepelných máp porovnávame tak, že počítame štanardnú odchílku pre každý voxel medzi vytvorenými tepelnými mapami. Tak z tepelných máp o rozmere $[N, z, y, x]$ vznikne 3D matica štandardných odchílok $[z, y, x]$. Ak má voxel rovnakú/blízku hodnotu tepla medzi tepelnými mapammi, štandardná odchýlka nula/blízka nule. Z 3D matice štandradných odchílok vypočítame priemernú/strednú hodnotu - táto hodnota reprezentuje vzniknutú chybu medzi tepelnými mapami plynúcu z náhodnosti tepelných masiek.
+$N$ vytvorených tepelných máp porovnávame tak, že počítame štanardnú odchíľku pre každý voxel medzi vytvorenými tepelnými mapami. Tak z tepelných máp o rozmere $[N, z, y, x]$ vznikne 3D matica štandardných odchíľok $[z, y, x]$. Ak má voxel rovnakú/blízku hodnotu tepla medzi tepelnými mapammi, štandardná odchýlka nula/blízka nule. Z 3D matice štandradných odchíľok vypočítame priemernú/strednú hodnotu - táto hodnota reprezentuje vzniknutú chybu medzi tepelnými mapami plynúcu z náhodnosti tepelných masiek.
 
 \subsubsection{Experiment 1 (jedna snímka) \label{sec:risei_stability_1}}
 
-Pre náhodný snímok vytvoríme $K$ tepelných máp, pričom tepelné mapy vytvárame z 16, 128, 256, 512, 1024, 2048, 3072, 4096, 6144, 8192, 16384 alebo 32768 masiek. Kvôli vysokej pamäťovej náročnosti, v experiementoch, v ktorých vytvárame tepelné mapy z vysokého počtu masiek vytvoríme menej tepelných máp (Tabuľka \ref{tab:risei_stability_1}). Zistili sme, že s vyšším počtom vygenerovaných masiek chyba klesá logaritmicky (Obr. \ref{fig:risei_stability_1}). Zároveň, chyba sa javí byť náhodná a nie systematická (Obrázok \ref{fig:risei_stability_error_visialisation}).
+Pre náhodnú snímku vytvoríme $K$ tepelných máp, pričom tepelné mapy vytvárame z 16, 128, 256, 512, 1024, 2048, 3072, 4096, 6144, 8192, 16384 alebo 32768 masiek. Kvôli vysokej pamäťovej náročnosti, v experiementoch, v ktorých vytvárame tepelné mapy z vysokého počtu masiek vytvoríme menej tepelných máp (Tabuľka \ref{tab:risei_stability_1}). Zistili sme, že s vyšším počtom vygenerovaných masiek chyba klesá logaritmicky (Obr. \ref{fig:risei_stability_1}). Zároveň, chyba sa javí byť náhodná a nie systematická (Obrázok \ref{fig:risei_stability_error_visialisation}).
 
-\begin{table}[]
+\begin{table}[H]
     \centering
     \begin{tabular}{|r|r|r|}
     \hline
@@ -79,7 +79,7 @@ Pre náhodný snímok vytvoríme $K$ tepelných máp, pričom tepelné mapy vytv
     16384 & 15  & 0.0019 \\ \hline
     32768 & 5   & 0.0011 \\ \hline
     \end{tabular}
-    \caption{Stabilita vytvorených tepelných máp podľa počtu vygenerovaných masiek pre jeden snímok. S vyšším počtom vygenerovaných máp chyba výrazne klesá. Už pri 2048 maskách je chyba zanedbateľná, keďže hodnoty voxelov v tepelných mapách sú z intervalu $<0, 1>$.}
+    \caption{Stabilita vytvorených tepelných máp podľa počtu vygenerovaných masiek pre jeden snímok. S vyšším počtom vygenerovaných máp chyba výrazne klesá. Už pri 2048 maskách je chyba zanedbateľná, keďže hodnoty voxelov v tepelných mapách sú z intervalu $<0, 1>$. Väčšie množstvo náhodných masiek nemá zmysel generovať, pretože výpočtová náročnosť stúpa rýchlejšie ako stabilita. V porovnaní 2048 a 32768 chyba klesla 5 krát, avšak sme museli vygenerovať 15 krát viac masiek.}
     \label{tab:risei_stability_1}
 \end{table}
 
@@ -99,9 +99,9 @@ Pre náhodný snímok vytvoríme $K$ tepelných máp, pričom tepelné mapy vytv
 
 \subsubsection{Experiment 2 (viacero snímok)}
 
-Keďže sme v predchádzajúcom experimente overovali stabilitu iba na jednej snímke, v tomto experimente overíme stabilitu na viacero snímkach. Z testovacej sady sme vybrali 5 TP (viď. \nameref{sec:dictionary}), 5 TN, 5 FP a 5 FN pozorovaní (tj. celkovo 20 pozorovaní), podľa toho ako ich neurónová sieť označila. Takto zabezpečíme vyváženosť tried pozorovaní v experimente. Kvôli časovej aj pamäťovej náročnosti tohto experimentu sme vytvárali 10 tepelných máp pre každé jedno pozorovanie. Výsledky boli takmer identické s predchádzajúcim experimentom (Sekcia \ref{sec:risei_stability_1}) a trend poklesu chyby pri zvyšujúcom počte masiek bol zachovaný (\ref{tab:risei_stability_2}). Z oboch experimentov vyplýva, že je vhodné použiť vyšší počet masiek pri vytváraní tepelných máp, aby sa odstránil vyplyv náhody. Ako vhodným počet považujem 2048 masiek, pri tomto počte je chyba vzhľadom na hodnoty v tejeplnej mape minimálna (Tabuľka \ref{tab:risei_stability_1}, \ref{tab:risei_stability_2}).
+Keďže sme v predchádzajúcom experimente overovali stabilitu iba na jednej snímke, v tomto experimente overíme stabilitu na viacero snímkach. Z testovacej sady sme vybrali 5 TP (viď. \nameref{sec:dictionary}), 5 TN, 5 FP a 5 FN pozorovaní (tj. celkovo 20 pozorovaní), podľa toho ako ich neurónová sieť označila. Takto zabezpečíme vyváženosť tried pozorovaní v experimente. Kvôli časovej aj pamäťovej náročnosti tohto experimentu sme vytvárali 10 tepelných máp pre každé jedno pozorovanie. Výsledky boli takmer identické s predchádzajúcim experimentom (Sekcia \ref{sec:risei_stability_1}) a trend poklesu chyby pri zvyšujúcom sa počte masiek bol zachovaný (\ref{tab:risei_stability_2}). Z oboch experimentov vyplýva, že je vhodné použiť vyšší počet masiek pri vytváraní tepelných máp, aby sa odstránil vyplyv náhody. Ako vhodným počet považujem 2048 masiek, pri tomto počte je chyba vzhľadom na hodnoty v tejeplnej mape minimálna (Tabuľka \ref{tab:risei_stability_1}, \ref{tab:risei_stability_2}).
 
-\begin{table}[]
+\begin{table}[H]
     \centering
     \begin{tabular}{|r|r|}
     \hline
@@ -130,7 +130,7 @@ Použili sme rovnaké nastavenie parametrov, a rovnaký počet pozorovaní ako p
 
 Vyhodnocovali sme len metriku \textit{insertion} (aby sme čo najrýchlejšie získali prvotné výsledky), najlepšie výsledky sme dosiahlli bez použitia dokreslenia ale s prekrytím hodnotou jedna (Tabuľka \ref{tab:experiment_risei_various_configuration}). To si vysvetľujeme tým, že hodnota voxelov blízka jednej je v trénovacej sade veľmi ojedinelá (Obr. \ref{fig:test_dataset_voxel_distribution}) a neurónová sieť na základe nich nerozhoduje, takéto voxely neurónovú sieť nepomýlia. Naopak, voxely s hodnotou/blízke hodnote nula sú pomerne časté, ak na základe nich neurónová sieť rozhoduje, može to byť dôvod prečo prekrytie zaznamenalo horšie výsledky.
 
-Metóda s dokreslením si počínala horšie ako prekrytie hodnotou jedna, ale stále lepšie ako prekrytie s hodnotou nula pôvodná metóda RISE). Zároveň dosiahla takmer identický výsledok ako prykritie mediánom hodnôt voxelov snímky.
+Metóda s dokreslením si počínala horšie ako prekrytie hodnotou jedna, ale stále lepšie ako prekrytie s hodnotou nula (hodnota pôvodnej metódy RISE). Zároveň dosiahla takmer identický výsledok ako prekrytie mediánom hodnôt voxelov snímky.
 
 Obrázok \ref{fig:heatmap_and_auc_example} zobrazuje príklad vygenerovanej tepelnej mapy pre MRI snímok a výsledný graf zmeny aktivácie pre metriku \textit{insertion}. Na diagrame je vidieť, že s postupným pridávaním voxelov stúpa aktivácia pre skutočnú triedu pozorovania, takto to však nie je u všetkých pozorovaní.
 
@@ -192,7 +192,7 @@ Doposiaľ sme menili parametre \textit{b1}, \textit{b2} a \textit{b2\_value}, kt
 
 čím sme zahrnuli pôvodnú metódu RISE, metódu RISEI s dokreslením a najlepšiu kombináciu parametrov. Tak ako sme uviedli v predchádzajúcom experimente, používame v tomto aj v ďaľších experiemntoch model 3D CNN so senzitivitou 81\% a špecificitou 74\%. Kvoli časovej náročnsoti týchto experimentov sme použili menšiu dátovu vzorku o veľkosti 10 pozorovaní (5 AD + 5 CN).
 
-Aj tieto experimenty potvrdili, že metóda s prekryvom hodntou jedna dosahuje najlepšie výsledky. Ďalej sme zistili, že nastavením menšieho prekryvu (parameter \textit{p} má vyššiu hodnotu) sme v kombinácii s vyšším počtom masiek dosiahli lepšie výsledky, pričom od 256 masiek boli tieto hodnoty takmer rovnaké (Obr. \ref{fig:risei_parameters}). Od 2048 masiek boli dosiahnuté výsledky takmer rovnaké, toto môže súvisieť aj so stabilitou tepelných máp pri vyšších hodnotách (Sekcia \ref{sec:risei_stability}). Metódy RISEI a RISE s prekryvom nula dosiahli najlepšie výsledky s nízkym počtom masiek. Toto je prekvapivé, vzhľadom na to, že tepelné masky z nízkym počtom masiek niesú stabilné. Je preto možné, že sa jedná o chybu a náhodu, je to preto vhodné ďaľšie skúmanie.
+Aj tieto experimenty potvrdili, že metóda s prekryvom hodntou jedna dosahuje najlepšie výsledky. Ďalej sme zistili, že nastavením menšieho prekryvu (parameter \textit{p} má vyššiu hodnotu) sme v kombinácii s vyšším počtom masiek dosiahli lepšie výsledky, pričom od 256 masiek boli tieto hodnoty takmer rovnaké (Obr. \ref{fig:risei_parameters}). Od 2048 masiek boli dosiahnuté výsledky takmer rovnaké, toto môže súvisieť aj so stabilitou tepelných máp pri vyšších hodnotách (Sekcia \ref{sec:risei_stability}). Metódy RISEI a RISE s prekryvom nula dosiahli najlepšie výsledky s nízkym počtom masiek. Toto je prekvapivé, vzhľadom na to, že tepelné masky z nízkym počtom masiek niesú stabilné. Je preto možné, že sa jedná o chybu alebo náhodu. Preto je vhodné ďaľšie skúmanie týchto výsledkov.
 
 \begin{sidewaysfigure}
     \centering
@@ -223,7 +223,12 @@ Zoznam porovnávaných metód je teda nasledovný:
 
 Ako testovaciu vzorku sme použili 40 pozorovaní (20 AD + 20 CN).
 
-Vytvorené tepelné mapy sme porovnali aj oproti segmentačným maskám, v ktorých sme mali vyznačené nasledovné oblasti - šedá hmota, biela hmota, komory a hipokampus. V rámci týchto oblastí nás bude zaujímať koľko zachytili "tepla" z tepelných máp. Na základe ich veľkosti budeme následne počítať hustotu tepla ako $\frac{sucet\_tepla\_v\_oblasti}{pocet\_voxelov\_v\_ oblasti}$. Zároveň jednotlivé oblasti dáme do pomeru medzi sebou. 
+Vytvorené tepelné mapy sme porovnali aj oproti segmentačným maskám, v ktorých sme mali vyznačené nasledovné oblasti - šedá hmota, biela hmota, komory a hipokampus. V rámci týchto oblastí nás bude zaujímať koľko zachytili "tepla" z tepelných máp. Na základe ich veľkosti budeme následne počítať hustotu tepla podľa vzorca \eqref{eq:density}, kde $o$ je oblasť, pre ktorú počítame hustotu, $N$ je počet voxelov v oblasti, a $t_{no}$ je hodnota tepla n-tého voxely v oblasti $o$. Zároveň jednotlivé oblasti dáme do pomeru medzi sebou.
+
+\begin{equation}
+    h(o) = \frac{\sum_{n=1}^{N}{t_{no}}}{N_o}
+    \label{eq:density}
+\end{equation}
 
 \subsubsection{Metriky \label{sec:verification_experiments_metrics}}
 
@@ -233,71 +238,71 @@ Keďže tepelné mapy rôznych metód vyjadrujú teplo na rôznych škálach, te
 
 \begin{enumerate}[label=\Alph*]
     \item \textit{insertion x deletion} ($(insertion + (1 - deletion)) / 2$) - vyššia hodnota je lepšia,
-    \item hustota tepla v jednotlivých častiach mozgu - šedá hmota, biela hmota, komory a hipokampus - vyššia hodnota je lepšia,
-    \item pomer hustoty tepla mimo mozgu oproti hustote tepla v mozgu - nižšia hodnota je lepšia,
-    \item pomer hustoty tepla zvyšnej časti snímky oproti významným častiam mozgu (biela hmota, komory a hipokampus) - nižšia hodnota je lepšia,
-    \item pomer hustoty tepla mimo mozgu oproti významným častiam mozgu (biela hmota, komory a hipokampus) - nižšia hodnota je lepšia.
+    \item hustota tepla v jednotlivých častiach mozgu - šedá hmota, biela hmota, komory a hipokampus (Vzorec \ref{eq:density}) - vyššia hodnota je lepšia,
+    \item pomer hustoty tepla mimo mozgu oproti hustote tepla v mozgu, \\ $\frac{h(oblast\_mimo\_mozgu)}{h(oblast\_v\_mozgu)}$ kde $h(o)$ je \eqref{eq:density} - nižšia hodnota je lepšia,
+    \item pomer hustoty tepla zvyšnej časti snímky oproti významným častiam mozgu (biela hmota, komory a hipokampus), $\frac{h(oblast\_mimo\_mozgu) + h(seda_hmota)}{h(biela\_hmota) + h(komory) + h(hipokampus)}$ kde $h(o)$ je \eqref{eq:density} - nižšia hodnota je lepšia,
+    \item pomer hustoty tepla mimo mozgu oproti významným častiam mozgu (biela hmota, komory a hipokampus), $\frac{h(oblast\_mimo\_mozgu)}{h(biela\_hmota) + h(komory) + h(hipokampus)}$ kde $h(o)$ je \eqref{eq:density} - nižšia hodnota je lepšia.
 \end{enumerate}
 
 \subsubsection{Výsledky \label{sec:verification_experiments_results}}
 
 Najlepšie výsledky takmer vo všetkých metrikách dosiahla metóda Guided Backprop (Tabuľka \ref{tab:methods_evaluation}). 
 
-Metriky \textit{B} nám dávajú predstavu o tom ako jednotlivé metódy rozdeľovali teplo a pomocou nich vieme koľko tepla bolo prodeleného mimo mozog. Všetky metódy rozdeľovali teplo pomerne rovnomerne medzi jednotlivé časti mozgu. U metódy GradCAM je na základe metriky \textit{C} vidieť, že CN pozorovaniam rozdelovala viac templa mimo mozog, toto je viditeľné aj na obrázku \ref{fig:method_evaluation_2}. Metrika \textit{C} je prvotným ukazovateľom ako dobre metóda funguje, najlepší výsledok v nej dosiahla metóda Guided Backprop, a to $0.808$. Táto hodnota je avšak pomerne vysoká, keďže hovorí, že hustota tepla mimo mozgu je až 80.8\% hustoty tepla v mozgu. Toto môže signalizovať zlý model. Podobne je tomu aj u metrík \textit{D} a \textit{E}. Metódy RISE nedosiahli dobré výsledky, najlepšie výsledky dosiahla metóda RISE s $b2\_value = 1$, pričom prekonala aj GradCAM.
+Metriky \textit{B} nám dávajú predstavu o tom ako jednotlivé metódy rozdeľovali teplo a pomocou nich vieme koľko tepla bolo prideleného mimo mozog. Všetky metódy rozdeľovali teplo pomerne rovnomerne medzi jednotlivé časti mozgu. U metódy GradCAM je na základe metriky \textit{C} vidieť, že CN pozorovaniam rozdeľovala viac tepla mimo mozog, toto je viditeľné aj na obrázku \ref{fig:method_evaluation_2}. Metrika \textit{C} je prvotným ukazovateľom ako dobre metóda funguje, najlepší výsledok v nej dosiahla metóda Guided Backprop, a to $0.808$. Táto hodnota je avšak pomerne vysoká, keďže hovorí, že hustota tepla mimo mozgu je až 80.8\% hustoty tepla v mozgu. Toto môže signalizovať zlý model. Podobne je tomu aj u metrík \textit{D} a \textit{E}. Metódy RISE nedosiahli dobré výsledky, najlepšie výsledky dosiahla metóda RISE s $b2\_value = 1$, pričom prekonala aj GradCAM.
 
 Samotná metóda RISE dosiahla zo všetkych metód najhoršie výsledky, pričom ju prekonala aj metóda RISEI. Metóda RISE s prekrytím hodnotou jedna dosiahla porovnateľné výsledky s metódou GradCAM, pričom ju v niekoľkých metrikách (\textit{A}, \textit{C}) prekonala. Metóda Guided RISE nedokázala vylepšiť metódu Guided Backprop a bola s ňou v niekoľkých metrikách (\textit{C}, \textit{D}, \textit{E}) takmer totožná, v týchto metrikách dokonca prekonala metódu Guided GradCAM.
 
-Zo sady pozorovaní sme vybrali sme dva snímky, jeden s najlepšou tepelnou mapou podľa metriky \textit{C} najlepšej metódy, druhú s najhoršou tepelnou mapou (Obr. \ref{fig:method_evaluation_1}, \ref{fig:method_evaluation_2}). Na základe vizualizácii nemôžeme tvrdiť, že by sa model rozhodoval na základe relevantných častí mozgu (Obr. \ref{fig:method_evaluation_2}). Metóda Guided Backprop zachytila pomerne veľké množstvo tepla na lebke mozgu, čo môže naznačovať, že máme chybný model.
+Zo sady pozorovaní sme vybrali sme dva snímky, jeden s najlepšou tepelnou mapou podľa metriky \textit{C} najlepšej metódy, druhú s najhoršou tepelnou mapou (Obr. \ref{fig:method_evaluation_1}, \ref{fig:method_evaluation_2}). Na základe vizualizácii nemôžeme tvrdiť, že by sa model rozhodoval na základe relevantných častí mozgu (Obr. \ref{fig:method_evaluation_2}). Metóda Guided Backprop zachytila pomerne veľké množstvo tepla na lebke mozgu, čo môže naznačovať, že model môže v niektorých prípadoch vykazovať chybné správanie, tj. rozhodovať sa na základe náhodných, resp. nerelevantných častí mozgu.
 
 \begin{small}
     \begin{table}
-    \centering
-    \begin{tabular}{|
-    >{\columncolor[HTML]{C0C0C0}}l |r|r|r|r|r|r|r|}
-    \hline
-    \multicolumn{1}{|c|}{\cellcolor[HTML]{C0C0C0}\footnotesize{Metrika / Metóda}} &
-        \multicolumn{1}{c|}{\cellcolor[HTML]{EFEFEF}\begin{tabular}[c]{@{}c@{}}\small{Grad-}\\ \small{CAM}\end{tabular}} &
-        \multicolumn{1}{c|}{\cellcolor[HTML]{EFEFEF}\begin{tabular}[c]{@{}c@{}}\small{Guided}\\ \small{Back-}\\\small{prop}\end{tabular}} &
-        \multicolumn{1}{c|}{\cellcolor[HTML]{EFEFEF}\begin{tabular}[c]{@{}c@{}}\small{Guided}\\ \small{Grad-}\\ \small{CAM}\end{tabular}} &
-        \multicolumn{1}{c|}{\cellcolor[HTML]{EFEFEF}\begin{tabular}[c]{@{}c@{}}\small{Guided}\\ \small{RISE}\\ \small{(b2\_}\\ \small{value}\\ \small{= 0})\end{tabular}} &
-        \multicolumn{1}{c|}{\cellcolor[HTML]{EFEFEF}\begin{tabular}[c]{@{}c@{}}\small{RISE}\\ \small{(b2\_}\\ \small{value}\\ \small{= 0)}\end{tabular}} &
-        \multicolumn{1}{c|}{\cellcolor[HTML]{EFEFEF}\begin{tabular}[c]{@{}c@{}}\small{RISE}\\ \small{(b2\_}\\ \small{value}\\ \small{= 1)}\end{tabular}} &
-        \multicolumn{1}{c|}{\cellcolor[HTML]{EFEFEF}\footnotesize{RISEI}} \\ \hline
-    A (AD + CN)                                                         & 0.572 & \textbf{0.678} & 0.673 & 0.547 & 0.401 & 0.610 & 0.443 \\ \hline
-    A (AD)                                                              & 0.606 & 0.803 & \textbf{0.810} & 0.552 & 0.372 & 0.550 & 0.423 \\ \hline
-    A (CN)                                                              & 0.541 & 0.564 & 0.538 & 0.473 & 0.426 & \textbf{0.638} & 0.462 \\ \hline
-    \begin{tabular}[c]{@{}l@{}}B - biela hmota\\ (AD + CN)\end{tabular} & 0.466 & 0.607 & 0.507 & 0.606 & 0.497 & 0.512 & 0.498 \\ \hline
-    \begin{tabular}[c]{@{}l@{}}B - hipokampus\\ (AD + CN)\end{tabular}  & 0.400 & 0.559 & 0.500 & 0.556 & 0.491 & 0.435 & 0.501 \\ \hline
-    \begin{tabular}[c]{@{}l@{}}B - komory\\ (AD + CN)\end{tabular}      & 0.417 & 0.333 & 0.491 & 0.331 & 0.494 & 0.537 & 0.484 \\ \hline
-    \begin{tabular}[c]{@{}l@{}}B - nie mozog \\ AD + CN)\end{tabular}   & 0.503 & 0.464 & 0.498 & 0.464 & 0.502 & 0.494 & 0.500 \\ \hline
-    \begin{tabular}[c]{@{}l@{}}B - šedá hmota\\ (AD + CN)\end{tabular}  & 0.452 & 0.572 & 0.504 & 0.571 & 0.499 & 0.504 & 0.503 \\ \hline
-    C (AD + CN)                                                         & 1.108 & \textbf{0.808} & 0.986 & 0.809 & 1.014 & 0.970 & 1.002 \\ \hline
-    C (AD)                                                              & 0.854 & \textbf{0.810} & 0.942 & \textbf{0.810} & 0.985 & 0.996 & 1.004 \\ \hline
-    C (CN)                                                              & 1.234 & \textbf{0.802} & 0.999 & 0.803 & 1.015 & 0.968 & 0.999 \\ \hline
-    D (AD + CN)                                                         & 1.118 & \textbf{0.875} & 0.991 & \textbf{0.875} & 1.000 & 0.989 & 0.999 \\ \hline
-    D (AD)                                                              & 0.948 & \textbf{0.882} & 0.970 & \textbf{0.882} & 0.991 & 1.005 & 0.990 \\ \hline
-    D (CN)                                                              & 1.171 & \textbf{0.868} & 0.998 & 0.869 & 1.004 & 0.983 & 1.005 \\ \hline
-    E (AD + CN)                                                         & 1.130 & \textbf{0.836} & 0.989 & 0.837 & 1.004 & 0.982 & 0.995 \\ \hline
-    E (AD)                                                              & 0.910 & \textbf{0.840} & 0.957 & 0.841 & 0.984 & 1.002 & 0.993 \\ \hline
-    E (CN)                                                              & 1.206 & \textbf{0.828} & 0.998 & 0.830 & 1.006 & 0.975 & 1.002 \\ \hline
-    \end{tabular}
-    \caption{\textbf{Porovnanie kvality a správnosti tepelných máp RISEI oproti iným existujúcim metódam.}
-    Hodnoty jednotlivých metrík sú strednými hodnotami metrik pre jednotlivé pozorovania v testovacej sade. Popis metrík sa nachadza v sekcii \ref{sec:verification_experiments_metrics}}
-    \label{tab:methods_evaluation}
+        \centering
+        \begin{tabular}{|
+        >{\columncolor[HTML]{C0C0C0}}l |r|r|r|r|r|r|r|}
+        \hline
+        \multicolumn{1}{|c|}{\cellcolor[HTML]{C0C0C0}\footnotesize{Metrika / Metóda}} &
+            \multicolumn{1}{c|}{\cellcolor[HTML]{EFEFEF}\begin{tabular}[c]{@{}c@{}}\small{Grad-}\\ \small{CAM}\end{tabular}} &
+            \multicolumn{1}{c|}{\cellcolor[HTML]{EFEFEF}\begin{tabular}[c]{@{}c@{}}\small{Guided}\\ \small{Back-}\\\small{prop}\end{tabular}} &
+            \multicolumn{1}{c|}{\cellcolor[HTML]{EFEFEF}\begin{tabular}[c]{@{}c@{}}\small{Guided}\\ \small{Grad-}\\ \small{CAM}\end{tabular}} &
+            \multicolumn{1}{c|}{\cellcolor[HTML]{EFEFEF}\begin{tabular}[c]{@{}c@{}}\small{Guided}\\ \small{RISE}\\ \small{(b2\_}\\ \small{value}\\ \small{= 0})\end{tabular}} &
+            \multicolumn{1}{c|}{\cellcolor[HTML]{EFEFEF}\begin{tabular}[c]{@{}c@{}}\small{RISE}\\ \small{(b2\_}\\ \small{value}\\ \small{= 0)}\end{tabular}} &
+            \multicolumn{1}{c|}{\cellcolor[HTML]{EFEFEF}\begin{tabular}[c]{@{}c@{}}\small{RISE}\\ \small{(b2\_}\\ \small{value}\\ \small{= 1)}\end{tabular}} &
+            \multicolumn{1}{c|}{\cellcolor[HTML]{EFEFEF}\footnotesize{RISEI}} \\ \hline
+        A (AD + CN)                                                         & 0.572 & \textbf{0.678} & 0.673 & 0.547 & 0.401 & 0.610 & 0.443 \\ \hline
+        A (AD)                                                              & 0.606 & 0.803 & \textbf{0.810} & 0.552 & 0.372 & 0.550 & 0.423 \\ \hline
+        A (CN)                                                              & 0.541 & 0.564 & 0.538 & 0.473 & 0.426 & \textbf{0.638} & 0.462 \\ \hline
+        \begin{tabular}[c]{@{}l@{}}B - biela hmota\\ (AD + CN)\end{tabular} & 0.466 & 0.607 & 0.507 & 0.606 & 0.497 & 0.512 & 0.498 \\ \hline
+        \begin{tabular}[c]{@{}l@{}}B - hipokampus\\ (AD + CN)\end{tabular}  & 0.400 & 0.559 & 0.500 & 0.556 & 0.491 & 0.435 & 0.501 \\ \hline
+        \begin{tabular}[c]{@{}l@{}}B - komory\\ (AD + CN)\end{tabular}      & 0.417 & 0.333 & 0.491 & 0.331 & 0.494 & 0.537 & 0.484 \\ \hline
+        \begin{tabular}[c]{@{}l@{}}B - nie mozog \\ AD + CN)\end{tabular}   & 0.503 & 0.464 & 0.498 & 0.464 & 0.502 & 0.494 & 0.500 \\ \hline
+        \begin{tabular}[c]{@{}l@{}}B - šedá hmota\\ (AD + CN)\end{tabular}  & 0.452 & 0.572 & 0.504 & 0.571 & 0.499 & 0.504 & 0.503 \\ \hline
+        C (AD + CN)                                                         & 1.108 & \textbf{0.808} & 0.986 & 0.809 & 1.014 & 0.970 & 1.002 \\ \hline
+        C (AD)                                                              & 0.854 & \textbf{0.810} & 0.942 & \textbf{0.810} & 0.985 & 0.996 & 1.004 \\ \hline
+        C (CN)                                                              & 1.234 & \textbf{0.802} & 0.999 & 0.803 & 1.015 & 0.968 & 0.999 \\ \hline
+        D (AD + CN)                                                         & 1.118 & \textbf{0.875} & 0.991 & \textbf{0.875} & 1.000 & 0.989 & 0.999 \\ \hline
+        D (AD)                                                              & 0.948 & \textbf{0.882} & 0.970 & \textbf{0.882} & 0.991 & 1.005 & 0.990 \\ \hline
+        D (CN)                                                              & 1.171 & \textbf{0.868} & 0.998 & 0.869 & 1.004 & 0.983 & 1.005 \\ \hline
+        E (AD + CN)                                                         & 1.130 & \textbf{0.836} & 0.989 & 0.837 & 1.004 & 0.982 & 0.995 \\ \hline
+        E (AD)                                                              & 0.910 & \textbf{0.840} & 0.957 & 0.841 & 0.984 & 1.002 & 0.993 \\ \hline
+        E (CN)                                                              & 1.206 & \textbf{0.828} & 0.998 & 0.830 & 1.006 & 0.975 & 1.002 \\ \hline
+        \end{tabular}
+        \caption{\textbf{Porovnanie kvality a správnosti tepelných máp RISEI oproti iným existujúcim metódam.}
+        Hodnoty jednotlivých metrík sú strednými hodnotami metrik pre jednotlivé pozorovania v testovacej sade. Popis metrík sa nachadza v sekcii \ref{sec:verification_experiments_metrics}}
+        \label{tab:methods_evaluation}
     \end{table}
 \end{small}
 
-\begin{figure}[h!]
+\begin{figure}[H]
     \centering
     \includegraphics[width=13cm]{assets/images/method_evaluation_2.png}
     \caption{Porovnanie tepelných máp vytvorených porovnávaními metódami. Vybrali sme snímku s najlepšiou tepelnú mapu pre metódu Guided Backprop podľa metriky \textit{C = 0.781}. Tak ako aj na obrázku \ref{fig:method_evaluation_1}, aj tu si môžeme všimnúť výrazné rozdiely medzi jednotlivými metódami. Metóda GradCAM pridelila veľmi málo tepla do mozgu a veľmi málo tepla na krajoch snímky.}
     \label{fig:method_evaluation_2}   
 \end{figure}
 
-\begin{figure}[h!]
+\begin{figure}[H]
     \centering
     \includegraphics[width=14.5cm]{assets/images/method_evaluation_1.png}
-    \caption{\small{Porovnanie tepelných máp vytvorených porovnávaními metódami. Vybrali sme snímku s najlepšiou tepelnú mapu pre metódu Guided Backprop podľa metriky \textit{C = 0.839}. Môžeme si všimnúť výrazné rozdiely medzi jednotlivými metódami. Teplo z metódy Guided Backprop, ktoré sa nachádza mimo mozgu, lemuje časť lebky, v ľavej a aj v pravej časti snímky. Metóda GradCAM oproti metódam RISE rozdelila pomerne veľa tepla v rámci mozgu.}}
+    \caption{\small{Porovnanie tepelných máp vytvorených porovnávaními metódami. Vybrali sme snímku s najlepšiou tepelnú mapu pre metódu Guided Backprop podľa metriky \textit{C = 0.839}. Môžeme si všimnúť výrazné rozdiely medzi jednotlivými metódami. Teplo z metódy Guided Backprop, ktoré sa nachádza mimo mozgu, lemuje časť lebky, v ľavej a aj v pravej časti snímky. Metóda GradCAM oproti metódam RISE a RISEI rozdelila pomerne veľa tepla v rámci mozgu. Metóda RISE s prekrytím hodnotou nula aj jedna rozdelila pomerne veľké množstvo tepla v oblasti komôr.}}
     \label{fig:method_evaluation_1}
 \end{figure}
 
@@ -311,9 +316,12 @@ Podarilo sa nám vyhodnotiť stabilitu vytváraných tepelných máp. Z výsledk
 
 Vyhodnotili sme rôzne hodnoty prekrytia pre metódu RISEI. Následne sme hľadali optimálny počet masiek a mieru prekrytia.
 
-Metódu RISEI (a jej rôzne nastavenia na základe doterajších experimentov) sa nám podarilo porovnať s niekoľkými existujúcimi metódami. Pričom v sledovaných metrikách sme dosiahli horšie výsledky ako metóda Guided Backprop, ktorá vo väčšine metrík dominovala.
+Metódu RISEI (a jej rôzne nastavenia na základe doterajších experimentov) sa nám podarilo porovnať s niekoľkými existujúcimi metódami. V sledovaných metrikách sme dosiahli horšie výsledky ako metóda Guided Backprop, ktorá vo väčšine metrík dominovala.
+Metóda Guided Backprop na rozdiel od metódy RISE(I) musí poznať model, čo môže byť v niektorých prípadoch nevýhodou. Je teda uplatniteľná na menšiu množinou modelov ako metóda RISE(I).
 
-Dosiahnuté výsledky naznačujú, že máme model, ktorý sa nerozhoduje na základe relevantných častí mozgu - rozhoduje napr. aj na základe lebky. Toto má vo veľkej miere vyplyv na kvalitu tepelných máp metódy RISE, keďže vytvára tepelné mapy z veľkého počtu predikcií k zamaskovaným snímkam. Ďaľšie experimenty by bolo vhodné realizovať na modeli s lepšou úspešnosťou a na pozorovaniach s odstránenou lebkou zo snímiek v predspracovaní.
+Metóda RISEI dosiahla lepšie výsledky ako pôvodná metóda RISE. Avšak oveľa jednoduchšou úpravou metódy RISE, a to použitím prekrytia hodnotou jedna sme dosiahli lepšie výsledky ako použítím dokreslenia, pričom sme dosiahli rýchlejšie generovanie masiek.
+
+Dosiahnuté výsledky naznačujú, že máme model, ktorý sa nerozhoduje na základe relevantných častí mozgu - rozhoduje napr. aj na základe lebky. Toto má vo veľkej miere vyplyv na kvalitu tepelných máp metódy RISE, keďže vytvára tepelné mapy z veľkého počtu predikcií k zamaskovaným snímkam. Ďaľšie experimenty by bolo vhodné realizovať na modeli s lepšou úspešnosťou a na pozorovaniach s odstránenou lebkou zo snímiek v predspracovaní (keďže náš model sa rozhodoval na základe nej a tie najlepšie modely boli trénované na snímkoch bez nej).
 
 
 % Zistili sme, že metóda RISE s dokresľovaním dosahuje lepšie výsledky ako pôvodná metóda ktorá zakrývala minimálnou hodnotou. Pokial ale minimálnu hodnotu nahradíme maximálnou, dosiahneme lepšie výsledky ako s dokreslovaním, ktoré dosahuje podobné vśyeldky ako zakrývaním mediánom. Avšak, vyhodnocovali sme zatiaľ len pomerne malej vzorke a nebrali sme do úvahy početnosť tried (AD a CN) v tejto vzorke čo je nedostatkom našich experimentov (v ďaľších experimentoch by mali byť tieto triedy vyvážené). Zároveň na dátach z tejto vzorky nemali testované modely 100\%-nú úspešnosť.
