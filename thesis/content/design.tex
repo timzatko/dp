@@ -45,7 +45,9 @@ Oproti metóde \textit{RISE} vytvárame o jednu masku naviac, a teda je originá
 
 Vytvorenie ''čiernej'' masky je rovnaké, ako pri metóde \textit{RISE}. Dokreslená maska vznikne dokreslením zakrytých (zamaskovaných) častí obrázka pomocou jedného z algoritmov na dokreslovanie (angl. inpainting). Tieto algoritmy sme popísali v sekcii \ref{cap:image_processing} Spracovanie obrazu. Obrázok \ref{fig:risei_inpainting_example} je príkladom dokreslenia častí vzorového obrázka na základe masky náhodne vygenerovanej masky (tento príklad je v 2D, naša metóda pracuje s 3D dátami).
 
-Hodnota prekrytia môže byť akákoľvek konštanta - napríklad nula (hodnota v pôvodnej metóde RISE), jedna (maximálna hodnota v nami použitých dátach), stredná alebo priemerná hodnota zo snímky. Alebo prekrytie môže pozostávať viacero hodnôt na základe algoritmu - napr. dokreslenia.
+Hodnota prekrytia môže byť akákoľvek konštanta - napríklad nula (hodnota v pôvodnej metóde RISE), jedna (maximálna hodnota v nami použitých dátach), stredná alebo priemerná hodnota zo snímky. Alebo prekrytie môže pozostávať viacero hodnôt na základe algoritmu - napr. dokreslenia. 
+
+Dokreslenie je možné realizovať v 3D, alebo 2D z každého pohľadu pričom jednotlové dokreslenia sú spriemerované do jedného. Také dokreslenie je síce menej presné, ale výrazne rýchlejšie.
 
 \begin{figure}[h!]
     \centering
