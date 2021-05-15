@@ -235,7 +235,7 @@ MRI snímky boli predspracované štandardnou postupnosťou nástroja Freesurfer
     \item Štandardizáciu vstupných dát (preškálovanie na rozsah $<0, 1>$) nasledovným vzorcom: $\frac{(image\_x - images\_min])}{(images\_max - images\_min)}$.
 \end{itemize}
 
-Snímky z dátovej sady sme augmentovali na základe návrhu.
+Snímky z dátovej sady sme augmentovali, tak ako sme uviedli v návrhu (Sekcia \ref{sec:design_model}.
 
 \subsection{Model}
 
@@ -312,7 +312,7 @@ Vzhľadom na to, že naším cieľom nie je natrénovať najlepšiu neurónovú 
 
 \begin{figure}[H]
     \centering
-    \includegraphics[width=14cm]{assets/images/2d_3d_res_net_training.png}
+    \includegraphics[width=12cm]{assets/images/2d_3d_res_net_training.png}
     \caption{Priebeh trénovania 2D a 3D ResNet neurónovej siete. V oboch prípadoch sme použili dropout aj regularizáciu. Od približne 30-tej epochy sa neurónová sieť začala pretrénovávať, aj napriek regularizácii. Ako vylepšenie je možné skúsiť silnesjšiu regularizáciu (väčšiu hodnotu l2 a dropout), ak ani to nepomôže, je možné, že architektúra je príliš komplexná náš problém (neurónová sieť je príliš hlboká). Môžeme ďalej skúsiť odstrániť jednu plne prepojenú vrstvu alebo znížiť počet neurónov v týchto vrstvách.}
     \label{fig:2d_3d_res_net_training}
 \end{figure}

@@ -30,7 +30,7 @@ Keďže metóda vychádza už z existujúcej metódy, časť našej metódy je s
 
 Toto sú 3 hlavné kroky z ktorých pozostáva táto metóda, ďalej bližšie popíšeme jednotlivé z nich.
 
-\paragraph{1. Vytvorenie \textit{N} náhodne zamaskovaných obrázkov z obrázka $O$}
+\subsection{Vytvorenie \textit{N} náhodne zamaskovaných obrázkov z obrázka \textit{O}}
 
 Vytvorenie náhodne zamaskovaných obrázkov tiež pozostáva z niekoľkých krokov, pričom niektoré z nich môžu byť vykonávané paralelne. Tento krok sme znázornili diagramom (Obr. \ref{fig:risei_diagram}). Masky sa vytvárajú paralelne, pretože ''čierna'' maska ma jemné hrany a na dokreslenie potrebujeme naopak masku s ostrými hranami.
 
@@ -43,7 +43,9 @@ Vytvorenie náhodne zamaskovaných obrázkov tiež pozostáva z niekoľkých kro
 
 Oproti metóde \textit{RISE} vytvárame o jednu masku naviac, a teda je originálny obrázok prekrytý s viacerými maskami. Jednotlivé masky cez seba prekryjeme, pričom každej z nich nastavíme určité množstvo priehľadnosti. S týmto pomerom môžeme ďalej experimentovať a výsledky porovnávať. Môžeme porovnať použitie iba dokreslenej masky s iba ''čiernou'' maskou a tiež s použitím oboch v rôznych pomeroch.
 
-Vytvorenie ''čiernej'' masky je rovnaké, ako pri metóde \textit{RISE}. Dokreslená maska vznikne dokreslením zakrytých (zamaskovaných) častí obrázka pomocou jedného z algoritmov na dokreslovanie (angl. inpainting). Tieto algoritmy sme popísali v sekcii \ref{cap:image_processing} Spracovanie obrazu. Obrázok \ref{fig:risei_inpainting_example} je príkladom dokreslenia častí vzorového obrázka na základe masky náhodne vygenerovanej masky (tento príklad je v 2D, naša metóda bude pracovať s 3D). V našej metóde budeme experimentovať s rôznymi hodnotami prekrytia (priemer, maximum, minimum, medián).
+Vytvorenie ''čiernej'' masky je rovnaké, ako pri metóde \textit{RISE}. Dokreslená maska vznikne dokreslením zakrytých (zamaskovaných) častí obrázka pomocou jedného z algoritmov na dokreslovanie (angl. inpainting). Tieto algoritmy sme popísali v sekcii \ref{cap:image_processing} Spracovanie obrazu. Obrázok \ref{fig:risei_inpainting_example} je príkladom dokreslenia častí vzorového obrázka na základe masky náhodne vygenerovanej masky (tento príklad je v 2D, naša metóda pracuje s 3D dátami).
+
+Hodnota prekrytia môže byť akákoľvek konštanta - napríklad nula (hodnota v pôvodnej metóde RISE), jedna (maximálna hodnota v nami použitých dátach), stredná alebo priemerná hodnota zo snímky. Alebo prekrytie môže pozostávať viacero hodnôt na základe algoritmu - napr. dokreslenia.
 
 \begin{figure}[h!]
     \centering
@@ -52,11 +54,11 @@ Vytvorenie ''čiernej'' masky je rovnaké, ako pri metóde \textit{RISE}. Dokres
     \label{fig:risei_inpainting_example}
 \end{figure}
 
-\paragraph{2. Vloženie zamaskovaných obrázkov do modelu a následné získanie aktivácie pre triedu $T$.}
+\subsection{Vloženie zamaskovaných obrázkov do modelu a následné získanie aktivácie pre triedu \textit{T}.}
 
-Tento krok je identický s originálnou metódou \textit{RISE}.
+Krok vloženia zamaskovaných obrázkov do modelu je identický s originálnou metódou \textit{RISE}. Zamaskované obrázky sú vložené do modelu, metóda následne zozbiera výsledné aktivácie pre triedu, pre ktorú ju tepelná mapa vytváraná - vytvárame takú tepelnú mapu, ktorá hovorí, ktoré oblasti obrázka sú viac/menej dôležité pre vybranú triedu.
 
-\paragraph{3. Vytvorenie a vizualizácia vysvetlenia pomocou tepelnej mapy.}
+\subsection{Vytvorenie a vizualizácia vysvetlenia pomocou tepelnej mapy.}
 
 Tento krok je identický s originálnou metódou \textit{RISE}. Nasledovný vzorec \ref{eq:risei_heatmap_1} vyjadruje výpočet dôležitosti $I$ pre každý voxel $[x, y, z]$ snímky, kde $n$ je počet všetkých zamaskovaných snímok. Funkcia $p(k, x, y, z)$ vracia vracia predikciu (tj. aktiváciu v kontexte neurónových sietí) pre predikovanú triedu (v prípade binárnej klasifikácie) z modelu pre zamaskovanú snímku $k$. Funkcia $c(k, x, y, z)$ vracia mieru zakrytia/dokreslenia maskou, pričom $H(c) = <0, 1>$, kde $1$ znamená úplné prekrytie/dokreslenie a $0$ žiadne prekrytie/dokreslenie. Rovnako, ako metóde \textit{RISE}, počítame vážený priemer.
 
@@ -71,11 +73,13 @@ Navrhovaná metóda do orignálnej metódy pridáva niekoľko parametrov a najm�
 
 Našu metódu v prvom rade porovnávame s originálnou metódou RISE (tj. či sa nám podarilo vytvoriť lepšiu metódu) a následne s inou existujúcou metódou (LRP, GradCAM, Guided Backprop alebo Guided GradCAM). Z týchto metód je najviac vhodná metóda LRP, keďže už bolo jej použitie pri vysvetľovaní rozhodnutí neurónových sietí detegujúcich Alzheimerovu chorobu (Sekcia \ref{sec:ad_nn_explanation}) skúmané. Tieto experimenty vykonávame na CN a AD vzorkách. Sledujeme kvalitu navrhnutej metódy (oproti ostatným metódam) a na základe týchto tepelných máp vyhodnocujeme mieru správnosti modelu.
 
-\subsection{Dátová sada} Experimenty budeme vykonávať na dátovej sade ADNI, ktorá obsahuje MRI snímky AD pacientov. Táto dátová sada bola použitá aj na trénovanie state-of-the-art modelu na diagnsotiku Alzheimerovej choroby \cite{esmaeilzadeh2018end}, ale aj pri vysvetľovaní rozhodnutí neurónovej siete pomocou LRP \cite{bohle2019layer}. Na tejto dátovej sade budeme musieť vykonať rovnaké predspracovanie ako \citeauthor*{bohle2019layer}, aby sme sa s ich výsledkami mohli porovnať. Prípadne môžeme vykonať vlastné predspracovanie, ale budeme musieť vykonať aj experimenty s metódou LRP.
+\subsection{Dátová sada} Experimenty budeme vykonávať na dátovej sade ADNI, ktorá obsahuje MRI snímky AD pacientov. Táto dátová sada bola použitá aj na trénovanie state-of-the-art modelu na diagnsotiku Alzheimerovej choroby \cite{esmaeilzadeh2018end}, ale aj pri vysvetľovaní rozhodnutí neurónovej siete pomocou LRP \cite{bohle2019layer}. 
+
+% Na tejto dátovej sade budeme musieť vykonať rovnaké predspracovanie ako \citeauthor*{bohle2019layer}, aby sme sa s ich výsledkami mohli porovnať. Prípadne môžeme vykonať vlastné predspracovanie, ale budeme musieť vykonať aj experimenty s metódou LRP.
 
 \section{Model \label{sec:design_model}}
 
-Na vytváranie tepelmých máp je nevyhnutný model. Navrhnutú metódu porovnávame na niekoľkých modeloch - architektúrach neurónových sietí. Z nich vyberieme najvhodnejší pre ďaľšie experimenty.
+Na vytváranie tepelmých máp je nevyhnutný model. Navrhnutú metódu porovnávame na niekoľkých modeloch - architektúrach neurónových sietí. Z nich vyberieme najvhodnejší pre ďaľšie detailnejšie experimenty.
 
 \begin{itemize}
     \item \textbf{3D konvolučná neurónová sieť od \citeauthor*{esmaeilzadeh2018end}} Túto neurónovú sieť sme vybrali, pretože jej autori pomocou nej dosiahli veľmi dobré výsledky (94.1\% presnosť).

@@ -286,7 +286,7 @@ Zo sady pozorovaní sme vybrali sme dva snímky, jeden s najlepšou tepelnou map
         E (AD)                                                              & 0.910 & \textbf{0.840} & 0.957 & 0.841 & 0.984 & 1.002 & 0.993 \\ \hline
         E (CN)                                                              & 1.206 & \textbf{0.828} & 0.998 & 0.830 & 1.006 & 0.975 & 1.002 \\ \hline
         \end{tabular}
-        \caption{\textbf{Porovnanie kvality a správnosti tepelných máp RISEI oproti iným existujúcim metódam.}
+        \caption{\textbf{Porovnanie kvality a správnosti tepelných máp RISEI oproti iným existujúcim metódam (na vzorke 40 pozorovaní).}
         Hodnoty jednotlivých metrík sú strednými hodnotami metrik pre jednotlivé pozorovania v testovacej sade. Popis metrík sa nachadza v sekcii \ref{sec:verification_experiments_metrics}}
         \label{tab:methods_evaluation}
     \end{table}
@@ -305,6 +305,31 @@ Zo sady pozorovaní sme vybrali sme dva snímky, jeden s najlepšou tepelnou map
     \caption{\small{Porovnanie tepelných máp vytvorených porovnávaními metódami. Vybrali sme snímku s najlepšiou tepelnú mapu pre metódu Guided Backprop podľa metriky \textit{C = 0.839}. Môžeme si všimnúť výrazné rozdiely medzi jednotlivými metódami. Teplo z metódy Guided Backprop, ktoré sa nachádza mimo mozgu, lemuje časť lebky, v ľavej a aj v pravej časti snímky. Metóda GradCAM oproti metódam RISE a RISEI rozdelila pomerne veľa tepla v rámci mozgu. Metóda RISE s prekrytím hodnotou nula aj jedna rozdelila pomerne veľké množstvo tepla v oblasti komôr.}}
     \label{fig:method_evaluation_1}
 \end{figure}
+
+Metódy sme ešte overli na vyššej vzorke pozorovaní. Z testovacej sady sme vybrali 76 počet pozorvaní (28 TP, 28 TN, 10 FP a 10 FN) - vybrali sme maximálny počet pozorvaní z testovacej sady tak aby pomer medzi AD a CN bol rovnaký. Dosiahnuté výsledky sa od predošlých výsledkov výrazne nelíšili a rozdieli medzi metódami ostali zachované (Tabuľka \ref{tab:methods_evaluation_76}).
+
+\begin{table}[H]
+    \centering
+    \begin{tabular}{|
+        >{\columncolor[HTML]{EFEFEF}}l |r|r|r|r|}
+        \hline
+        \multicolumn{1}{|c|}{\cellcolor[HTML]{C0C0C0}Metóda \ Metrika} &
+          \multicolumn{1}{c|}{\cellcolor[HTML]{C0C0C0}\begin{tabular}[c]{@{}c@{}}A\\ (AD + CN)\end{tabular}} &
+          \multicolumn{1}{c|}{\cellcolor[HTML]{C0C0C0}\begin{tabular}[c]{@{}c@{}}C\\ (AD + CN)\end{tabular}} &
+          \multicolumn{1}{c|}{\cellcolor[HTML]{C0C0C0}\begin{tabular}[c]{@{}c@{}}D\\ (AD + CN)\end{tabular}} &
+          \multicolumn{1}{c|}{\cellcolor[HTML]{C0C0C0}\begin{tabular}[c]{@{}c@{}}E\\ (AD + CN)\end{tabular}} \\ \hline
+        GradCAM             & 0.556          & 1.140          & 1.113          & 1.137          \\ \hline
+        Guided Backprop     & \textbf{0.682} & \textbf{0.808} & \textbf{0.875} & \textbf{0.836} \\ \hline
+        Guided GradCAM      & 0.679          & 0.983          & 0.990          & 0.986          \\ \hline
+        RISE (b2\_value = 0) & 0.395          & 1.010          & 1.002          & 1.008          \\ \hline
+        RISE (b2\_value = 1) & 0.618          & 0.992          & 0.991          & 0.996          \\ \hline
+        RISEI               & 0.479          & 0.994          & 0.999          & 1.005          \\ \hline
+    \end{tabular}
+    \caption{
+        \textbf{Porovnanie kvality a správnosti tepelných máp RISEI oproti iným existujúcim metódam (na vzorke 76 pozorovaní).}
+        Hodnoty jednotlivých metrík sú strednými hodnotami metrik pre jednotlivé pozorovania v testovacej sade. Popis metrík sa nachadza v sekcii \ref{sec:verification_experiments_metrics}. Dosiahnuté výsledky sa výrazne nelíšia od výsledkov pre 40 pozorovaní (Tabuľka \ref{tab:methods_evaluation}) aj napriek zahrnutiu takých pozorvaní, ktoré neurónová sieť označila nesprávne.}
+    \label{tab:methods_evaluation_76}
+\end{table}
 
 % TODO: compare the best and the worst heatmaps 
 
