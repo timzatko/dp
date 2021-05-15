@@ -80,7 +80,7 @@ def readfile(file_path):
 class MRISequence(Sequence):
     def __init__(self, path, batch_size, input_shape, class_names=('AD', 'CN'),
                  augmentations=None, augmentations_inplace=True, images=True, one_hot=True, class_weights=None,
-                 normalization=None, resize_img=True, crop_img=False, segmentation=None):
+                 normalization=None, resize_img=True, crop_img=False, segmentation=None, log=False):
         """
         MRISequence reads mri images.
         :param path: path to images
@@ -117,6 +117,7 @@ class MRISequence(Sequence):
 
         self.batch_size = batch_size
         self.images_dirs = [os.path.join(path, key) for key in os.listdir(path)]
+        self.log = log
 
     def size(self):
         return len(self.images_dirs)
@@ -138,6 +139,10 @@ class MRISequence(Sequence):
 
         batch_y = self.__encode(
             np.array([readfile(os.path.join(image_dir, 'real_diagnosis.txt')) for image_dir in images_dirs]))
+        
+        if self.log:
+            print(images_dirs)
+            print(batch_y)
 
         # if we disabled loading images, don't do it
         if not self.images:

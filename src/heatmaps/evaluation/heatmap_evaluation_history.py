@@ -40,6 +40,8 @@ class HeatmapEvaluationHistory:
     @staticmethod
     def load(path, filename):
         p = os.path.join(path, f'{filename}.cls')
+        if not os.path.exists(p):
+            raise f"path {p} does not exist!"
         with open(p, 'rb') as file:
             return pickle.load(file)
 
@@ -51,11 +53,11 @@ class HeatmapEvaluationHistory:
             pickle.dump(self, file, protocol=pickle.HIGHEST_PROTOCOL)
             print(f'saved to: {p}')
             
-    def _description(self, percentage=True):
-        arr_auc = self.__get_arr_auc(percentage)
+    def _description(self, percentage=True, cls_index=None):
+        arr_auc = self.__get_arr_auc(percentage, cls_index)
         
         return {
-            "heatmaps": len(self.arr_heatmap),
+            "heatmaps": len(arr_auc),
             "auc_mean": np.mean(arr_auc),
             "auc_p25": np.percentile(arr_auc, 25),
             "auc_median": np.median(arr_auc),
@@ -65,8 +67,8 @@ class HeatmapEvaluationHistory:
             "auc_std": np.std(arr_auc),
         }
 
-    def description(self, percentage=True):
-        data = self._description(percentage)
+    def description(self, percentage=True, cls_index=None):
+        data = self._description(percentage, cls_index)
         
         print(f'evaluated heatmaps: {data["heatmaps"]}')
         print(f'auc')
@@ -113,7 +115,10 @@ class HeatmapEvaluationHistory:
         if idx >= len(self.arr_x):
             raise Exception(f'image with index {idx} does not exist in the history!')
     
-    def __get_arr_auc(self, percentage):
+    def __get_arr_auc(self, percentage, cls_index):
         div = self.arr_max_voxels[0] if percentage and len(self.arr_max_voxels) else 1
-        return np.array(self.arr_auc) / div
+        arr_auc = self.arr_auc
+        if cls_index is not None:
+            arr_auc = [auc for auc, y in zip(arr_auc, self.arr_y) if y[cls_index] == 1]
+        return np.array(arr_auc) / div
     

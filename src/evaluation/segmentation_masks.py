@@ -30,7 +30,7 @@ def dim_selector(im, x=None, y=None, z=None):
     if z is not None:
         return im[z, :, :]
     if y is not None:
-        return im[:, y: :]
+        return im[:, y, :]
     if x is not None:
         return im[:, :, x]
     raise "x, y or z must be defined!"
@@ -45,27 +45,39 @@ def dim_selector_factory(x=None, y=None, z=None):
 def get_edges(img):
     return filters.roberts(img.reshape(img.shape[:-1])).reshape(img.shape)
 
+import skimage
 
-def plot_segmentation(seg_mask, seg_label, image_x, image_y, heatmap, d_selector, show_image=True, show_heatmap=True, edges=True, alpha=0.5, hmap_imshow=None):
-    cls = ['black', 'red', 'blue', 'magenta', 'brown']
-    fig = plt.figure(figsize=(6, 6))
-    ax = fig.add_subplot(1, 1, 1)
+def rotate(im, angle):
+    if angle is None:
+        return im
+    for _ in range(angle):
+        im = np.rot90(im)
+    return im
+
+
+def plot_segmentation(seg_mask, seg_label, image_x, image_y, heatmap, d_selector, show_image=True, show_heatmap=True, edges=True, alpha=0.5, hmap_imshow=None, rotate_angle=None, ax=None, legend=True):
+    cls = ['red', 'red', 'black', 'magenta', 'brown']
+    
+    if ax is None:
+        fig = plt.figure(figsize=(6, 6))
+        ax = fig.add_subplot(1, 1, 1)
+        
     handles = []
 
     if show_heatmap:
         if hmap_imshow is None:
-            ax.imshow(d_selector(heatmap), alpha=1 - alpha, cmap='jet')
+            ax.imshow(rotate(d_selector(heatmap), rotate_angle), alpha=1 - alpha, cmap='jet')
         else:
-            hmap_imshow(ax, d_selector(heatmap), 1 - alpha)
+            hmap_imshow(ax, rotate(d_selector(heatmap), rotate_angle), 1 - alpha)
     
     if show_image:
-        ax.imshow(d_selector(image_x), alpha=alpha, cmap='viridis')
+        ax.imshow(rotate(d_selector(image_x), rotate_angle), alpha=alpha, cmap='viridis')
     
     for idx, label in seg_label.items():
         if label == 'background / non-brain':
             continue
         color = cls[idx]
-        handles.append(mpatches.Patch(color=color, label=label))
+        handles.append(mpatches.Patch(color=color, label=lnames[label]))
         new_seg_mask = d_selector(seg_mask) == idx
         new_seg_mask = new_seg_mask.astype(np.int64)
         if edges:
@@ -73,15 +85,34 @@ def plot_segmentation(seg_mask, seg_label, image_x, image_y, heatmap, d_selector
         cmap = colors.ListedColormap([color, color])
         norm = colors.BoundaryNorm([0, 1], cmap.N)
         masked = np.ma.masked_where(new_seg_mask == 0, new_seg_mask)
-        ax.imshow(masked, alpha=1, cmap=cmap, norm=norm)
+        ax.imshow(rotate(masked, rotate_angle), alpha=1, cmap=cmap, norm=norm)
 
-    ax.legend(handles=handles, loc='upper left', bbox_to_anchor=(1.225, 1., 0., 0.))
+    if legend:
+        ax.legend(handles=handles, loc='upper left', bbox_to_anchor=(1.225, 1., 0., 0.))
     
-    return fig
+    return ax, handles
 
+lnames = {
+    'background / non-brain': 'nie mozog',
+    'hippocampus': 'hipokampus',
+    'ventricles': 'komory',
+    'gray_matter': 'šedá hmota',
+    'white matter': 'biela hmota',
+}
 
-def scale(arr):
-    return (arr - arr.min()) / (arr.max() - arr.min())
+import tensorflow.keras.backend as K
+
+# from https://github.com/keras-team/keras/blob/c10d24959b0ad615a21e671b180a1b2466d77a2b/examples/conv_filter_visualization.py
+def norm(arr):
+    x = np.array(arr).copy()
+    x -= x.mean()
+    x /= (x.std() + K.epsilon())
+    x *= 0.25
+
+    # clip to [0, 1]
+    x += 0.5
+    x = np.clip(x, 0, 1)
+    return x
 
 
 class SegmentationMasksEvaluator():
@@ -97,10 +128,12 @@ class SegmentationMasksEvaluator():
         fpath, fkey, fname_ins, fname_del = hisotry_fname_factory()
         self.history_ins = HeatmapEvaluationHistory.load(fpath, fname_ins)
         self.history_del = HeatmapEvaluationHistory.load(fpath, fname_del)
+    
+        self.heatmaps = self.history_ins.arr_heatmap
         
         self.fkey = fkey
         
-        self.images = list(zip(self.seg_masks, self.seg_labels, self.images_x, self.images_y, self.history_ins.arr_heatmap, self.history_ins.arr_y_pred))
+        self.images = list(zip(self.seg_masks, self.seg_labels, self.images_x, self.images_y, self.heatmaps, self.history_ins.arr_y_pred))
         
         self.validate()
         self.evaluate()
@@ -122,14 +155,21 @@ class SegmentationMasksEvaluator():
             areas_heat = {}
             # areas_heat_sum
             areas_heat_sum = {}
-            # areas_heat_sum_norm - size normalized
-            areas_heat_sum_norm = {}
-            # gain compared to background / non-brain
-            areas_heat_gain = {}
+            # areas_heat_sum_density - size normalized
+            areas_heat_sum_density = {}
 
             hmap = heatmap.flatten()
-            hmap = np.array([x if x > 0 else 0 for x in hmap]) # remove the negatove heat
-            hmap = scale(hmap)
+            # hmap = np.array([x if x > 0 else 0 for x in hmap]) # remove the negative heat
+            hmap = norm(hmap)
+            
+            def get_ratio(a_labels, b_labels):
+                heat_sum_a = sum([np.sum(heat_sum_values) for seg_label, heat_sum_values in areas_heat.items() if seg_label in a_labels])
+                area_a = sum([area_size for seg_label, area_size in areas.items() if seg_label in a_labels])
+                
+                heat_sum_b = sum([np.sum(heat_sum_values) for seg_label, heat_sum_values in areas_heat.items() if seg_label in b_labels])
+                area_b = sum([area_size for seg_label, area_size in areas.items() if seg_label in b_labels])
+                
+                return (heat_sum_a / area_a) / (heat_sum_b / area_b)
 
             for voxel_seg_mask, voxel_heat in zip(seg_mask.flatten().astype(np.int64), hmap):
                 if voxel_seg_mask not in areas:
@@ -144,30 +184,22 @@ class SegmentationMasksEvaluator():
                 areas_heat_sum[seg_label] = np.sum(heat_sum_values)
 
             for seg_label, heat_sum in areas_heat_sum.items():
-                areas_heat_sum_norm[seg_label] = heat_sum / areas[seg_label]
-
-            for seg_label, heat_sum_norm in areas_heat_sum_norm.items():
-                if areas_heat_sum_norm[0] > 0:
-                    areas_heat_gain[seg_label] = heat_sum_norm / areas_heat_sum_norm[0]
-                else:
-                    areas_heat_gain[seg_label] = np.nan
-
+                areas_heat_sum_density[seg_label] = heat_sum / areas[seg_label]
+                
             row = {}
             y_true = np.argmax(image_y, axis=0)
             add_to("y_true", row, y_true)
             add_to("y_pred", row, abs(y_true - image_y_pred[y_true]))
             for seg_label, heat_sum in areas_heat_sum.items():
                 add_to(f"arr_heat_sum__{seg_label}", row, heat_sum)
-            for seg_label, heat_sum in areas_heat_sum_norm.items():
-                add_to(f"arr_heat_sum_norm__{seg_label}", row, heat_sum)
-            for seg_label, heat_gain in areas_heat_gain.items():
-                add_to(f"arr_heat_sum_gain__{seg_label}", row, heat_gain)
-
-            heat_sum_other = sum([np.sum(heat_sum_values) for seg_label, heat_sum_values in areas_heat.items() if seg_label != 0])
-            area_other = sum([area_size for seg_label, area_size in areas.items() if seg_label != 0])
-            heat_sum_norm_other = (heat_sum_other / area_other)
-            heat_gain_other = np.nan if areas_heat_sum_norm[0] == 0 else heat_sum_norm_other / areas_heat_sum_norm[0]
-            add_to(f"arr_heat_sum_gain_other", row, heat_gain_other)
+            for seg_label, heat_sum in areas_heat_sum_density.items():
+                add_to(f"arr_heat_sum_density__{seg_label}", row, heat_sum)
+                
+            add_to(f"arr_heat_sum_non_brain_vs_brain", row, get_ratio([0], [1, 2, 3, 4]))
+            add_to(f"arr_heat_sum_0_2_vs_1_3_4", row, get_ratio([0, 2], [1, 3, 4]))
+            add_to(f"arr_heat_sum_0_vs_1_3_4", row, get_ratio([0], [1, 3, 4]))
+            add_to(f"arr_heat_sum_0_vs_3_4", row, get_ratio([0], [3, 4]))
+            add_to(f"arr_heat_sum_0_1_2_vs_3_4", row, get_ratio([0], [1, 2, 3, 4]))
 
             column_values.append(list(row.values()))
 
@@ -188,28 +220,34 @@ class SegmentationMasksEvaluator():
             
     def to_row(self):
         new_row = { 'notebook_key': self.fkey }
-        for row in self.df.describe().itertuples():
-            idx = None
-            for key, value in row._asdict().items():
-                if key == 'Index':
-                    idx = value
-                    continue
-                if idx == 'count':
-                    continue
-                new_key = f'{key}__{idx}'
-                new_row[new_key] = value
         
-        hist_ins_desc = self.history_ins._description()
-        for key, value in hist_ins_desc.items():
-            new_row[f'insertion__{key}'] = value
-            
-        hist_del_desc = self.history_del._description()
-        for key, value in hist_del_desc.items():
-            new_row[f'deletion__{key}'] = value
+        def describe(df, cls_idx, suffix):
+            for row in df.describe().itertuples():
+                idx = None
+                for key, value in row._asdict().items():
+                    if key == 'Index':
+                        idx = value
+                        continue
+                    if idx == 'count':
+                        continue
+                    new_key = f'{key}__{idx}__{suffix}'
+                    new_row[new_key] = value
+
+            hist_ins_desc = self.history_ins._description(cls_index=cls_idx)
+            for key, value in hist_ins_desc.items():
+                new_row[f'insertion__{key}__{suffix}'] = value
+
+            hist_del_desc = self.history_del._description(cls_index=cls_idx)
+            for key, value in hist_del_desc.items():
+                new_row[f'deletion__{key}__{suffix}'] = value
+                
+        describe(self.df, None, 'AD+CN')
+        describe(self.df[self.df['y_true'] == 0], 0, 'AD')
+        describe(self.df[self.df['y_true'] == 1], 1, 'CN')
             
         return new_row
     
     
 class SegmentationMasksSaver(CSVSaver):
-    def __init__(self, root_dir):
-        super().__init__(os.path.join(root_dir, "evaluation.csv"), "notebook_key")
+    def __init__(self, root_dir, fname="evaluation.csv"):
+        super().__init__(os.path.join(root_dir, fname), "notebook_key")

@@ -36,11 +36,11 @@ def select_from_dataset(predict_fn, sequence, max_category=5, seq_other=False, *
             y_true = np.argmax(np.array(y_true_logits), axis=0)
             append = False
             
-            if y_pred == y_true == 1 and tp < kwargs.get('tp_max', max_category):
+            if y_pred == y_true == 0 and tp < kwargs.get('tp_max', max_category):
                 append = True
                 tp += 1
 
-            if y_pred == y_true == 0 and tn < kwargs.get('tn_max', max_category):
+            if y_pred == y_true == 1 and tn < kwargs.get('tn_max', max_category):
                 append = True
                 tn += 1
 

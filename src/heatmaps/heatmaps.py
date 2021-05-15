@@ -7,8 +7,16 @@ import matplotlib.pyplot as plt
 from PIL import Image
 
 
-def get_heatmap(x, y, model, risei,
-                batch_size=8, masks_count=24, risei_batch_size=480, debug=False, log=True, seed=None):
+def get_heatmap(x,
+                y,
+                model,
+                risei,
+                batch_size=8,
+                masks_count=24,
+                risei_batch_size=480,
+                debug=False,
+                log=True,
+                seed=None):
     """
     Get heatmap for an image.
     :param x:
