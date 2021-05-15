@@ -97,7 +97,7 @@ Pre náhodný snímok vytvoríme $K$ tepelných máp, pričom tepelné mapy vytv
     \label{fig:risei_stability_error_visialisation}
 \end{figure}
 
-\subsubsection{Experiment 2 (viacero snímiek)}
+\subsubsection{Experiment 2 (viacero snímok)}
 
 Keďže sme v predchádzajúcom experimente overovali stabilitu iba na jednej snímke, v tomto experimente overíme stabilitu na viacero snímkach. Z testovacej sady sme vybrali 5 TP (viď. \nameref{sec:dictionary}), 5 TN, 5 FP a 5 FN pozorovaní (tj. celkovo 20 pozorovaní), podľa toho ako ich neurónová sieť označila. Takto zabezpečíme vyváženosť tried pozorovaní v experimente. Kvôli časovej aj pamäťovej náročnosti tohto experimentu sme vytvárali 10 tepelných máp pre každé jedno pozorovanie. Výsledky boli takmer identické s predchádzajúcim experimentom (Sekcia \ref{sec:risei_stability_1}) a trend poklesu chyby pri zvyšujúcom počte masiek bol zachovaný (\ref{tab:risei_stability_2}). Z oboch experimentov vyplýva, že je vhodné použiť vyšší počet masiek pri vytváraní tepelných máp, aby sa odstránil vyplyv náhody. Ako vhodným počet považujem 2048 masiek, pri tomto počte je chyba vzhľadom na hodnoty v tejeplnej mape minimálna (Tabuľka \ref{tab:risei_stability_1}, \ref{tab:risei_stability_2}).
 

@@ -73,8 +73,8 @@ Adresár \textit{[REPOZITÁR]/src} obashuje nasledovné Python moduly, ktoré ma
     \item \textbf{src.data.train\_test\_split} - rozdelenie dátovej sady na trénovaciua, testovaciu a validačnú.
     \item \textbf{src.data.selector} - výber záznamov z dátovej sadny na základe triedy AD/CN a správnosti klasifikácie modelom.
     \item \textbf{src.data.evaluation.segmentation\_masks} - evaluácia tepelných máp podľa segmentačných masiek.
-    \item \textbf{src.data.heatmaps} - generovanie tepelných máp.
-    \item \textbf{src.data.heatmaps.evaluation} - evaluácia kvality tepelnej mapy podľa metrík \textit{insertion} a \textit{deletion}, perzistencia histórie - tepelných máp a ich evaluácie, načítanie histórie evaluácie, vizualizácie v diagramoch. 
+    \item \textbf{src.heatmaps} - generovanie tepelných máp.
+    \item \textbf{src.heatmaps.evaluation} - evaluácia kvality tepelnej mapy podľa metrík \textit{insertion} a \textit{deletion}, perzistencia histórie - tepelných máp a ich evaluácie, načítanie histórie evaluácie, vizualizácie v diagramoch. 
 \end{itemize}
 
 Funkcie a triedy v moduloch sú v primeranom rozashu dokumentované pomocou komentárov. Ďalej bližšie opíšeme najviac dôležitý modul implementujúci navrhnutnú metódu \textit{RISEI}.
@@ -125,10 +125,12 @@ Metódy triedy RISEI.
     generate_masks(n, image, log=True, seed=None)
 \end{lstlisting}
 
+Metóda vygeneruje masky k poskytnutej snímke ($image$).
+
 Parametre:
 \begin{itemize}
     \item \textbf{n} - počet masiek na vygenerovanie,
-    \item \textbf{image} - 3D snímka \textit{(x, y, z)},
+    \item \textbf{image} - 3D snímka \textit{(x, y, z)} (k nej budú vygenerované masky),
     \item \textbf{log} - ak \textit{True} na štandardnom výstupe bude zobrazený aktuálny stav generovania masiek,
     \item \textbf{seed} - seed pre náhodu.
 \end{itemize}
@@ -144,6 +146,120 @@ Parametre:
     \item \textbf{z},
     \item \textbf{figsize} - veľkosť vykresleného diagarmu,
     \item \textbf{dim} - reprezentuje rozmer - 0, 1, 2.
+\end{itemize}
+
+\subsection{Modul: src.heatmaps.evaluation}
+
+Temto modul poskytuje generovanie a evaluáciu kvality tepelnej mapy podľa metrík \textit{insertion} a \textit{deletion}, perzistenciu histórie - tepelných máp a ich evaluácie, načítanie histórie a vizualizácie v diagramoch.
+
+\subsubsection{Trieda: HeatmapEvaluationV3}
+
+Táto trieda vytvorí a vyhodnotí tepelné mapy, následne vráti históriu evaluácie.
+
+\begin{lstlisting}
+    class src.risei.HeatmapEvaluationV3(
+        predict_fn,
+        heatmap_fn,
+        sequence,
+        evaluation_step_size=1000,
+        evaluation_max_steps=-1,
+        evaluation_batch_size=32)
+\end{lstlisting}
+
+\paragraph{Parametre}
+
+\begin{itemize}
+    \item \textbf{predict\_fn} - funkcia \textit{def predict\_fn(batch\_x)}, ktorá pre dávku snímkov vráti pravdepodobnosti predikovaných pre jednotlivé triedy.
+    \item \textbf{heatmap\_fn} - funkcia \textit{heatmap\_fn(image\_x, image\_y, evaluation\_idx, seed, log}, ktorá vráti tepelnú mapu pre snímku \textit{image\_x}.
+    \item \textbf{sequence} - sekvencia snímok - musí byť \textit{src.data.MRISequence}.
+    \item \textbf{evaluation\_step\_size} - koľko voxelov bude vložených v jednom kroku pri evaluácii tepelnej mapy. 
+    \item \textbf{evaluation\_batch\_size} - koľko snímkov vkladať pri evaluácii do modelu.
+\end{itemize}
+
+\paragraph{Metódy}
+
+Metódy triedy HeatmapEvaluationV3.
+
+\vspace{8pt}
+\begin{lstlisting}
+    evaluate(log=False, verbose=0, seed=None)
+\end{lstlisting}
+
+Spustí generovanie a evaluáciu tepelných máp. Metóda vráti \textit{src.heatmaps.\-evaluation.\-Heatmap\-EvaluationHistory} s históriou evaluácie a s metrikami.
+
+Parametre:
+\begin{itemize}
+    \item \textbf{log} - zapne alebo vypne výpisy.
+    \item \textbf{verbose} - úroveň výpisov 0, 1, 2 (najmenej až najviac).
+    \item \textbf{seed} - seed pre náhodu (posunutý do \textit{heatmap\_fn}).
+\end{itemize}
+
+\subsubsection{Trieda: HeatmapEvaluationHistory}
+
+Táto uchováva históriu evaulácie tepelných máp. Umožňuje ich načítavať a ukladať na disk.
+
+\begin{lstlisting}
+    class src.risei.HeatmapEvaluationHistory(
+        method, auc, arr_auc, arr_heatmap, arr_x, arr_y, arr_y_pred, arr_y_pred_heatmap,
+                 arr_voxels, arr_max_voxels, arr_step_size)
+\end{lstlisting}
+
+Túto triedu inicializuje knižnica (v \textit{src.heatmaps.\-evaluation.\-HeatmapEvaluationV3}), nemal by ju inicializovať klientský kód.
+
+\paragraph{Metódy}
+
+Metódy triedy HeatmapEvaluationHistory.
+
+\vspace{8pt}
+\begin{lstlisting}
+    save(path, filename)
+\end{lstlisting}
+
+Uloží históriu na disk.
+
+Parametre:
+\begin{itemize}
+    \item \textbf{path} - cesta k súboru.
+    \item \textbf{filename} - názov súboru.
+\end{itemize}
+
+\vspace{24pt}
+\begin{lstlisting}
+    @staticmethod
+    def load(path, filename):
+\end{lstlisting}
+
+Načíta históriu z disku.
+
+Parametre:
+\begin{itemize}
+    \item \textbf{path} - cesta k súboru.
+    \item \textbf{filename} - názov súboru.
+\end{itemize}
+
+\vspace{24pt}
+\begin{lstlisting}
+    description(percentage=True, cls_index=None)
+\end{lstlisting}
+
+Vypíše popisné štatistiky (min, max, priemer, štandardná odchýlka) pre plochy pod krivkou jednotlivých evaluácií.
+
+Parametre:
+\begin{itemize}
+    \item \textbf{percentage} - ak $False$ vráti AUC v absolútnych číslach vzhľadom na počet voxelov a nie hodnotu z intervalu $<0, 1>$.
+    \item \textbf{cls\_index} - ak $None$ vráti štatistiky pre všetky pozorovanie, ak číslo, vráti štatistiky pre index danej triedy.
+\end{itemize}
+
+Táto trieda poskytuje aj ďaľšie metódy pre vizualizáciu plochy pod krivkou pre jednotlivé pozorovania a pod., popísali sme iba najdôležitejšie z nich.
+
+\paragraph{Atribúty}
+
+\begin{itemize}
+    \item \textbf{arr\_heatmap} - vygenerované tepelné mapy pre všetky snímky.
+    \item \textbf{arr\_x} - snímky.
+    \item \textbf{arr\_y} - skutočne triedy ku snímkam.
+    \item \textbf{arr\_y\_pred} - predikované triedy ku snímkam.
+    \item \textbf{arr\_auc} - hodnoty AUC pre jednotlivé snímky.
 \end{itemize}
 
 \thispagestyle{empty}

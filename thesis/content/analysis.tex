@@ -52,7 +52,7 @@ Snímky z magnetickej rezonancie (MRI) dokážu zachytiť odumieranie tkaniva (n
 
 Snímky z pozitrónovej emisnej tomografie (PET) dokážu zachytiť pokles mozgovej aktivity, ktorá je u pacientov s Alzheimerovou chorobou nižšia. Mozgová aktivita odráža úroveň metabolizmu glukózy v mozgu. Na miestach v mozgu, ktoré sú touto chorobou postihnuté, je úroveň metabolizmu glukózy nižšia. Tento jav je znázornený na obrázku \ref{fig:pet}.
 
-\begin{figure}[h!]
+\begin{figure}[H]
     \centering
     \includegraphics[scale=0.5]{assets/images/pet.png}
     \caption{\textbf{Snímky normálneho mozgu a mozgu postihnutého Alzheimerovou chorobou z pozitrónovej emisnej tomografie (PET).} \cite{khan2016biomarkers}
@@ -106,18 +106,18 @@ Kde:
     \item $y_k$ je výsupný signál neurónu $k$
 \end{itemize}
 
-Parametrami, ktoré sa počas trénovania neurónovej siete menia sú váhy $w_{kj}$ a sklon $b_{k}$, tieto parametre sú takzvané trénovateľné parametre. Tieto parametre sa upravujú pri spätnej propagácii (angl. backpropagation), kedy sa minimalizuje chybová funkcia (angl. loss function).
-
-V neurónových sieťach s viac vrstvami sa stávajú výstupné signály $y$ neurónov jednej vrstvy vstupom $x$ do ďaľšej.
-
-Aktivačná funkcia zabezpečuje nelinearitu neurónu, medzi najpoužívanejšie aktivačné funkcie patria Sigmoid ($S(x) = \frac{1}{1 + e^x}$), Tanh alebo ReLU ($ReLU(x) = max(0, x)$). Jednotlivé neuróny si môžeme predstaviť ako nelineárne funkcie, ktorých spojením do viac vrstiev dokážu skladať ešte zložitejšie a komplexnejšie funkcie.
-
-\begin{figure}[h!]
+\begin{figure}[H]
     \centering
     \includegraphics[scale=1]{assets/images/neuron.png}
     \caption{\textbf{Model neurónu.} \cite{haykin2009neural} Neurón sa skladá zo vstupných signálov a váh, ktoré sú na tieto signály aplikované, sklon ($b_k$ - angl. bias) a aktivačnej funkcie, ktorá zapezpečuje nelinearitu. Vzorec \ref{eq:neuron} matematicky popisuje správanie neurónu.} 
     \label{fig:neuron}
 \end{figure}
+
+Parametrami, ktoré sa počas trénovania neurónovej siete menia sú váhy $w_{kj}$ a sklon $b_{k}$, tieto parametre sú takzvané trénovateľné parametre. Tieto parametre sa upravujú pri spätnej propagácii (angl. backpropagation), kedy sa minimalizuje chybová funkcia (angl. loss function).
+
+V neurónových sieťach s viac vrstvami sa stávajú výstupné signály $y$ neurónov jednej vrstvy vstupom $x$ do ďaľšej.
+
+Aktivačná funkcia zabezpečuje nelinearitu neurónu, medzi najpoužívanejšie aktivačné funkcie patria Sigmoid ($S(x) = \frac{1}{1 + e^x}$), Tanh alebo ReLU ($ReLU(x) = max(0, x)$). Jednotlivé neuróny si môžeme predstaviť ako nelineárne funkcie, ktorých spojením do viac vrstiev dokážu skladať ešte zložitejšie a komplexnejšie funkcie.
 
 \subsection{Dopredné neurónové siete}
 
@@ -134,7 +134,7 @@ Dopredné neurónové siete (Obr. \ref{fig:ff_nn}) sú jednou z mnoha architekt�
 
 Konvolučné neurónové siete sa používajú prevažne v doméne obrazových dát. Tieto siete majú schopnosť naučiť sa rozpoznávať špecifické štruktúry/tvary z obrázka. Toto dokážu pomocou takzvaných konvolučných filtrov, ktoré sa v nižších vrstvách naučia rozoznávať jednoduchšie tvary, akými sú napríklad obrysy alebo hrany (Obr. \ref{fig:cnn}). V tých vyšších vrstvách sú to zložitejšie štruktúry akými môžu byť celé objekty v závislosti od typu úlohy na ktorú boli trénované. Ak bola neurónová sieť trénovaná napríklad na klasifikáciu zvierat, môže tým objektom byť pes alebo morča, v prípade ak je úlohou neurónovej siete detekcia Alzheimerovej choroby možu týmito objektami byť niektoré väčšie časti mozgu (napr. hippocampus).
 
-\begin{figure}[h!]
+\begin{figure}[H]
     \centering
     \includegraphics[scale=0.5]{assets/images/cnn.png}
     \caption{
@@ -162,7 +162,7 @@ Cieľom združovacích vrstiev je postupne znižovať dimenzionalitu dát, tým 
 
 \subsection{Architektúry konvolučných neurónových sietí}
 
-Architektúra neurónovej siete hovorí o tom, ako neurónová sieť vyzerá - koľko má vrstiev, z akých vrstiev sa skladá (konvolučné, združovacie, husté), koľko filtrov je v jednotlivých vrstvách a pod. Nie každá architektúra je vhodná na každý problém. Ak je problém jednoduchý, môže byť použitie veľmi hlbokej neurónovej siete zbytočné. Taktiež, jednoduchšia architektúra potrebuje menej výpočtových zdrojov na natrénovanie a je odolnejšia voči pretrénovaniu. Spomeniem niekoľko najznámejších architektúr, ktoré sú používané najmä pri klasifikácii obrazových dát.
+Architektúra neurónovej siete hovorí o tom, ako neurónová sieť vyzerá - koľko má vrstiev, z akých vrstiev sa skladá (konvolučné, združovacie, husté), koľko filtrov je v jednotlivých vrstvách a pod. Nie každá architektúra je vhodná na každý problém. Ak je problém jednoduchý, môže byť použitie veľmi hlbokej neurónovej siete zbytočné. Taktiež, jednoduchšia architektúra potrebuje menej výpočtových zdrojov na natrénovanie a je odolnejšia voči pretrénovaniu. Spomenieme niekoľko najznámejších architektúr, ktoré sú používané najmä pri klasifikácii obrazových dát.
 
 \begin{itemize}
     \item VGG \cite{simonyan2014very} - hlboká neurónová sieť, so 16 alebo s 19 vrstvami. Skladá sa s konvolučných a združovacích vrstiev.
@@ -226,7 +226,7 @@ Výsledok analýzy senzitivity znázornený v tepelnej mape (angl. heatmap) je z
 \label{fig:sensitivity_analysis}
 \end{figure}
 
-\subsubsection{LRP (angl. layer-wiser relevance propagation)}
+\subsubsection{LRP}
 
 Metóda vrstvami propagovanej relevancie, ďalej len LRP (angl. layer-wise relevance propagation), sa od analýzy senzitivity odlišuje tým, že vo výslednej tepelnej mape dokáže odlíšiť vlastnosti, ktoré prispeli pozitívne alebo negatívne k výslednej predikcii (v zázislosti od použitých parametrov $\alpha$ a $\beta$).
 
@@ -263,9 +263,9 @@ Nasledovné vzorce \ref{eq:lrp_1}, \ref{eq:lrp_2}, \ref{eq:lrp_3} \cite{montavon
 
 Výhodou LRP oproti iným metódam, ako napríklad dekonvolúcii je, že vysvetlenie (výsledná tepelná mapa) vytvorené technikou LRP je pre rôzne obrázky vždy rôzne \cite{Muller_Samek_Montavon_Lapuschkin_Arras}. Naopak, pri dekonvolúcii je vysvetlenie vždy rovnaké pokiaľ v architektúre neurónovej siete neboli použité združovacie vrstvy (angl. pooling layers) \cite{Muller_Samek_Montavon_Lapuschkin_Arras}. Ďaľším rozdielom je (aj oproti analýze senzitivity), že vo výslednom vysvetlení LRP rozlišuje, ktoré vlastnosti pozitívne alebo negatívne prispeli k negatívnej predikcii.
 
-\subsubsection{Riadená spätná propagácia (angl. Guided Backprop) \label{sec:guided_backprop}}
+\subsubsection{Riadená spätná propagácia \label{sec:guided_backprop}}
 
-Metóda Guided Backprop je rozšírením metódy dekonvolúcie (angl. deconvolution) \cite{montavon2018methods}. Metóda využíva aktivácie \textit{ReLU} pre smerovanie signálu (tj. výsledného "tepla") na príslušné miesta vstupného obrazu \cite{montavon2018methods}. Pri spätnom širení sú negatívne gradienty nahradené hodnotou nula. Rovnako aj gradienty z neurónov, ktoré mali pri doprednom šírení po aplikácii aktivačnej funkcie (\textit{ReLU}) hodnotu 0. Obrázok \ref{fig:guided_grad_cam} zobrazuje výslednú tepelnú mapu po použití riadenej spätnej propagácie, a porovnáva ju s inými metódami. Na rozdiel od metódy LRP, táto metóda nezobrazí na tepelnej mape oblasti, ktoré k výslednej predikcii prispievajú negatívne.
+Metóda riadená spätná propagácia (angl. Guided Backprop) je rozšírením metódy dekonvolúcie (angl. deconvolution) \cite{montavon2018methods}. Metóda využíva aktivácie \textit{ReLU} pre smerovanie signálu (tj. výsledného "tepla") na príslušné miesta vstupného obrazu \cite{montavon2018methods}. Pri spätnom širení sú negatívne gradienty nahradené hodnotou nula. Rovnako aj gradienty z neurónov, ktoré mali pri doprednom šírení po aplikácii aktivačnej funkcie (\textit{ReLU}) hodnotu 0. Obrázok \ref{fig:guided_grad_cam} zobrazuje výslednú tepelnú mapu po použití riadenej spätnej propagácie, a porovnáva ju s inými metódami. Na rozdiel od metódy LRP, táto metóda nezobrazí na tepelnej mape oblasti, ktoré k výslednej predikcii prispievajú negatívne.
 
 \subsubsection{GradCAM \label{sec:grad_cam}}
 
@@ -281,9 +281,9 @@ GradCAM \cite{selvaraju2017grad}, alebo Gradientom-vážené mapovanie aktiváci
 
 Výsledkom je tepelná mapa pre vstupný obrázok voči vybranej predikovanej triede. Vyššie hodnoty v tepelnej mape vyjadrujú doležitejšie časti obrazu pre vybranú triedu, nižšie hodnoty vyjadrujú tie menej doležité.
 
-\subsubsection{Riadený GradCAM (angl. Guided GradCAM) \label{sec:guided_grad_cam}}
+\subsubsection{Riadený GradCAM \label{sec:guided_grad_cam}}
 
-Guided GradCAM kombinuje metódu riadenej spätnej propagácie s metódou GradCAM. Výsledné tepelné mapy z oboch metód, pre vstupný obraz a vybranú triedu sú navzájom vynásobené (nejedná sa o maticové násobenie ale násobenie po prvkoch) čím vznikne nová tepelná mapa \cite{selvaraju2017grad} (Obr. \ref{fig:guided_grad_cam}). 
+Riadený GradCAM (angl. Guided GradCAM), ďalej len Guided GradCAM, kombinuje metódu riadenej spätnej propagácie s metódou GradCAM. Výsledné tepelné mapy z oboch metód, pre vstupný obraz a vybranú triedu sú navzájom vynásobené (nejedná sa o maticové násobenie ale násobenie po prvkoch) čím vznikne nová tepelná mapa \cite{selvaraju2017grad} (Obr. \ref{fig:guided_grad_cam}). 
 
 \begin{figure}[h!]
     \centering
@@ -292,9 +292,9 @@ Guided GradCAM kombinuje metódu riadenej spätnej propagácie s metódou GradCA
     \label{fig:guided_grad_cam}
 \end{figure}
 
-\subsubsection{RISE - Randomized Input Sampling for Explanation \label{sec:rise}}
+\subsubsection{RISE \label{sec:rise}}
 
-Túto metódu môžeme zaradiť medzi perturbačné metódy, keďže je tiež založená na zakrývaní jednotlivých častí obrazu a sledovaním zmeny výslednej predikcie modelu. Už z názvu modelu \textit{(Randomized Input Sampling for Explanation)} je zrejmé, že táto metóda využíva náhodu na zakrývanie jednotlivých častí vstupného obrazu. Vstupný obraz je prekrytý náhodou maskou, ktorá je vytvorená nasledovne \cite{petsiuk2018rise}:
+Túto metódu môžeme zaradiť medzi perturbačné metódy, keďže je tiež založená na zakrývaní jednotlivých častí obrazu a sledovaním zmeny výslednej predikcie modelu. Už z názvu metódy \textit{RISE - (Randomized Input Sampling for Explanation)} je zrejmé, že táto metóda využíva náhodu na zakrývanie jednotlivých častí vstupného obrazu. Vstupný obraz je prekrytý náhodou maskou, ktorá je vytvorená nasledovne \cite{petsiuk2018rise}:
 
 \begin{itemize}
     \item Je vytvorená náhodná binárna (tj. iba z bielej a čiernej farby) maska o malej veľkosti (napríklad 8px x 8px).
