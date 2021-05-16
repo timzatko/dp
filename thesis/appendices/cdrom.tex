@@ -7,39 +7,31 @@ Evidenčné čislo práce v informačnom systéme FIIT-182905-86077.
 Obsah digitálnej časti práce (archív ZIP):
 
 \begin{itemize}
-    \item \texttt{/DP\_TimotejZatko.pdf} --- Práca vo formáte PDF.
-    \item \texttt{/DP\_prilohy\_TimotejZatko.pdf} --- Prílohy vo formáte PDF.
-    \item \texttt{/repo.zip} --- Zdrojové súbory a dáta vo formáte ZIP.
-\end{itemize}
-
-Obsah súboru \texttt{repo.zip}:
-
-\begin{itemize}
-    \item \texttt{/repo/thesis/} --- Zdrojové súbory práce vo formáte \LaTeX.
-    \item \texttt{/repo/tmp/} --- Dátová sada, zoserializované natrénované modely, záznamy z trénovania modelov, zoserializované výsledky experimentov. 
-    \item \texttt{/repo/src/} --- Všetky zdrojové súbory, vrátane metódy RISEI, modelov, generovania tepelných máp. Obsahuje Python balíky.
-    \item \texttt{/repo/scripts/} --- Pomocný skript na stiahnutie dát z Google Drive.
-    \item \texttt{/repo/assets/} --- Zdrojové súbory diagramov použitých v práci. 
-    \item \texttt{/repo/colab\_notebooks/} --- Obsahuje Jupyter notebooky z trénovania modelov na platforme Google Colab s vyuŽitím GPU aj TPU (obsahuje prvé natrénované modely) 
-    \item \texttt{/repo/conda\_notebooks/} --- Obsahuje Jupyter notebooky.
-    \item \texttt{/repo/conda\_notebooks/dataset.ipynb} --- Rozdelenie dátovej sady.
-    \item \texttt{/repo/conda\_notebooks/tensorboad.ipynb} --- Tensorboad.
-    \item \texttt{/repo/conda\_notebooks/augmentations.ipynb} --- Vizualizácia implementovaných augmentácií.
-    \item \texttt{/repo/conda\_notebooks/training/training\_history.ipynb} --- Vizualizácia priebehu trénovania.
-    \item \texttt{/repo/conda\_notebooks/training/augmentations/} --- Porovnanie vplyvu augmentácií na výsledný model. 
-    \item \texttt{/repo/conda\_notebooks/training/2d\_ResNet18/} --- Trénovanie modelu 2D ResNet18 (viacero jupyter notebookov).
-    \item \texttt{/repo/conda\_notebooks/training/3d\_ResNet18/} --- Trénovanie modelu 2D ResNet18 (viacero jupyter notebookov).
-    \item \texttt{/repo/conda\_notebooks/training/3d\_cnn/} --- Trénovanie modelu 3D CNN (viacero jupyter notebookov).
-    \item \texttt{/repo/conda\_notebooks/risei/model\_comparison\_v1/} --- Porovnanie metódy RISEI a jej parametrov na natrénovaných modeloch (prvá iterácia, staré modely, viacero jupyter notebooko).
-    \item \texttt{/repo/conda\_notebooks/risei/model\_comparison\_v2/} --- Porovnanie metódy RISEI a jej parametrov na natrénovaných modeloch (druhá iterácia, nové modely, viacero jupyter notebookv).
-    \item \texttt{/repo/conda\_notebooks/risei/evaluation\_history\_ins\_del\-.ipynb} --- Vypísanie štatistík pre vybranú evaluáciu metódy.
-    \item \texttt{/repo/conda\_notebooks/risei/evaluation\_history\_ins\_del\-\_comparison\-.ipynb} --- Porovnanie vybraných dvoch evaluácii metód.
-    \item \texttt{/repo/conda\_notebooks/risei/evaluation\_history\_\-segmentation\-\_masks\-.ipynb} --- Vyhodnotenie metódy voči segmentačným maskám.
-    \item \texttt{/repo/conda\_notebooks/risei.evalution\_all.ipynb} --- Porovnanie všetkých experimentov.
-    \item \texttt{/repo/conda\_notebooks/risei/risei.ipynb} --- RISEI - zobrazenie generovaných masiek podľa nastavených parametrov.
-    \item \texttt{/repo/conda\_notebooks/risei/experiments/methods/} --- Vyhodnotenie tepelných máp z iných, existujúcich metód (viacero jupyter notebookov).
-    \item \texttt{/repo/conda\_notebooks/risei/experiments/parameters/} --- Hľadanie optimálneho počtu parametrov (viacero jupyter notebookov).
-    \item \texttt{/repo/conda\_notebooks/risei/experiments/stability/} --- Vyhodnotenie kvality stability tepelných máp podľa počtu vygenerovaných masiek (viacero jupyter notebookov).
+    \item \texttt{/thesis/} --- Zdrojové súbory práce vo formáte \LaTeX.
+    \item \texttt{/tmp/} --- Dátová sada, zoserializované natrénované modely, záznamy z trénovania modelov, zoserializované výsledky experimentov. 
+    \item \texttt{/src/} --- Všetky zdrojové súbory, vrátane metódy RISEI, modelov, generovania tepelných máp. Obsahuje Python balíky.
+    \item \texttt{/scripts/} --- Pomocný skript na stiahnutie dát z Google Drive.
+    \item \texttt{/assets/} --- Zdrojové súbory diagramov použitých v práci. 
+    \item \texttt{/colab\_notebooks/} --- Obsahuje Jupyter notebooky z trénovania modelov na platforme Google Colab s vyuŽitím GPU aj TPU (obsahuje prvé natrénované modely) 
+    \item \texttt{/conda\_notebooks/} --- Obsahuje Jupyter notebooky.
+    \item \texttt{/conda\_notebooks/dataset.ipynb} --- Rozdelenie dátovej sady.
+    \item \texttt{/conda\_notebooks/tensorboad.ipynb} --- Tensorboad.
+    \item \texttt{/conda\_notebooks/augmentations.ipynb} --- Vizualizácia implementovaných augmentácií.
+    \item \texttt{/conda\_notebooks/training/training\_history.ipynb} --- Vizualizácia priebehu trénovania.
+    \item \texttt{/conda\_notebooks/training/augmentations/} --- Porovnanie vplyvu augmentácií na výsledný model. 
+    \item \texttt{/conda\_notebooks/training/2d\_ResNet18/} --- Trénovanie modelu 2D ResNet18 (viacero jupyter notebookov).
+    \item \texttt{/conda\_notebooks/training/3d\_ResNet18/} --- Trénovanie modelu 2D ResNet18 (viacero jupyter notebookov).
+    \item \texttt{/conda\_notebooks/training/3d\_cnn/} --- Trénovanie modelu 3D CNN (viacero jupyter notebookov).
+    \item \texttt{/conda\_notebooks/risei/model\_comparison\_v1/} --- Porovnanie metódy RISEI a jej parametrov na natrénovaných modeloch (prvá iterácia, staré modely, viacero jupyter notebooko).
+    \item \texttt{/conda\_notebooks/risei/model\_comparison\_v2/} --- Porovnanie metódy RISEI a jej parametrov na natrénovaných modeloch (druhá iterácia, nové modely, viacero jupyter notebookv).
+    \item \texttt{/conda\_notebooks/risei/evaluation\_history\_ins\_del\-.ipynb} --- Vypísanie štatistík pre vybranú evaluáciu metódy.
+    \item \texttt{/conda\_notebooks/risei/evaluation\_history\_ins\_del\-\_comparison\-.ipynb} --- Porovnanie vybraných dvoch evaluácii metód.
+    \item \texttt{/conda\_notebooks/risei/evaluation\_history\_\-segmentation\-\_masks\-.ipynb} --- Vyhodnotenie metódy voči segmentačným maskám.
+    \item \texttt{/conda\_notebooks/risei.evalution\_all.ipynb} --- Porovnanie všetkých experimentov.
+    \item \texttt{/conda\_notebooks/risei/risei.ipynb} --- RISEI - zobrazenie generovaných masiek podľa nastavených parametrov.
+    \item \texttt{/conda\_notebooks/risei/experiments/methods/} --- Vyhodnotenie tepelných máp z iných, existujúcich metód (viacero jupyter notebookov).
+    \item \texttt{/conda\_notebooks/risei/experiments/parameters/} --- Hľadanie optimálneho počtu parametrov (viacero jupyter notebookov).
+    \item \texttt{/conda\_notebooks/risei/experiments/stability/} --- Vyhodnotenie kvality stability tepelných máp podľa počtu vygenerovaných masiek (viacero jupyter notebookov).
 \end{itemize}
 
 Digitálna časť práce má veľkosť 123.9 GB, kvôli čomu je uložená v systéme G Suite for
